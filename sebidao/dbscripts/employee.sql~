@@ -1,0 +1,10 @@
+begin work;
+create table employees (
+       employee_id serial primary key,
+       lastname text,
+       firstname text,
+       department_id integer references department
+
+) without oids;
+
+rollback;

@@ -1,0 +1,5 @@
+#!/bin/bash
+dbname=simpledao
+dropdb --ifexists ${dbname}
+createdb -O exam ${dbname}
+cat schema.sql | psql -U exam -X ${dbname} 
