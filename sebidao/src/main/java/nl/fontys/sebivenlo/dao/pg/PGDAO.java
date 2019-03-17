@@ -120,7 +120,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String placeholders = makePlaceHolders( columnNames );
         K key = mapper.keyExtractor().apply( t );
         //if (key.getClass().i)
-        String sql = String.format( "update %s set (%s)=(%s) where (%s)=(?)",
+        String sql = String.format( "update %s set (%s)=(%s) where (%s)=(?)"
+                + " returning * ",
                 tableName, columns,
                 placeholders,
                 keyNames.iterator().next(),
