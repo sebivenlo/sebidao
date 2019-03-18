@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.toList;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.DAO;
+import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.TransactionToken;
 import nl.fontys.sebivenlo.dao.Entity2;
 
@@ -63,6 +64,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
+            throw new DAOException(ex.getMessage(),ex);
         }
         return Optional.empty();
     }
@@ -101,6 +103,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
+            throw new DAOException(ex.getMessage(),ex);
+            
         }
 
     }
@@ -145,6 +149,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
+            throw new DAOException(ex.getMessage(),ex);
         }
         return result;
 
@@ -184,6 +189,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
+            throw new DAOException(ex.getMessage(),ex);
         }
         return result;
     }
@@ -213,6 +219,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
+            throw new DAOException(ex.getMessage(),ex);
         }
         return result;
     }
@@ -238,6 +245,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
+            throw new DAOException(ex.getMessage(),ex);
         }
         return result;
     }
@@ -279,5 +287,4 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         return transactionToken;
     }
-
 }
