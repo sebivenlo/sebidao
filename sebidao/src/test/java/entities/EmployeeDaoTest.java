@@ -35,12 +35,11 @@ public class EmployeeDaoTest {
         daof = new PGDAOFactory( ds );
         daof.registerMapper( Employee.class, new EmployeeMapper() );
     }
-    DAO<Integer, Employee> edao;
+    //DAO<Integer, Employee> edao;
 
     @Before
     public void setupData() throws Exception {
         loadDatabase();
-        edao = daof.createDao( Employee.class );
     }
 
     @After
@@ -50,6 +49,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test00Size() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         int size = edao.size();
         assertEquals( "tests start out with one element", 1, size );
 
@@ -58,6 +58,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test01Get() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         int lastId = edao.lastId();
         Optional<Employee> e = edao.get( lastId );
 
@@ -68,6 +69,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test02GetAll() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Collection<Employee> el = edao.getAll();
         assertEquals( 1, el.size() );
         assertEquals( "Marvel: it is Piet again", "Piet", el.iterator().next().
@@ -77,6 +79,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test03Delete() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee dummy = new Employee( 1 );
         edao.delete( dummy ); // will drop piet
         Optional<Employee> e = edao.get( 1 );
@@ -87,6 +90,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test04Create() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Collection<Employee> el = edao.getAll();
         int preSize = el.size();
         edao.save( JAN );
@@ -100,6 +104,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test05Update() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee savedJan = edao.save( JAN );
         assertNotNull( "should have a jan", savedJan );
         assertTrue( "proper id", savedJan.getId() != 0 );
