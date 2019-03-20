@@ -37,9 +37,9 @@ public class MainDB {
         Department saveDept = dDao.save( d1 );
         
         Collection<Department> allDept = dDao.getAll();
+        System.out.println( "allDept = " ); 
         allDept.stream().forEach( System.out::println );
-        System.out.println( "allDept = " + allDept );
-        dDao.delete( saveDept );
+        
         
         Collection<Employee> all = eDao.getAll();
         System.out.println( "all = " + all );
@@ -51,7 +51,11 @@ public class MainDB {
         Employee sharonInDb = eDao.save( p );
         
         all = eDao.getAll();
-        System.out.println( "now all = " + all );
+        System.out.println( "now all = " );
+        all.stream().forEach( System.out::println );
+        
+        // clean up 
         eDao.delete( sharonInDb );
+        dDao.delete( saveDept );
     }
 }
