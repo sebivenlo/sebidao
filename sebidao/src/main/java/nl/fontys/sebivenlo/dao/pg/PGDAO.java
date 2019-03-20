@@ -32,15 +32,22 @@ import nl.fontys.sebivenlo.dao.Entity2;
 public class PGDAO<K extends Serializable, E extends Entity2<K>>
         implements
         DAO<K, E> {
-
+    /** Table backing this DAO. */
     protected final String tableName;
+    /** Id column name. */
     protected final String idName;
+    /** When a transaction is taking place .*/
     protected PGTransactionToken transactionToken;
-    @Resource
+    @Resource    
     final DataSource ds;
     @Resource
     final Mapper<K, E> mapper;
 
+    /** 
+     * Create a DAO for a data source and a mapper.
+     * @param ds injected through this ctor.
+     * @param mapper injected through this ctor.
+     */
     public PGDAO( DataSource ds, Mapper<K, E> mapper ) {
         this.ds = ds;
         this.mapper = mapper;

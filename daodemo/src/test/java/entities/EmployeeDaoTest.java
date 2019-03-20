@@ -1,6 +1,5 @@
 package entities;
 
-import nl.fontys.sebivenlo.dao.pg.PGDataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -9,13 +8,14 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
 import static java.util.stream.Collectors.joining;
+import nl.fontys.sebivenlo.dao.DAO;
+import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
 import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
 
 /**
@@ -27,12 +27,18 @@ import org.junit.runners.MethodSorters;
 public class EmployeeDaoTest {
 
     static PGDataSource ds = PGDataSource.DATA_SOURCE;
+    static PGDAOFactory daof;
+
+    @BeforeClass
+    public static void setupClass() {
+        daof = new PGDAOFactory( ds );
+        daof.registerMapper( Employee.class, new EmployeeMapper() );
+    }
 
     @Before
     public void setupData() throws Exception {
         loadDatabase();
     }
-    EmployeeDao edao = new EmployeeDao( ds );
 
     @After
     public void cleanup() {
@@ -41,6 +47,8 @@ public class EmployeeDaoTest {
 
     @Test
     public void test00Size() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+
         int size = edao.size();
         assertEquals( "tests start out with one element", 1, size );
 
@@ -49,6 +57,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test01Get() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         int lastId = edao.lastId();
         System.out.println( "lastId = " + lastId );
         Optional<Employee> e = edao.get( lastId );
@@ -60,6 +69,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test02GetAll() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Collection<Employee> el = edao.getAll();
         System.out.println( "el=" + el );
         assertEquals( 1, el.size() );
@@ -70,6 +80,7 @@ public class EmployeeDaoTest {
 
     @Test
     public void test03Delete() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee dummy = new Employee( 1 );
         edao.delete( dummy ); // will drop piet
         System.out.println();
@@ -81,9 +92,10 @@ public class EmployeeDaoTest {
 
     @Test
     public void test04Create() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Collection<Employee> el = edao.getAll();
         int preSize = el.size();
-        System.out.println( "el = " + el);
+        System.out.println( "el = " + el );
         System.out.println( "preSize = " + preSize );
         edao.save( JAN );
         int postSize = edao.getAll().size();
@@ -97,6 +109,7 @@ public class EmployeeDaoTest {
 //    @Ignore
     @Test
     public void test05Update() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee savedJan = edao.save( JAN );
         assertNotNull( "should have a jan", savedJan );
         assertTrue( "proper id", savedJan.getId() != 0 );

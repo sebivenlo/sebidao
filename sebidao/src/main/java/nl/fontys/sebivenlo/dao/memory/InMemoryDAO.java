@@ -20,13 +20,19 @@ import java.util.logging.Logger;
 
 /**
  * An in memory implementation of a DAO, typically used for testing.
- * 
+ *
  * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @param <K> key for lookup
  * @param <E> type of entity
  */
 public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implements
         DAO<K, E>, Serializable {
 
+    /**
+     * Create a DAO using the given name for persistence to disk.
+     *
+     * @param storageName on disk file name
+     */
     public InMemoryDAO( String storageName ) {
         this.storageName = storageName;
         if ( Files.exists( Paths.get( this.storageName ) ) ) {
@@ -37,6 +43,12 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
         Runtime.getRuntime().addShutdownHook( saveThread );
     }
 
+    /**
+     * Create a DAO, deriving the name for the on disk storage from the type
+     * name.
+     *
+     * @param tclass managed by this DAO
+     */
     public InMemoryDAO( Class<E> tclass ) {
         this( tclass.getCanonicalName() + ".ser" );
     }
@@ -90,27 +102,29 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
         }
     }
 
-    private void load( String storageName ) {
+    private void load( String aStorageName ) {
         try ( ObjectInputStream in = new ObjectInputStream(
-                new FileInputStream( storageName ) ) ) {
+                new FileInputStream( aStorageName ) ) ) {
             this.storage.clear();
-            Map<K, E> readMap = ( Map<K, E> ) in.readObject();
+            Map<K, E> readMap = (Map<K, E>) in.readObject();
 
             this.storage.putAll( readMap );
 
         } catch ( FileNotFoundException ex ) {
             Logger.getLogger( InMemoryDAO.class.getName() ).
                     log( Level.SEVERE, null, ex );
-        } catch ( IOException ex ) {
-            Logger.getLogger( InMemoryDAO.class.getName() ).
-                    log( Level.SEVERE, null, ex );
-        } catch ( ClassNotFoundException ex ) {
+        } catch ( IOException | ClassNotFoundException ex ) {
             Logger.getLogger( InMemoryDAO.class.getName() ).
                     log( Level.SEVERE, null, ex );
         }
 
     }
 
+    /**
+     * Get the storage name.
+     *
+     * @return the name
+     */
     String getStorageName() {
         return this.storageName;
     }
@@ -119,6 +133,5 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
     public int size() {
         return storage.size();
     }
-    
-    
+
 }

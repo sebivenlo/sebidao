@@ -19,14 +19,14 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>nl.fontys.sebivenlo</groupId>
+            <artifactId>sebidao</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+	 <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>nl.fontys.sebivenlo</groupId>
-            <artifactId>sebidao</artifactId>
-            <version>0.1</version>
         </dependency>
     </dependencies>
 </project>

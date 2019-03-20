@@ -46,7 +46,7 @@ public class DAOTest {
 
     /**
      * This test serves to cover the default implemenations in DAO.
-     * @throws Exception 
+     * @throws Exception no expected
      */
     @Test
     public void testAllCovered() throws Exception {

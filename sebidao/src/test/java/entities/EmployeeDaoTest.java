@@ -1,6 +1,5 @@
 package entities;
 
-import nl.fontys.sebivenlo.dao.pg.PGDataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

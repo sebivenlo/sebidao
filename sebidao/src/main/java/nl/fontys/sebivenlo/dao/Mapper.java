@@ -15,6 +15,10 @@ import java.util.function.Function;
  */
 public interface Mapper<K, E> {
 
+    /**
+     * Get the type that is mapped by this mapper.
+     * @return the type
+     */
     Class<E> entityType();
 
     /**
@@ -34,7 +38,7 @@ public interface Mapper<K, E> {
     E implode( Object[] parts );
 
     /**
-     * Get the table name for the entity
+     * Get the table name for the entity.
      *
      * @return the name of the table in the database
      */
@@ -88,6 +92,10 @@ public interface Mapper<K, E> {
         return true;
     }
 
+    /**
+     * Get the name of the id field or column.
+     * @return the name.
+     */
     default String idName() {
         return entityType().getSimpleName().toLowerCase() + "id";
     }

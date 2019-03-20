@@ -87,10 +87,9 @@ public class Employee implements Entity2<Integer> {
 
     @Override
     public String toString() {
-        return "Employees{" + "employeeid=" + employeeid + ", lastname="
-                + lastname + ", firstname=" + firstname + ", departmentid="
-                + departmentid + '}';
+        return "Employee{" + "employeeid=" + employeeid + ", lastname=" + lastname + ", firstname=" + firstname + ", email=" + email + ", departmentid=" + departmentid + '}';
     }
+
 
     public int getEmployeeid() {
         return employeeid;

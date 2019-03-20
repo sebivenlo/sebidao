@@ -10,11 +10,20 @@ package nl.fontys.sebivenlo.dao;
  */
 public interface TransactionToken {
 
+    /**
+     * Save the effect of a transaction.
+     *
+     * @throws Exception on error.
+     */
     default void commit() throws Exception {
     }
 
-    ;
+    /**
+     * Undo the work of the transaction, making the transaction atomic.
+     *
+     * @throws Exception on error.
+     */
     default void rollback() throws Exception {
     }
-;
+
 }

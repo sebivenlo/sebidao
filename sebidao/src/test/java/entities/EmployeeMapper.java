@@ -1,14 +1,10 @@
 package entities;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import static java.lang.reflect.Modifier.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Function;
-import static java.util.stream.Collectors.toSet;
 import nl.fontys.sebivenlo.dao.Mapper;
 
 class EmployeeMapper implements Mapper<Integer, Employee> {
