@@ -99,4 +99,12 @@ public interface Mapper<K, E> {
     default String idName() {
         return entityType().getSimpleName().toLowerCase() + "id";
     }
+    
+    /**
+     * Get the name of the natural key of this relation, if it is not the default.
+     * @return the key name
+     */
+    default String naturalKeyName(){
+        return idName();
+    }
 }

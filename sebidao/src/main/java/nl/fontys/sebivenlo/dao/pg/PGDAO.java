@@ -32,19 +32,27 @@ import nl.fontys.sebivenlo.dao.Entity2;
 public class PGDAO<K extends Serializable, E extends Entity2<K>>
         implements
         DAO<K, E> {
-    /** Table backing this DAO. */
+
+    /**
+     * Table backing this DAO.
+     */
     protected final String tableName;
-    /** Id column name. */
+    /**
+     * Id column name.
+     */
     protected final String idName;
-    /** When a transaction is taking place .*/
+    /**
+     * When a transaction is taking place .
+     */
     protected PGTransactionToken transactionToken;
-    @Resource    
+    @Resource
     final DataSource ds;
     @Resource
     final Mapper<K, E> mapper;
 
-    /** 
+    /**
      * Create a DAO for a data source and a mapper.
+     *
      * @param ds injected through this ctor.
      * @param mapper injected through this ctor.
      */
@@ -71,7 +79,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-            throw new DAOException(ex.getMessage(),ex);
+            throw new DAOException( ex.getMessage(), ex );
         }
         return Optional.empty();
     }
@@ -110,8 +118,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-            throw new DAOException(ex.getMessage(),ex);
-            
+            throw new DAOException( ex.getMessage(), ex );
+
         }
 
     }
@@ -123,7 +131,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         // get natural id, chop up into parts for where (keys...) = (parts...)
         // get object parts
         // sql = "
-        E result=null;
+        E result = null;
         Set<String> keyNames = mapper.keyNames();
         List<String> columnNames
                 = mapper.persistentFieldNames().stream().collect( toList() );
@@ -156,7 +164,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-            throw new DAOException(ex.getMessage(),ex);
+            throw new DAOException( ex.getMessage(), ex );
         }
         return result;
 
@@ -196,7 +204,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-            throw new DAOException(ex.getMessage(),ex);
+            throw new DAOException( ex.getMessage(), ex );
         }
         return result;
     }
@@ -226,7 +234,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-            throw new DAOException(ex.getMessage(),ex);
+            throw new DAOException( ex.getMessage(), ex );
         }
         return result;
     }
@@ -235,12 +243,12 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     public int lastId() {
         String sql = format( "select max(%s)  as lastid from %s", idName,
                 tableName );
-        int result = exucuteIntQuery( sql );
+        int result = executeIntQuery( sql );
 
         return result;
     }
 
-    final int exucuteIntQuery( String sql ) {
+    final int executeIntQuery( String sql ) {
         int result = 0;
         try ( Connection c = this.getConnection();
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
@@ -252,7 +260,25 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-            throw new DAOException(ex.getMessage(),ex);
+            throw new DAOException( ex.getMessage(), ex );
+        }
+        return result;
+    }
+
+    final int executeIntQuery( String sql, K k ) {
+        int result = 0;
+        try ( Connection c = this.getConnection();
+                PreparedStatement pst = c.prepareStatement( sql ); ) {
+            pst.setObject( 1, k );
+            try ( ResultSet rs = pst.executeQuery(); ) {
+                if ( rs.next() ) {
+                    result = rs.getInt( 1 );
+                }
+            }
+        } catch ( SQLException ex ) {
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+            throw new DAOException( ex.getMessage(), ex );
         }
         return result;
     }
@@ -260,7 +286,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     @Override
     public int size() {
         String sql = format( "select count(1)  as size from %s", tableName );
-        int result = exucuteIntQuery( sql );
+        int result = executeIntQuery( sql );
 
         return result;
 
@@ -293,5 +319,17 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             transactionToken = new PGTransactionToken( getConnection() );
         }
         return transactionToken;
+    }
+
+    /**
+     * Simply get the integer translation for a natural key.
+     * @param k lookup key
+     * @return the int value matching this key.
+     */
+    public int getIdForKey( K k ) {
+        String ks = k.toString();
+        String sql = String.format( "select %s from %s where %s=?", mapper.idName(), mapper.tableName(), mapper.naturalKeyName() );
+        return executeIntQuery( sql, k );
+
     }
 }
