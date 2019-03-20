@@ -29,7 +29,7 @@ public class EmployeeMapper implements Mapper<Integer, Employee> {
                     "lastname",
                     "firstname",
                     "email",
-                    "departmentid"
+                    "department"
             ) );
 
     private static final Set<String> KEYS = new HashSet<>( Arrays.asList(

@@ -15,26 +15,26 @@ public class Employee implements Entity2<Integer> {
     private String lastname;
     private String firstname;
     private String email;
-    private int departmentid;
+    private String department;
 
     public Employee( int employeeid, String lastname, String firstname,
             String email,
-            int departmentid ) {
+            String department ) {
         this.employeeid = employeeid;
         this.lastname = lastname;
         this.firstname = firstname;
         this.email = email;
-        this.departmentid = departmentid;
+        this.department = department;
     }
 
     Employee( Object[] parts ) {
         this( ( int ) parts[ 0 ], ( String ) parts[ 1 ],
-                ( String ) parts[ 2 ],( String ) parts[ 3 ], ( int ) parts[ 4 ] );
+                ( String ) parts[ 2 ],( String ) parts[ 3 ], (String ) parts[ 4 ] );
     }
 
     Object[] asParts() {
         return new Object[] { getEmployeeid(), getLastname(),
-            getFirstname(), getEmail(),getDepartmentid() };
+            getFirstname(), getEmail(),getDepartment() };
     }
 
     public Employee( Integer employeeid ) {
@@ -87,7 +87,7 @@ public class Employee implements Entity2<Integer> {
 
     @Override
     public String toString() {
-        return "Employee{" + "employeeid=" + employeeid + ", lastname=" + lastname + ", firstname=" + firstname + ", email=" + email + ", departmentid=" + departmentid + '}';
+        return "Employee{" + "employeeid=" + employeeid + ", lastname=" + lastname + ", firstname=" + firstname + ", email=" + email + ", department=" + department + '}';
     }
 
 
@@ -95,12 +95,12 @@ public class Employee implements Entity2<Integer> {
         return employeeid;
     }
 
-    public int getDepartmentid() {
-        return departmentid;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setDepartmentid( int departmentid ) {
-        this.departmentid = departmentid;
+    public void setDepartment( String department ) {
+        this.department= department;
     }
 
     public String getEmail() {

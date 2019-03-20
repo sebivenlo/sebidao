@@ -104,7 +104,7 @@ public class EmployeeDaoTest {
         // fail( "testCreate not yet implemented. Review the code and comment or delete this line" );
     }
     private static final Employee JAN = new Employee( 0, "Klaassen", "Jan",
-            "jan@example.com", 1 );
+            "jan@example.com", "sales" );
 
 //    @Ignore
     @Test

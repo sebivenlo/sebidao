@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
@@ -11,32 +12,22 @@ import nl.fontys.sebivenlo.dao.Entity2;
  *
  * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
  */
-public class Department implements Entity2<Integer> {
+public class Department implements Entity2<String> {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer departmentid;
     private String name;
     private String description;
     private String email;
 
-    public Department( Integer departmentId ) {
-        this.departmentid = departmentId;
+    public Department( String name ) {
+        this.name = name;
     }
 
-    public Department( int departmentid, String name, String desciption, String email ) {
-        this.departmentid = departmentid;
+    public Department( String name, String desciption, String email ) {
         this.name = name;
         this.description = desciption;
         setEmail( email );
-    }
-
-    public Integer getDepartmentid() {
-        return departmentid;
-    }
-
-    public void setDepartmentid( Integer departmentId ) {
-        this.departmentid = departmentId;
     }
 
     public String getName() {
@@ -55,16 +46,10 @@ public class Department implements Entity2<Integer> {
         this.description = description;
     }
 
-    @Override
-    public int getId() {
-        return departmentid;
-    }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 11 * hash + this.departmentid;
-        return hash;
+        return Objects.hash( this.name );
     }
 
     public String getEmail() {
@@ -72,9 +57,9 @@ public class Department implements Entity2<Integer> {
     }
 
     private static final Predicate<String> EMAILTEST = Pattern.compile(
-          //0123456789012345678901234567890123456789012345678901234567890
-"^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~]+@"
-       // + "+@[a-zA-Z0-9](?:[a-zA-Z0-9]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9]{0,61}[a-zA-Z0-9])?)*$", CASE_INSENSITIVE | COMMENTS
+            //0123456789012345678901234567890123456789012345678901234567890
+            "^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~]+@"
+    // + "+@[a-zA-Z0-9](?:[a-zA-Z0-9]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9]{0,61}[a-zA-Z0-9])?)*$", CASE_INSENSITIVE | COMMENTS
     ).asPredicate();
 
     public final void setEmail( String email ) {
@@ -97,34 +82,34 @@ public class Department implements Entity2<Integer> {
             return false;
         }
         final Department other = (Department) obj;
-        return this.departmentid == other.departmentid;
+        return this.name.equals( other.name );
     }
 
     @Override
-    public Integer getNaturalId() {
-        return this.departmentid;
+    public String getNaturalId() {
+        return this.name;
     }
 
     @Override
-    public ToIntFunction<Integer> idMapper() {
-        return Integer::intValue;
+    public ToIntFunction<String> idMapper() {
+        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
     }
 
+    
     @Override
     public String toString() {
-        return "Department{" + "departmentid=" + departmentid + ", name=" + name + ", description=" + description + ", email=" + email + '}';
+        return "Department{ name=" + name + ", description=" + description + ", email=" + email + '}';
     }
 
     static Department implode( Object[] parts ) {
-        int deptid = ( (Integer) parts[ 0 ] ).intValue();
-        String name = (String) parts[ 1 ];
-        String description = (String) parts[ 2 ];
-        String email = (String) parts[ 3 ];
-        return new Department( deptid, name, description, email );
+        String name = (String) parts[ 0 ];
+        String description = (String) parts[ 1 ];
+        String email = (String) parts[ 2 ];
+        return new Department(  name, description, email );
     }
 
     Object[] explode() {
-        return new Object[]{ departmentid, name, description, email };
+        return new Object[]{ name, description, email };
     }
 
 }

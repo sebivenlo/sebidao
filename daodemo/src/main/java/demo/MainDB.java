@@ -16,9 +16,9 @@ import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
  * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
  */
 public class MainDB {
-
+    
     public static String EMPLOYEE_FILE = "employee.ser";
-
+    
     public static void main( String[] args ) {
 
         // register a mapper for employee
@@ -28,19 +28,18 @@ public class MainDB {
 
         // get a dao (no transactions.
         DAO<Integer, Employee> eDao = pdaof.createDao( Employee.class );
-        DAO<Integer, Department> dDao = pdaof.createDao( Department.class );
-
-        Department d1 = new Department( 2 );
-        d1.setEmail( "sales@vanderheijden.nl" );
-
-        d1.setDescription( "sales" );
-        d1.setName( "sales" );
+        DAO<String, Department> dDao = pdaof.createDao( Department.class );
+        
+        Department d1 = new Department( "fin" );
+        d1.setDescription( "bean counters" );
+        d1.setEmail( "fin@vanderheijden.nl" );
+        
         Department saveDept = dDao.save( d1 );
         
         Collection<Department> allDept = dDao.getAll();
-        allDept.stream().forEach( System.out::println);
+        allDept.stream().forEach( System.out::println );
         System.out.println( "allDept = " + allDept );
-        dDao.delete( saveDept);
+        dDao.delete( saveDept );
         
         Collection<Employee> all = eDao.getAll();
         System.out.println( "all = " + all );
@@ -48,9 +47,9 @@ public class MainDB {
         p.setFirstname( "Sharon" );
         p.setLastname( "Hendrix" );
         p.setEmail( "s.hendrix@student.fontys.nl" );
-        p.setDepartmentid( 1 );
+        p.setDepartment( "fin" );
         Employee sharonInDb = eDao.save( p );
-
+        
         all = eDao.getAll();
         System.out.println( "now all = " + all );
         eDao.delete( sharonInDb );

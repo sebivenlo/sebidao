@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -12,7 +13,7 @@ public class EmployeeTest {
     @Test
     public void testFromParts() {
         Object[] parts = new Object[] {
-            1, "Puk", "Piet","piet@student.fontys.nl", 42
+            1, "Puk", "Piet","piet@student.fontys.nl", "drivers"
         };
 
         Employee employee = new Employee( parts );
@@ -20,11 +21,11 @@ public class EmployeeTest {
         Integer id = employee.getId();
         String lastname = employee.getLastname();
         String firstname = employee.getFirstname();
-        int dept = employee.getDepartmentid();
+        String dept = employee.getDepartment();
         assertEquals( "id", 1, id.intValue() );
         assertEquals( "last", "Puk", lastname );
         assertEquals( "first", "Piet", firstname );
-        assertEquals( "first", 42, dept );
+        assertEquals( "first", "drivers", dept );
 
         // fail( "testFromParts not yet implemented. Review the code and comment or delete this line" );
     }
@@ -36,14 +37,15 @@ public class EmployeeTest {
         emp.setFirstname( "Piet" );
         emp.setLastname( "Puk" );
         emp.setEmail("p.puk@outlook.com" );
-        emp.setDepartmentid( 42 );
-
+        emp.setDepartment( "fin" );
+        System.out.println( "emp = " + emp );
         Object[] part = emp.asParts();
+        System.out.println( Arrays.toString( part ));
         assertEquals( "id", 1, ( ( Integer ) part[ 0 ] ).intValue() );
         assertEquals( "last", "Puk", part[ 1 ] );
         assertEquals( "first", "Piet", part[ 2 ] );
         assertEquals( "email", "p.puk@outlook.com", part[ 3 ] );
-        assertEquals( "dept", 42, ( ( Integer ) part[ 4 ] ).intValue() );
+        assertEquals( "dept", "fin",  part[ 4 ] );
 
         //fail( "testToParts not yet implemented. Review the code and comment or delete this line" );
     }

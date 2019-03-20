@@ -7,18 +7,17 @@ CREATE DOMAIN public.email AS public.citext
 
 
 CREATE TABLE departments (
-       departmentid serial primary key,
-       name text not null,
+       name text primary key,
        description text not null,
-       email text unique not null
+       email text  not null
 ) WITHOUT oids;
 
 CREATE TABLE employees (
-       employeeid serial primary key,
+       employeeid serial unique not null ,
        lastname text,
        firstname text,
-       email text unique not null,
-       departmentid integer references departments
+       email text primary key,
+       department text references departments(name)
 
 ) WITHOUT oids;
 
