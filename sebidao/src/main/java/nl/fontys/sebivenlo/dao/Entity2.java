@@ -16,17 +16,17 @@ import java.util.function.ToIntFunction;
  * bit pedantic. He/she read a book or two on SQL, in particular heard
  * things about natural and composite keys. He considers the books he
  * read (allegedly) the philosophers stone, and therefor frowns upon surrogate
- * keys bad, and wishes to avoid them.</p>
+ * keys as bad, and wishes to avoid them.</p>
  *
  * <p>
- * However, as any true software engineer<sup>&tm;</sup> knows, nothing in the real world
+ * However, as any true software engineer<sup>&trade;</sup>, bitten by reality knows, nothing in the real world
  * matches the real requirements of a natural key: immutable and not null. To
  * give you a few examples:</p>
  * <ul>
  * <li>Address as natural key? What if the customer moves, who do you send the
  * invoice to?</li>
  * <li>Birth date and gender. We live in 2019+, so who never heard of Gender
- * change</li>
+ * change?</li>
  * </ul>
  *
  * <p>
