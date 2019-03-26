@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 /**
  * An in memory implementation of a DAO, typically used for testing.
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key for lookup
  * @param <E> type of entity
  */

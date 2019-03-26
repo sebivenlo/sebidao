@@ -9,7 +9,7 @@ import java.util.function.Function;
  * Map an entity to and from its representation in the persistent storage.
  *
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key for access.
  * @param <E> mapped type
  */

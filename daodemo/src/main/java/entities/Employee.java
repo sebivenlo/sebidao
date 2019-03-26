@@ -6,7 +6,7 @@ import nl.fontys.sebivenlo.dao.Entity2;
 /**
  * Dutch naming.
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class Employee implements Entity2<Integer> {
 
