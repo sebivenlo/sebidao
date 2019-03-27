@@ -3,6 +3,8 @@ package entities;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import nl.fontys.sebivenlo.dao.Generated;
+import nl.fontys.sebivenlo.dao.ID;
 import nl.fontys.sebivenlo.dao.SimpleEntity;
 
 /**
@@ -12,8 +14,11 @@ import nl.fontys.sebivenlo.dao.SimpleEntity;
 public class Department implements SimpleEntity {
 
     private static final long serialVersionUID = 1L;
+    @Generated
     private Integer departmentid;
+    @ID( generated = false )
     private String name;
+
     private String description;
     private String email;
 
@@ -95,7 +100,7 @@ public class Department implements SimpleEntity {
         if ( getClass() != obj.getClass() ) {
             return false;
         }
-        final Department other = ( Department ) obj;
+        final Department other = (Department) obj;
         return this.departmentid == other.departmentid;
     }
 

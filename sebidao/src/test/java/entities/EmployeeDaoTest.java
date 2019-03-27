@@ -16,13 +16,14 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
 
 /**
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-//@Ignore
+@Ignore
 @FixMethodOrder( MethodSorters.NAME_ASCENDING )
 public class EmployeeDaoTest {
 

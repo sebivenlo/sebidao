@@ -3,6 +3,7 @@ package entities;
 import java.util.Objects;
 import java.util.function.ToIntFunction;
 import nl.fontys.sebivenlo.dao.Entity2;
+import nl.fontys.sebivenlo.dao.ID;
 
 /**
  * Dutch naming. (fields all lower case.)
@@ -12,6 +13,7 @@ import nl.fontys.sebivenlo.dao.Entity2;
 public class Employee implements Entity2<Integer> {
 
     private static final long serialVersionUID = 1L;
+    @ID
     private Integer employeeid;
     private String lastname;
     private String firstname;
