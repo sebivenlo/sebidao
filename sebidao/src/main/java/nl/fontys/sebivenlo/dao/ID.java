@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
  * Identifies the ID field of an Entity.
  * 
  * Just adding the annotation will tag the id generated, i.e. typically using some sequence.
+ * Use @ID(generated=false) if you have a natural key that should NOT be generated.
  * 
  * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
  */
