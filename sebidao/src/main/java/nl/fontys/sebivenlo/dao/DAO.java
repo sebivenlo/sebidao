@@ -23,7 +23,7 @@ import java.util.Optional;
  * The implementations that need to forward checked exceptions should wrap these exceptions 
  * in a appropriate unchecked variant, or just log them.
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> Key to the entity
  * @param <E> the type of Entity2.
 */

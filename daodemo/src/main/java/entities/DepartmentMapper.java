@@ -10,7 +10,7 @@ import nl.fontys.sebivenlo.dao.Mapper;
 
 /**
  *
- * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh (879417) {@code pieter.van.den.hombergh@gmail.com}
  */
 public class DepartmentMapper implements Mapper<String, Department> {
 
