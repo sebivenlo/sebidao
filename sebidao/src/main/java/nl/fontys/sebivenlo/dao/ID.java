@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Just adding the annotation will tag the id generated, i.e. typically using some sequence.
  * Use @ID(generated=false) if you have a natural key that should NOT be generated.
  * 
- * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

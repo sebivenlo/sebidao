@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * This is the data that is cached, and is typically stored in a
  * {@code Map<Type,EntityData>}.
  *
- * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
  */
 class EntityMetaData<K> {
 

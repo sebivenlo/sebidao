@@ -3,7 +3,7 @@ package nl.fontys.sebivenlo.dao;
 /**
  * Wraps any exception occurring in the DAO. Has all constructors of its super.
  *
- * @author Pieter van den Hombergh (879417) {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
 public class DAOException extends RuntimeException {
 

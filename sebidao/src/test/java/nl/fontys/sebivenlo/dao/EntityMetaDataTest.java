@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 
 /**
  *
- * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
  */
 public class EntityMetaDataTest {
 

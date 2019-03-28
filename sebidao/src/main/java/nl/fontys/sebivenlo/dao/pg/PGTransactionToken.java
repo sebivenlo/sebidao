@@ -7,7 +7,7 @@ import nl.fontys.sebivenlo.dao.TransactionToken;
 /**
  * Token carrying transaction information, such as the active connection.
  *
- * @author Pieter van den Hombergh (879417) {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
 public class PGTransactionToken implements TransactionToken {
 

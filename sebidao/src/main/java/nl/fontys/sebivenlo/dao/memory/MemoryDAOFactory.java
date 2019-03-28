@@ -11,7 +11,7 @@ import nl.fontys.sebivenlo.dao.TransactionToken;
 
 /**
  *
- * @author Pieter van den Hombergh (879417) {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
 public class MemoryDAOFactory extends AbstractDAOFactory {
 

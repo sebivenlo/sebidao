@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 /**
  *
- * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
  */
 public abstract class AbstractMapper<K,E> implements Mapper<K,E>{
 

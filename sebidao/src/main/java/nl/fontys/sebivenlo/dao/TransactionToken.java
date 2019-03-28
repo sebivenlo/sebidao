@@ -6,7 +6,7 @@ package nl.fontys.sebivenlo.dao;
  * The typical use case is to store a database connection, but this is not
  * specified.
  *
- * @author Pieter van den Hombergh (879417) {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
 public interface TransactionToken {
 
