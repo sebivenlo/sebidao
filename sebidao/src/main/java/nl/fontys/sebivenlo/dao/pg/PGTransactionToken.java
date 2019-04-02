@@ -26,6 +26,7 @@ public class PGTransactionToken implements TransactionToken {
         this.connection = connection;
         try {
             this.connection.setAutoCommit( false );
+            System.out.println( "new transaction token" );
         } catch ( SQLException ex ) {
             Logger.getLogger( PGTransactionToken.class.getName() ).
                     log( Level.SEVERE, null, ex );
