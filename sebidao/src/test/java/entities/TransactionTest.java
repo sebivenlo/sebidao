@@ -77,15 +77,14 @@ public class TransactionTest {
         int deptSize = checkDepDao.size();
         int empSize = checkEmpDao.size();
 
-        try {
-            TransactionToken tok = ddao.startTransaction();
+        try ( TransactionToken tok = ddao.startTransaction(); ) {
             edao.setTransactionToken( tok );
             Department save = ddao.save( engineering );
             int depno = save.getDepartmentid();
             dilbert.setDepartmentid( depno );
             edao.save( dilbert );
             int tempSize = edao.size();
-            assertEquals("temp emp size",empSize+1,tempSize);
+            assertEquals( "temp emp size", empSize + 1, tempSize );
             tok.rollback();
         } catch ( Exception ex ) {
             fail( "unexpected exception " + ex );
@@ -228,7 +227,8 @@ public class TransactionTest {
 
             System.out.println( "Short appearance of Johnny: " + sue );
             Employee newJohn = edao.update( sue );
-            assertFalse("connection still open?",((PGTransactionToken)tok).getConnection().isClosed());
+            assertFalse( "connection still open?", ( (PGTransactionToken) tok ).
+                    getConnection().isClosed() );
             System.out.println( "newJohn = " + newJohn );
             assertEquals( "new name", "Sue", newJohn.getFirstname() );
         } catch ( Exception ex ) {

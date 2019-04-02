@@ -8,8 +8,8 @@ import nl.fontys.sebivenlo.dao.AbstractMapper;
  */
 public class EmployeeMapper2 extends AbstractMapper<Integer,Employee> {
 
-    public EmployeeMapper2( Class<Employee> entityType, Class<Integer> keyType ) {
-        super( entityType, keyType );
+    public EmployeeMapper2(  Class<Integer> keyType ,Class<Employee> entityType) {
+        super( keyType,entityType );
     }
 
     @Override
