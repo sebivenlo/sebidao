@@ -1,17 +1,18 @@
 package entities;
 
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.Generated;
 import nl.fontys.sebivenlo.dao.ID;
-import nl.fontys.sebivenlo.dao.SimpleEntity;
 
 /**
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class Department implements SimpleEntity {
+public class Department implements Entity2<Integer> {
 
     private static final long serialVersionUID = 1L;
     @Generated
@@ -26,11 +27,18 @@ public class Department implements SimpleEntity {
         this.departmentid = departmentId;
     }
 
-    public Department( int departmentid, String name, String desciption, String email ) {
+    public Department( int departmentid, String name, String desciption,
+            String email ) {
         this.departmentid = departmentid;
         this.name = name;
         this.description = desciption;
         setEmail( email );
+    }
+
+    public Department( Object[] parts ) {
+        this( (int) parts[ 0 ], (String) parts[ 1 ], (String) parts[ 2 ],
+                (String) parts[ 3 ] );
+
     }
 
     public Integer getDepartmentid() {
@@ -82,10 +90,10 @@ public class Department implements SimpleEntity {
     ).asPredicate();
 
     public final void setEmail( String email ) {
-        if ( !EMAILTEST.test( email ) ) {
-            throw new IllegalArgumentException( "not a valid email address"
-                    + email );
-        }
+//        if ( !EMAILTEST.test( email ) ) {
+//            throw new IllegalArgumentException( "not a valid email address"
+//                    + email );
+//        }
         this.email = email;
     }
 
@@ -104,4 +112,18 @@ public class Department implements SimpleEntity {
         return this.departmentid == other.departmentid;
     }
 
+    @Override
+    public Integer getNaturalId() {
+        return departmentid;
+    }
+
+    @Override
+    public ToIntFunction<Integer> idMapper() {
+        return Integer::intValue;
+    }
+
+    Object[] asParts() {
+        return new Object[] { getDepartmentid(), getName(), getDescription(),
+            getEmail() };
+    }
 }

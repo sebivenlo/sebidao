@@ -91,8 +91,9 @@ public class Employee implements Entity2<Integer> {
     @Override
     public String toString() {
         return "Employees{" + "employeeid=" + employeeid + ", lastname="
-                + lastname + ", firstname=" + firstname + ", departmentid="
-                + departmentid + '}';
+                + lastname + ", firstname=" + firstname
+                + ", email=" + email
+                + ", departmentid=" + departmentid + '}';
     }
 
     public int getEmployeeid() {
@@ -117,7 +118,7 @@ public class Employee implements Entity2<Integer> {
 
     @Override
     public Integer getNaturalId() {
-        return this.employeeid ;
+        return this.employeeid;
     }
 
     @Override

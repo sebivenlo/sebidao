@@ -8,7 +8,7 @@ package nl.fontys.sebivenlo.dao;
  *
  * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
-public interface TransactionToken {
+public interface TransactionToken extends AutoCloseable {
 
     /**
      * Save the effect of a transaction.
@@ -25,5 +25,8 @@ public interface TransactionToken {
      */
     default void rollback() throws Exception {
     }
+
+    @Override
+    default void close() throws Exception{};
 
 }

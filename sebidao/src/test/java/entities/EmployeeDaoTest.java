@@ -1,5 +1,8 @@
 package entities;
 
+import static entities.DBTestHelpers.daof;
+import static entities.DBTestHelpers.ds;
+import static entities.DBTestHelpers.loadDatabase;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,12 +26,10 @@ import org.junit.runners.MethodSorters;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-@Ignore
+//@Ignore
 @FixMethodOrder( MethodSorters.NAME_ASCENDING )
 public class EmployeeDaoTest {
 
-    static PGDataSource ds = PGDataSource.DATA_SOURCE;
-    static PGDAOFactory daof;
 
     @BeforeClass
     public static void setupClass() {
@@ -118,18 +119,4 @@ public class EmployeeDaoTest {
         // fail( "test05Update not yet implemented. Review the code and comment or delete this line" );
     }
 
-    private static void loadDatabase() throws IOException, SQLException {
-        String ddl
-                = Files.lines( Paths.get( "dbscripts/newpiet.sql" ) )
-                        .filter( l -> !l.startsWith( "--" ) )
-                        .collect( joining( System.lineSeparator() ) );
-        doDDL( ddl );
-    }
-
-    private static void doDDL( String ddl ) throws
-            SQLException {
-        try ( Connection con = ds.getConnection() ) {
-            con.prepareStatement( ddl ).execute();
-        }
-    }
 }
