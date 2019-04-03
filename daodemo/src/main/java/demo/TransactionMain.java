@@ -28,7 +28,6 @@ public class TransactionMain {
         pdaof.registerMapper( Department.class, new DepartmentMapper() );
 
         // get a dao (no transactions).
-        //DAO<Integer, Employee> eDao = pdaof.createDao( Employee.class );
         DAO<String, Department> dDao = pdaof.createDao( Department.class );
 
         Department d1 = new Department( "fin" );
@@ -40,13 +39,12 @@ public class TransactionMain {
         Collection<Department> allDept = dDao.getAll();
         System.out.println( "allDept = " );
         allDept.stream().forEach( System.out::println );
+        // undo
 
-        
-        try ( 
-                
-        DAO<Integer,Employee> e2Dao = pdaof.createDao( Employee.class );
-                TransactionToken tok = eDao.startTransaction(); ) {
-            dDao = pdaof.createDao( Department.class, tok);
+        try (
+                DAO<Integer, Employee> e2Dao = pdaof.createDao( Employee.class );
+                TransactionToken tok = e2Dao.startTransaction(); ) {
+            dDao = pdaof.createDao( Department.class, tok );
             Collection<Employee> all = e2Dao.getAll();
             System.out.println( "all = " + all );
             Employee p = new Employee( 0 );
@@ -54,7 +52,7 @@ public class TransactionMain {
             p.setLastname( "Hendrix" );
             p.setEmail( "s.hendrix@student.fontys.nl" );
             p.setDepartment( "fin" );
-            Employee sharonInDb = eDao.save( p );
+            Employee sharonInDb = e2Dao.save( p );
 
             all = e2Dao.getAll();
             System.out.println( "now all = " );
@@ -68,5 +66,7 @@ public class TransactionMain {
             Logger.getLogger( MainDB.class.getName() ).log( Level.SEVERE, null,
                     ex );
         }
+
+        // undo
     }
 }

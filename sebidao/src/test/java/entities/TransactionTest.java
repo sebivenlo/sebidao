@@ -29,7 +29,7 @@ public class TransactionTest {
     public static void setupClass() throws IOException, SQLException {
         DBTestHelpers.loadDatabase();
         daof = new PGDAOFactory( ds );
-        daof.registerMapper( Employee.class, new EmployeeMapper() );
+        daof.registerMapper( Employee.class, new EmployeeMapper2(Integer.class, Employee.class));
         daof.registerMapper( Department.class, new DepartmentMapper() );
     }
 

@@ -6,7 +6,6 @@
 package nl.fontys.sebivenlo.dao;
 
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  *
@@ -57,11 +56,6 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
     @Override
     public Set<String> persistentFieldNames() {
         return entityMetaData.typeMap.keySet();
-    }
-
-    @Override
-    public Function<E, K> keyExtractor() {
-        throw new UnsupportedOperationException( "Not supported yet." );
     }
 
     @Override

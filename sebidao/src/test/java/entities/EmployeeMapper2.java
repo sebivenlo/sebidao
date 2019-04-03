@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.function.Function;
 import nl.fontys.sebivenlo.dao.AbstractMapper;
 
 /**
@@ -14,13 +15,17 @@ public class EmployeeMapper2 extends AbstractMapper<Integer,Employee> {
 
     @Override
     public Object[] explode( Employee e ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return e.asParts();
     }
 
     @Override
-    public Employee implode( Object[] parts ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
+    public Employee implode( Object... parts ) {
+        return new Employee(parts );
     }
 
-   
+    @Override
+    public Function<Employee, Integer> keyExtractor() {
+        return Employee::getEmployeeid;
+    }
+    
 }
