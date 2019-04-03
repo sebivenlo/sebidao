@@ -13,7 +13,7 @@ import java.util.Optional;
  * <dt>Read</dt> <dd>called {@code Optional<Entity> get(Key k} here.</dd>
  * <dt>Update</dt> <dd>called {@code Entity update(Entity e)} here.</dd>
  * <dt>Delete</dt> <dd>called {@code void delete(Entity e)} here.</dd>
- * <dt>Get all</dt><dd>called {@code Collection<Entity getAll()>} here.</dd>
+ * <dt>Get all</dt><dd>called {@code Collection<Entity> getAll()} here.</dd>
  * </dl>
  * 
  * A future version of this DAO can participate in transactions by passing around a transaction
