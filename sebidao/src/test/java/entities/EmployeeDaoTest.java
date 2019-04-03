@@ -3,14 +3,8 @@ package entities;
 import static entities.DBTestHelpers.daof;
 import static entities.DBTestHelpers.ds;
 import static entities.DBTestHelpers.loadDatabase;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
-import static java.util.stream.Collectors.joining;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
 import org.junit.After;
@@ -19,7 +13,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
 
 /**
@@ -119,4 +112,15 @@ public class EmployeeDaoTest {
         // fail( "test05Update not yet implemented. Review the code and comment or delete this line" );
     }
 
+    @Test
+    public void testGetByKeyValues() {
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+        // should get default piet.
+        Collection<Employee> col = edao.getByColumnValues( "email","p.puk@vanderheiden.nl");
+        assertFalse(col.isEmpty());
+        Employee firstEmployee = col.iterator().next();
+        assertEquals("Hi Piet", "Piet",firstEmployee.getFirstname());
+        
+        //fail( "test method testGetByKeyValues reached its end, you can remove this line when you aggree." );
+    }
 }

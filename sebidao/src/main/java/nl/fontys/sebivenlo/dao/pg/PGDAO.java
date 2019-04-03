@@ -313,6 +313,59 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     @Override
+    public Collection<E> getByColumnValues( Object... keyValues ) {
+        if ( null != transactionToken ) {
+            return getByColumnValues(transactionToken.getConnection(),keyValues );
+        }
+        try ( Connection con = this.getConnection(); ) {
+            return getByColumnValues(con,keyValues );
+        } catch ( SQLException ex ) {
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+            throw new DAOException( ex.getMessage(), ex );
+        }
+
+    }
+
+    private Collection<E> getByColumnValues( Connection c, Object... keyValues ) {
+        //Connection c = getConnection();
+        final List<String> keys = new ArrayList<>();
+        final List<Serializable> values = new ArrayList<>();
+        for ( int i = 0; i < keyValues.length; i += 2 ) {
+            keys.add( String.class.cast( keyValues[ 0 + i ] ) );
+            values.add( Serializable.class.cast( keyValues[ 1 + i ] ) );
+        }
+        String columns = String.join( ",", keys );
+        String placeholders = makePlaceHolders( keys );
+        String sql
+                = format( "select * from %s where (%s) =(%s)",
+                        tableName,
+                        columns, placeholders );
+        try (
+                PreparedStatement pst = c.prepareStatement( sql ); ) {
+            int j = 1;
+            for ( int i = 0; i < values.size(); i++ ) {
+                pst.setObject( j++, values.get( i ) );
+            }
+            try ( ResultSet rs = pst.executeQuery(); ) {
+                Collection<E> result = new ArrayList<>();
+                Object[] parts = createPartsArray( rs );
+                while ( rs.next() ) {
+                    // note columns start at 1
+                    fillPartsArray( parts, rs );
+                    E e = mapper.implode( parts );
+                    result.add( e );
+                }
+                return result;
+            }
+        } catch ( SQLException ex ) {
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+            throw new DAOException( ex.getMessage(), ex );
+        }
+    }
+
+    @Override
     public int lastId() {
         String sql = format( "select max(%s)  as lastid from %s", idName,
                 tableName );

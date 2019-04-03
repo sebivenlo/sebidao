@@ -56,6 +56,13 @@ public class MapperTest {
         //fail( "testGeneratedKeyIsDefault not yet implemented. Review the code and comment or delete this line" );
     }
     
+    @Test
+    public void testNaturalKeyName() {
+        String naturalKeyName = mapper.naturalKeyName();
+        assertEquals("naturla key name","studentid", naturalKeyName);
+        //fail( "test method testNaturalKeyName reached its end, you can remove this line when you aggree." );
+    }
+    
     private static class Student {
 
       

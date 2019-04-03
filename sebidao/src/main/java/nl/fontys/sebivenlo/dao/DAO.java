@@ -46,7 +46,7 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
 
     /**
      * Get by column keyvalues pairs.
-     * Conveniece method to get a etities by field=value,[field=value]*
+     * Convenience method to get a entities by field=value[,field=value].
      * 
      * @param keyValues even sized parameter list like ("departmentid",1,"firstname", "Piet").
      * @return the collection of enities matching key value pairs.

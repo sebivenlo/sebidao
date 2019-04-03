@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Coverage.
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class DAOTest {
@@ -57,5 +57,11 @@ public class DAOTest {
         assertEquals( "empty to start with", 0, dao.size() );
         assertEquals( "last id", 0, dao.lastId() );
         //fail( "testAllCovered not yet implemented. Review the code and comment or delete this line" );
+    }
+    
+    @Test(expected=UnsupportedOperationException.class)
+    public void testNotImplemented() {
+        Collection notexepected = dao.getByColumnValues( "key","value");
+       // fail( "test method testNotImplemented reached its end, you can remove this line when you aggree." );
     }
 }

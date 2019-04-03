@@ -231,4 +231,23 @@ public class TransactionTest {
         assertEquals( "Nashville", "Sue", j.getFirstname() );
         //fail( "testUpdate not yet implemented. Review the code and comment or delete this line" );
     }
+
+    @Test
+    public void testGetByLastName() throws SQLException {
+        //DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+        try ( DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+                TransactionToken tok = edao.startTransaction(); ) {
+            Collection<Employee> allPuks = edao.getByColumnValues( "lastname","Puk");
+            assertEquals(1,allPuks.size());
+            Employee firstPuk = allPuks.iterator().next();
+            
+            assertEquals("Hi again piet, going through a transaction","Piet",firstPuk.getFirstname());
+        } catch ( Exception ex ) {
+            fail( "unexpected exception " + ex );
+            Logger.getLogger( TransactionTest.class.getName() ).
+                    log( Level.SEVERE, null, ex );
+        }
+
+        //fail( "testGetByLastName not yet implemented. Review the code and comment or delete this line" );
+    }
 }

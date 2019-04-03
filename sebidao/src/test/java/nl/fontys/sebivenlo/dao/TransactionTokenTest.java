@@ -4,7 +4,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Coverage. 
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class TransactionTokenTest {
@@ -13,7 +13,7 @@ public class TransactionTokenTest {
     };
 
     /**
-     * Test that both default methods have no effect. For coverage.
+     * Test that all default methods have no effect. For coverage.
      * @throws java.lang.Exception not expected
      */
     @Test
@@ -21,8 +21,10 @@ public class TransactionTokenTest {
         
         tok.commit();
         tok.rollback();
-        
+        tok.close();
         //fail( "testMethod not yet implemented. Review the code and comment or delete this line" );
     }
+    
+    
 
 }
