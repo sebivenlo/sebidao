@@ -2,19 +2,10 @@ package nl.fontys.sebivenlo.dao;
 
 import java.lang.reflect.Field;
 import static java.lang.reflect.Modifier.*;
-import java.util.AbstractMap;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import static java.util.stream.Collectors.mapping;
-import java.util.stream.Stream;
 
 /**
  * To minimize the amount of reflection, keep a copy of the meta data on a the
@@ -22,10 +13,11 @@ import java.util.stream.Stream;
  *
  * This is the data that is cached, and is typically stored in a
  * {@code Map<Type,EntityData>}.
+ * @param <E> entity type.
  *
  * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
  */
-class EntityMetaData<K> {
+class EntityMetaData<E> {
 
     /**
      * Contains the name to type map for all (declared) fields. Use a map that 
@@ -36,14 +28,14 @@ class EntityMetaData<K> {
     /**
      * What are these meta data about.
      */
-    final Class<K> about;
+    final Class<E> about;
     /**
      * The name of the if field.
      */
     private String idName;
     private boolean idGenerated;
 
-    EntityMetaData( Class<K> about ) {
+    EntityMetaData( Class<E> about ) {
         this.about = about;
         register( about );
     }
@@ -53,7 +45,7 @@ class EntityMetaData<K> {
      *
      * @param clz
      */
-    final void register( Class<K> clz ) {
+    final void register( Class<E> clz ) {
         Field[] declaredFields = clz.getDeclaredFields();
 
         for ( Field field : declaredFields ) {

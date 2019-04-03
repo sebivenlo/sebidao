@@ -10,27 +10,50 @@ import java.util.function.Function;
 
 /**
  *
- * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @param <K> key type.
+ * @param <E> entity type.
  */
-public abstract class AbstractMapper<K,E> implements Mapper<K,E>{
+public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
 
-    
-    protected final Class<E> entityType;
+    /**
+     * The key type for this mapper.
+     */
     protected final Class<K> keyType;
-    
-    EntityMetaData<E> entityMetaData;
+    /**
+     * The entity type for this mapper.
+     */
+    protected final Class<E> entityType;
 
-    public AbstractMapper( Class<E> entityType, Class<K> keyType ) {
+    /**
+     * Cached knowledge about the entity type.
+     */
+    private EntityMetaData<E> entityMetaData;
+
+    /**
+     * Create a mapper for entity and key type.
+     * @param entityType for entity
+     * @param keyType for key
+     */
+    public AbstractMapper(  Class<K> keyType,Class<E> entityType ) {
         this.entityType = entityType;
         this.keyType = keyType;
-        entityMetaData = new EntityMetaData<>(entityType);
+        entityMetaData = new EntityMetaData<>( entityType );
     }
 
+    /**
+     * Get entity type.
+     * @return the type.
+     */
     @Override
     public Class<E> entityType() {
         return this.entityType;
     }
 
+    /**
+     * Get the column names.
+     * @return the set of names.
+     */
     @Override
     public Set<String> persistentFieldNames() {
         return entityMetaData.typeMap.keySet();
@@ -43,17 +66,17 @@ public abstract class AbstractMapper<K,E> implements Mapper<K,E>{
 
     @Override
     public boolean generateKey() {
-        return Mapper.super.generateKey(); //To change body of generated methods, choose Tools | Templates.
+        return Mapper.super.generateKey(); 
     }
 
     @Override
     public String idName() {
-        return Mapper.super.idName(); //To change body of generated methods, choose Tools | Templates.
+        return Mapper.super.idName(); 
     }
 
     @Override
     public String naturalKeyName() {
-        return Mapper.super.naturalKeyName(); //To change body of generated methods, choose Tools | Templates.
+        return Mapper.super.naturalKeyName(); 
     }
 
 }

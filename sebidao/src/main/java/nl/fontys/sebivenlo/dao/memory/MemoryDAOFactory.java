@@ -11,33 +11,38 @@ import nl.fontys.sebivenlo.dao.TransactionToken;
 
 /**
  *
- * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class MemoryDAOFactory extends AbstractDAOFactory {
 
     private static class Holder {
 
-        public static MemoryDAOFactory instance = new MemoryDAOFactory();
+        static final MemoryDAOFactory INSTANCE = new MemoryDAOFactory();
     }
 
     /**
      * Get the instance of this singleton MemoryDAOFactory.
+     *
      * @return the instance.
      */
     public static MemoryDAOFactory getInstance() {
-        return Holder.instance;
+        return Holder.INSTANCE;
     }
-    
-    private Map<Class<?>, InMemoryDAO<? extends Serializable, ? extends Entity2>> factorStorage = new HashMap<>();
+
+    private final Map<Class<?>, 
+            InMemoryDAO<? extends Serializable, ? extends Entity2>> factorStorage
+            = new HashMap<>();
 
     @Override
     public <K, E> DAO createDao( Class<? extends SimpleEntity> forClass ) {
-        return factorStorage.computeIfAbsent( forClass, c -> new InMemoryDAO( c ) );
+        return factorStorage.computeIfAbsent( forClass, c
+                -> new InMemoryDAO( c ) );
     }
 
     @Override
-    public <K, E> DAO createDao( Class<? extends SimpleEntity> forClass, TransactionToken token ) {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    public <K, E> DAO createDao( Class<? extends SimpleEntity> forClass,
+            TransactionToken token ) {
+        throw new UnsupportedOperationException( "Not supported yet." ); 
     }
 
 }

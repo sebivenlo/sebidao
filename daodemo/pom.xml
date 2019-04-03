@@ -9,7 +9,7 @@
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
         <artifactId>sebipom</artifactId>
-        <version>1.4.3</version>
+        <version>1.4.4</version>
     </parent>
     
     <properties>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
 	 <dependency>
             <groupId>org.postgresql</groupId>
