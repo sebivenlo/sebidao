@@ -1,14 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.fontys.sebivenlo.dao;
 
 import java.util.Set;
 
 /**
- *
+ * Simplify the creation of a Mapper by using a bit of reflection and some caching.
+ * 
+ * Creating a mapper by extending this class is best shown using an example.
+ * The obvious imports are assumed.
+ * 
+ * <pre class='brush:java'>
+ * public class EmployeeMapper2 extends AbstractMapper&lt;Integer,Employee&gt; {
+ * 
+ *     public EmployeeMapper2(  Class&lt;Integer&gt; keyType ,Class&lt;Employee&gt; entityType) {
+ *         super( keyType,entityType );
+ *     }
+ * 
+ *     &#64;Override
+ *     public Object[] explode( Employee e ) {
+ *         return e.asParts();
+ *     }
+ * 
+ *     &#64;Override
+ *     public Employee implode( Object... parts ) {
+ *         return new Employee(parts );
+ *     }
+ * 
+ *     &#64;Override
+ *     public Function&lt;Employee, Integer&gt; keyExtractor() {
+ *         return Employee::getEmployeeid;
+ *     }
+ *     
+ * }
+ * </pre>
+ * 
  * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
  * @param <K> key type.
  * @param <E> entity type.

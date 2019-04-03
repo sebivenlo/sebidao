@@ -24,20 +24,23 @@
  * Create the eDAO as before, then do:
  * 
  * <pre class='brush:java'>
- * try ( TransactionToken ttok = ddao.startTransaction(); ) {
- *     // create a dDao with same token.
- *     DAO&lt;Integer, Department&gt; dDao = daof.createDao( Department.class, ttok );
- *     // use dDao
- *     Department engineering = dDao.save(new Department(....));
- *     joe.setDepartmentid(engineering.getDepartmentid());
- *     hank.setDepartmentid(engineering.getDepartmentid());
- *     eDao.save(joe);
- *     eDao.save(hank);
- *     ttok.commit();
- * } catch(Exception ex) {
- *    ttok.rollback();
+ * try (
+ *          DAO&lt;Integer, Department&gt; ddao = daof.createDao( Department.class );
+ *          TransactionToken tok = ddao.startTransaction();
+ *          DAO&lt;Integer, Employee&gt; edao = daof.createDao( Employee.class, tok ); ) {
+ *       
+ *       System.out.println( "tok = " + tok );
+ *       savedDept = ddao.save( engineering );
+ *       int depno = savedDept.getDepartmentid();
+ *       dilbert.setDepartmentid( depno );
+ *       savedDilbert = edao.save( dilbert );
+ *       System.out.println( "savedDilbert = " + savedDilbert );
+ *       tok.commit();
+ * } catch ( Exception ex ) {
+ *       tok.rollback();
+ *       Logger.getLogger( TransactionTest.class.getName() ).
+ *              log( Level.SEVERE, null, ex );
  * }
- * 
  * </pre>
  * The order in which you create the DAOs does not matter, but you must make sure they use the same transaction token
  * to make the cooperate in a transaction.
