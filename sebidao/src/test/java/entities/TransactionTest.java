@@ -45,14 +45,15 @@ public class TransactionTest {
     @Test
     public void testRollback() {
         // first dao is consumed by transaction
-        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee henk = new Employee( 0, "Heijmans", "Henk",
                 "henk@someclub.org", 1 );
 
-        int beforeSize = edao.size();
-        try {
-            TransactionToken tok = edao.startTransaction();
-            edao.save( henk );
+        int beforeSize = checkEmpDao.size();
+        try (
+                DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+                TransactionToken tok = edao.startTransaction(); ) {
+            Employee savedHenk = edao.save( henk );
+            assertTrue("real employee id", savedHenk.getEmployeeid()!=0);
             tok.rollback();
         } catch ( Exception ex ) {
             fail( "unexpected exception " + ex );
@@ -68,8 +69,6 @@ public class TransactionTest {
 
     @Test
     public void testAddDeptWithBossRollBack() {
-        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
-        DAO<Integer, Department> ddao = daof.createDao( Department.class );
         Department engineering = new Department( 0, "Engineering",
                 "Where value creation happens", "dilbert@example.com" );
         Employee dilbert = new Employee( 0, "O'Hana", "Dilbert",
@@ -77,15 +76,16 @@ public class TransactionTest {
         int deptSize = checkDepDao.size();
         int empSize = checkEmpDao.size();
 
-        try {
-            TransactionToken tok = ddao.startTransaction();
-            edao.setTransactionToken( tok );
+        try (
+                DAO<Integer, Department> ddao = daof.createDao( Department.class );
+                TransactionToken tok = ddao.startTransaction();
+                DAO<Integer, Employee> edao = daof.createDao( Employee.class, tok ); ) {
             Department save = ddao.save( engineering );
             int depno = save.getDepartmentid();
             dilbert.setDepartmentid( depno );
             edao.save( dilbert );
             int tempSize = edao.size();
-            assertEquals("temp emp size",empSize+1,tempSize);
+            assertEquals( "temp emp size", empSize + 1, tempSize );
             tok.rollback();
         } catch ( Exception ex ) {
             fail( "unexpected exception " + ex );
@@ -103,8 +103,6 @@ public class TransactionTest {
 
     @Test
     public void testAddDeptWithBossCommit() {
-        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
-        DAO<Integer, Department> ddao = daof.createDao( Department.class );
         Department engineering = new Department( 0, "Engineering",
                 "Where value creation happens", "dilbert@example.com" );
         Employee dilbert = new Employee( 0, "O'Hana", "Dilbert",
@@ -114,10 +112,11 @@ public class TransactionTest {
         Department savedDept = null;
         Employee savedDilbert = null;
 
-        try {
-            TransactionToken tok = ddao.startTransaction();
+        try (
+                DAO<Integer, Department> ddao = daof.createDao( Department.class );
+                TransactionToken tok = ddao.startTransaction();
+                DAO<Integer, Employee> edao = daof.createDao( Employee.class, tok ); ) {
             System.out.println( "tok = " + tok );
-            edao.setTransactionToken( tok );
             savedDept = ddao.save( engineering );
             int depno = savedDept.getDepartmentid();
             dilbert.setDepartmentid( depno );
@@ -146,9 +145,8 @@ public class TransactionTest {
     @Test
     public void testGetAll() {
 
-        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
-
-        try {
+        try (
+                DAO<Integer, Employee> edao = daof.createDao( Employee.class ); ) {
             TransactionToken tok = edao.startTransaction();
             Collection<Employee> all = edao.getAll();
             Connection connection = ( (PGTransactionToken) tok ).getConnection();
@@ -157,6 +155,7 @@ public class TransactionTest {
             int size = edao.size();
             System.out.println( "size = " + size );
             assertEquals( "two calls same size", size, all.size() );
+            edao.close();
         } catch ( Exception ex ) {
             fail( "unexpected exception " + ex );
             Logger.getLogger( TransactionTest.class.getName() ).
@@ -169,9 +168,7 @@ public class TransactionTest {
     @Test
     public void testGetPiet() throws SQLException {
 
-        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
-
-        try (
+        try ( DAO<Integer, Employee> edao = daof.createDao( Employee.class );
                 TransactionToken tok = edao.startTransaction(); ) {
             Optional<Employee> optionalPiet = edao.get( 1 );
 
@@ -184,59 +181,54 @@ public class TransactionTest {
                     log( Level.SEVERE, null, ex );
         }
 
-        assertConnectionClosed( edao );
-    }
-
-    private void assertConnectionClosed( DAO<Integer, Employee> edao ) throws
-            SQLException {
-        TransactionToken transactionToken = edao.getTransactionToken();
-        assertNotNull( "token still there?", transactionToken );
-        Connection connection
-                = ( (PGTransactionToken) transactionToken ).getConnection();
-        assertTrue( "after use, connection closed", connection.isClosed() );
-        // fail( "testGetPiet not yet implemented. Review the code and comment or delete this line" );
     }
 
     @Test
     public void testDelete() throws SQLException {
-        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
-        try ( TransactionToken tok = edao.startTransaction(); ) {
+
+        try ( DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+                TransactionToken tok = edao.startTransaction(); ) {
             Employee johnny = new Employee( 0, "Cash", "Johnny",
                     "sue@nashville.town", 1 );
             Employee savedJohnny = edao.save( johnny );
             System.out.println( "Short appearance of Johnny: " + savedJohnny );
             edao.delete( savedJohnny );
+            tok.commit();
         } catch ( Exception ex ) {
             fail( "unexpected exception " + ex );
             Logger.getLogger( TransactionTest.class.getName() ).
                     log( Level.SEVERE, null, ex );
         }
-
-        assertConnectionClosed( edao );
 
         //fail( "testDelete not yet implemented. Review the code and comment or delete this line" );
     }
 
     @Test
     public void testUpdate() throws SQLException {
-        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
-        try ( TransactionToken tok = edao.startTransaction(); ) {
-            Employee johnny = new Employee( 0, "Cash", "Johnny",
-                    "sue@nashville.town", 1 );
-            Employee sue = edao.save( johnny );
-            sue.setFirstname( "Sue" );
+        //DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+        Employee johnny = new Employee( 0, "Cash", "Johnny",
+                "sue@nashville.town", 1 );
+        Employee j = checkEmpDao.save( johnny );
+        Integer sid = j.getEmployeeid();
+        try ( DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+                TransactionToken tok = edao.startTransaction(); ) {
+            Employee sj = edao.get( sid ).get();
+            sj.setFirstname( "Sue" );
 
-            System.out.println( "Short appearance of Johnny: " + sue );
-            Employee newJohn = edao.update( sue );
-            assertFalse("connection still open?",((PGTransactionToken)tok).getConnection().isClosed());
-            System.out.println( "newJohn = " + newJohn );
-            assertEquals( "new name", "Sue", newJohn.getFirstname() );
+            System.out.println( "Short appearance of Sue: " + sj );
+            Employee sue = edao.update( sj );
+            assertFalse( "connection still open?", ( (PGTransactionToken) tok ).getConnection().isClosed() );
+            System.out.println( "newJohn = " + sue );
+            assertEquals( "new name", "Sue", sue.getFirstname() );
+            tok.commit();
         } catch ( Exception ex ) {
             fail( "unexpected exception " + ex );
             Logger.getLogger( TransactionTest.class.getName() ).
                     log( Level.SEVERE, null, ex );
         }
-        assertConnectionClosed( edao );
+
+        j = checkEmpDao.get( sid ).get();
+        assertEquals( "Nashville", "Sue", j.getFirstname() );
         //fail( "testUpdate not yet implemented. Review the code and comment or delete this line" );
     }
 }

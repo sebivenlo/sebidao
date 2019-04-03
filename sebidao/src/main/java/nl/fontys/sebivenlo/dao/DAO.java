@@ -27,7 +27,7 @@ import java.util.Optional;
  * @param <K> Key to the entity
  * @param <E> the type of Entity2.
 */
-public interface DAO<K extends Serializable, E extends Entity2<K>> {
+public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoCloseable {
 
     /**
      * Get the entity by id, if any.
@@ -125,5 +125,13 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> {
      */
     default int lastId() {
         return 0;
+    }
+
+    /**
+     * Default no-op close.
+     * @throws Exception whenever the implementer sees it fit.
+     */
+    @Override
+    default void close() throws Exception {
     }
 }
