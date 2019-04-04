@@ -188,7 +188,6 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 tableName, columns,
                 placeholders,
                 mapper.idName() );
-        System.out.println( "sql = " + sql );
         try ( PreparedStatement pst = c.
                 prepareStatement( sql ); ) {
             Object[] parts = mapper.explode( t );
@@ -479,7 +478,6 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     public PGDAO<K, E> setTransactionToken( TransactionToken tok ) {
         if ( tok instanceof PGTransactionToken ) {
             this.transactionToken = (PGTransactionToken) tok;
-            System.out.println( "token set" );
         }
         return this;
     }
