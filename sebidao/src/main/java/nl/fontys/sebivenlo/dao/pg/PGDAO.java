@@ -315,10 +315,11 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     @Override
     public Collection<E> getByColumnValues( Object... keyValues ) {
         if ( null != transactionToken ) {
-            return getByColumnValues(transactionToken.getConnection(),keyValues );
+            return getByColumnValues( transactionToken.getConnection(),
+                    keyValues );
         }
         try ( Connection con = this.getConnection(); ) {
-            return getByColumnValues(con,keyValues );
+            return getByColumnValues( con, keyValues );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
@@ -448,7 +449,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     @Override
     public int size() {
-        String sql = format( "select count(1)  as size from %s", tableName );
+        String sql = format( "select count(1) as size from %s", tableName );
         int result = executeIntQuery( sql );
 
         return result;
@@ -456,8 +457,9 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     Connection getConnection() {
-        if ( transactionToken != null ) {
-            return transactionToken.getConnection();
+        PGTransactionToken tok = getTransactionToken();
+        if ( tok != null ) {
+            return tok.getConnection();
         } else {
             try {
                 return ds.getConnection();
@@ -470,7 +472,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     @Override
-    public TransactionToken getTransactionToken() {
+    public PGTransactionToken getTransactionToken() {
         return this.transactionToken;
     }
 
@@ -484,7 +486,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     @Override
-    public TransactionToken startTransaction() throws SQLException {
+    public PGTransactionToken startTransaction() throws SQLException {
         if ( null == transactionToken ) {
             transactionToken = new PGTransactionToken( getConnection() );
         }
@@ -504,4 +506,13 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         return executeIntQuery( sql, k );
 
     }
+
+    @Override
+    public void close() throws Exception {
+        if ( this.transactionToken != null ) {
+            transactionToken.close();
+            transactionToken = null;
+        }
+    }
+
 }

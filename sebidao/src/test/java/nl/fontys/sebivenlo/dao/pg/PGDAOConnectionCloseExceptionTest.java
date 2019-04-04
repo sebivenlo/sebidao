@@ -9,8 +9,7 @@ import entities.DBTestHelpers;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import static org.mockito.Mockito.mock;
+import static java.util.logging.Logger.*;
 
 /**
  * Test if all sql exceptions are properly translated (as in wrapped in) into
@@ -28,7 +27,8 @@ public class PGDAOConnectionCloseExceptionTest extends PGDAOExceptionTestBase {
             Connection realConnection = DBTestHelpers.ds.getConnection();
             return new NonClosingConnection( realConnection );
         } catch ( SQLException ex ) {
-            Logger.getLogger( PGDAOConnectionCloseExceptionTest.class.getName() ).log( Level.SEVERE, null, ex );
+            getLogger( PGDAOConnectionCloseExceptionTest.class.getName() )
+                    .log( Level.SEVERE, null, ex );
         }
         return null;
     }

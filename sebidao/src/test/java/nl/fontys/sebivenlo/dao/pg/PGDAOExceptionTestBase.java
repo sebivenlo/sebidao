@@ -5,9 +5,12 @@ import entities.Employee;
 import entities.EmployeeMapper2;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.DAOException;
+import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +30,20 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
     DataSource ds;
     PGDAO<Integer, Employee> eDao;
     EmployeeMapper2 mapper;
-    
-    abstract Connection getConnection();
+    private Connection connection;
 
+    abstract Connection getConnection();
+    
+    @After
+    public void cleanup() {
+        try {
+            this.connection.close();
+        } catch ( SQLException zipit ) {
+            Logger.getLogger( PGDAOExceptionTestBase.class.getName() ).
+                    log( Level.SEVERE, null, zipit );
+        }
+    }
+    
     @Test( expected = DAOException.class )
     public void testDelete() {
         eDao.delete( gp );
@@ -52,7 +66,7 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
 
     @Test( expected = DAOException.class )
     public void testIntQuery() {
-        eDao.executeIntQuery( "select count(1) from employee" );
+        eDao.executeIntQuery( "select count(1) from employees" );
         fail( "test method testIntQuery reached its end, you can remove this line when you aggree." );
     }
 
@@ -85,10 +99,19 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
     @Before
     public void setup() throws SQLException {
         MockitoAnnotations.initMocks( this );
-        Mockito.when( ds.getConnection() ).thenReturn( getConnection() );
+        this.connection=getConnection();
+        Mockito.when( ds.getConnection() ).thenReturn( this.connection );
         mapper = new EmployeeMapper2( Integer.class, Employee.class );
         daof = new PGDAOFactory( ds );
         daof.registerMapper( Employee.class, mapper );
         eDao = (PGDAO<Integer, Employee>) daof.createDao( Employee.class );
     }
+
+    @Test( expected = DAOException.class )
+    public void testExecuteIntQueryInt1() {
+        eDao.executeIntQuery(
+                "select departmentid from employees where employeeid=?", 1 );
+        // fail( "testExecuteIntQueryInt1 not yet implemented. Review the code and comment or delete this line" );
+    }
+
 }

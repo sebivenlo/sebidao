@@ -53,8 +53,9 @@ public class PGTransactionToken implements TransactionToken {
 
     @Override
     public void close() throws Exception {
-        this.connection.close();
+        if ( !this.connection.isClosed() ) {
+            this.connection.close();
+        }
     }
 
-    
 }
