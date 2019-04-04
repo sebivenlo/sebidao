@@ -77,7 +77,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         try ( Connection con = this.getConnection(); ) {
             return get( con, id );
-        } catch ( SQLException ex ) {
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
@@ -284,7 +284,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         try ( Connection c = this.getConnection(); ) {
             return getAll( c );
-        } catch ( SQLException ex ) {
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
@@ -319,7 +319,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         try ( Connection con = this.getConnection(); ) {
             return getByColumnValues(con,keyValues );
-        } catch ( SQLException ex ) {
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
@@ -384,7 +384,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         try ( Connection c = this.getConnection(); ) {
             return executeIntQuery( c, sql );
-        } catch ( SQLException ex ) {
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
@@ -421,7 +421,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         try ( Connection c = this.getConnection(); ) {
             return executeIntQuery( c, sql, k );
-        } catch ( SQLException ex ) {
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
@@ -455,7 +455,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     }
 
-    private Connection getConnection() {
+    Connection getConnection() {
         if ( transactionToken != null ) {
             return transactionToken.getConnection();
         } else {

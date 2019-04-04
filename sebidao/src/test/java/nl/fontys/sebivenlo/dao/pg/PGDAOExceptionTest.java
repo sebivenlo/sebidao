@@ -19,107 +19,100 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
- * For coverage. The methods all will find a connection that is broken and
- * throws an exception.
+ * Test if all sql exceptions are properly translated (as in wrapped in) into
+ * DAOExceptions. For coverage. The methods all will find a connection that is
+ * broken and throws an exception.
  *
  *
  * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
  */
-public class PGDAOTest {
+public class PGDAOExceptionTest {
 
-    @Mock
-    Connection conn;
+    Connection conn = mock( Connection.class, anything -> {
+        throw new SQLException( "I am supposed to" );
+    } );
 
     @Mock
     DataSource ds;
 
     AbstractDAOFactory daof;
     EmployeeMapper2 mapper;
-    DAO<Integer, Employee> eDao;
+    PGDAO<Integer, Employee> eDao;
 
     @Before
     public void setup() throws SQLException {
         MockitoAnnotations.initMocks( this );
-        Mockito.doThrow( new SQLException( "Just for fun" ) ).when( conn ).setAutoCommit( false );
         Mockito.when( ds.getConnection() ).thenReturn( conn );
         mapper = new EmployeeMapper2( Integer.class, Employee.class );
         daof = new PGDAOFactory( ds );
         daof.registerMapper( Employee.class, mapper );
-        eDao = daof.createDao( Employee.class );
+        eDao = (PGDAO<Integer, Employee>)daof.createDao( Employee.class );
     }
+
+    Employee gp = new Employee( 1 );
 
     @Test( expected = DAOException.class )
     public void testGet() {
-        assertNotNull( eDao );
-        Optional<Employee> numberone = eDao.get( 1 );
+        eDao.get( 1 );
     }
 
-    @Test
+    @Test( expected = DAOException.class )
     public void testDelete() {
-        fail( "testDelete" );
+        eDao.delete( gp );
     }
 
-    @Test
+    @Test( expected = DAOException.class )
     public void testUpdate() {
-        fail( "testUpdate" );
+        eDao.update( gp );
     }
 
-    @Test
+    @Test( expected = DAOException.class )
     public void testSave() {
-        fail( "testSave" );
+        eDao.save( gp );
     }
 
-    @Test
+    @Test( expected = DAOException.class )
     public void testGetAll() {
-        fail( "testGetAll" );
+        eDao.getAll();
     }
 
-    @Test
+    @Test( expected = DAOException.class )
     public void testGetByColumnValues() {
-        fail( "testGetByColumnNames" );
+        eDao.getByColumnValues( "name", "nothing" );
     }
 
-    @Test
+    @Test( expected = DAOException.class )
     public void testLastId() {
-        fail( "testGetLastId" );
+        eDao.lastId();
     }
 
-    @Test
-    public void testExecuteIntQuery_String() {
-        fail( "testExecuteIntQuery" );
-    }
-
-    @Test
-    public void testExecuteIntQuery_String_GenericType() {
-        fail( "testExecuteIntQuery_String_GenericType" );
-    }
-
-    @Test
+    @Test( expected = DAOException.class )
     public void testSize() {
-        fail( "testSize" );
-    }
-
-    @Test
-    public void testGetTransactionToken() {
-        fail( "testGetTransactionToken" );
+        eDao.size();
     }
 
     @Test
     public void testSetTransactionToken() {
-        fail( "testSize" );
+        eDao.setTransactionToken( null );
+        assertTrue( "should run without issues", true );
     }
 
-    @Test
+
+    @Test( expected = DAOException.class )
+    public void testIntQuery() {
+        eDao.executeIntQuery( "select count(1) from employee" );
+        
+        fail( "test method testIntQuery reached its end, you can remove this line when you aggree." );
+    }
+    
+    @Test( expected = DAOException.class )
     public void testStartTransaction() throws Exception {
-        fail( "testStartTransaction" );
+        eDao.startTransaction();
     }
-
-    @Test
-    public void testGetIdForKey() {
-        fail( "testGetIdForKey" );
-    }
-
 }
