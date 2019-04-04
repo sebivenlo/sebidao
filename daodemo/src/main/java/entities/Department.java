@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.COMMENTS;
 import nl.fontys.sebivenlo.dao.Entity2;
+import nl.fontys.sebivenlo.dao.ID;
 
 /**
  *
@@ -18,6 +19,7 @@ public class Department implements Entity2<String> {
 
     private String name;
     private String description;
+    @ID(generated = false)
     private String email;
 
     public Department( String name ) {

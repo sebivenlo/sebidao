@@ -33,7 +33,7 @@ public class DepartmentMapper implements Mapper<String, Department> {
     public Function<Department, String> keyExtractor() {
         return Department::getEmail;
     }
-    ;
+   
     
     static final Set<String> FIELD_NAMES
             = new LinkedHashSet<>( Arrays.asList(

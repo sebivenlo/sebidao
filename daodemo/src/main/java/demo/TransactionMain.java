@@ -2,6 +2,7 @@ package demo;
 
 import entities.DepartmentMapper;
 import entities.Department;
+import entities.DepartmentMapper2;
 import entities.Employee;
 import entities.EmployeeMapper;
 import entities.PGDataSource;
@@ -25,7 +26,7 @@ public class TransactionMain {
         // register a mapper for employee
         PGDAOFactory pdaof = new PGDAOFactory( PGDataSource.DATA_SOURCE );
         pdaof.registerMapper( Employee.class, new EmployeeMapper() );
-        pdaof.registerMapper( Department.class, new DepartmentMapper() );
+        pdaof.registerMapper( Department.class, new DepartmentMapper2(String.class,Department.class) );
 
         // get a dao (no transactions).
         DAO<String, Department> dDao = pdaof.createDao( Department.class );

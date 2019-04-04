@@ -177,13 +177,12 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private E update( final Connection c, E t ) {
-        Set<String> keyNames = mapper.keyNames();
         List<String> columnNames
                 = mapper.persistentFieldNames().stream().collect( toList() );
         String columns = String.join( ",", columnNames );
         String placeholders = makePlaceHolders( columnNames );
         K key = mapper.keyExtractor().apply( t );
-        String sql = String.format( "update %s set (%s)=(%s) where (%s)=(?)"
+        String sql = format( "update %s set (%s)=(%s) where (%s)=(?)"
                 + " returning * ",
                 tableName, columns,
                 placeholders,
@@ -194,8 +193,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             int j = 1;
 
             // all fields
-            for ( int i = 0; i < parts.length; i++ ) {
-                pst.setObject( j++, parts[ i ] );
+            for ( Object part : parts ) {
+                pst.setObject( j++, part );
             }
             pst.setObject( j, key );
             try ( ResultSet rs = pst.executeQuery(); ) {
@@ -497,8 +496,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @return the int value matching this key.
      */
     public int getIdForKey( K k ) {
-        String ks = k.toString();
-        String sql = String.format( "select %s from %s where %s=?", mapper.
+        String sql = format( "select %s from %s where %s=?", mapper.
                 idName(), mapper.tableName(), mapper.naturalKeyName() );
         return executeIntQuery( sql, k );
 
