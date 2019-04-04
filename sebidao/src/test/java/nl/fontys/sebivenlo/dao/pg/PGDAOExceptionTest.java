@@ -7,9 +7,25 @@ package nl.fontys.sebivenlo.dao.pg;
 
 import entities.Employee;
 import entities.EmployeeMapper2;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.NClob;
+import java.sql.PreparedStatement;
+import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
+import java.sql.Savepoint;
+import java.sql.Statement;
+import java.sql.Struct;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.concurrent.Executor;
 import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.DAO;
@@ -32,87 +48,13 @@ import org.mockito.stubbing.Answer;
  *
  * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
  */
-public class PGDAOExceptionTest {
+public class PGDAOExceptionTest extends PGDAOExceptionTestBase {
 
-    Connection conn = mock( Connection.class, anything -> {
-        throw new SQLException( "I am supposed to" );
-    } );
-
-    @Mock
-    DataSource ds;
-
-    AbstractDAOFactory daof;
-    EmployeeMapper2 mapper;
-    PGDAO<Integer, Employee> eDao;
-
-    @Before
-    public void setup() throws SQLException {
-        MockitoAnnotations.initMocks( this );
-        Mockito.when( ds.getConnection() ).thenReturn( conn );
-        mapper = new EmployeeMapper2( Integer.class, Employee.class );
-        daof = new PGDAOFactory( ds );
-        daof.registerMapper( Employee.class, mapper );
-        eDao = (PGDAO<Integer, Employee>)daof.createDao( Employee.class );
-    }
-
-    Employee gp = new Employee( 1 );
-
-    @Test( expected = DAOException.class )
-    public void testGet() {
-        eDao.get( 1 );
-    }
-
-    @Test( expected = DAOException.class )
-    public void testDelete() {
-        eDao.delete( gp );
-    }
-
-    @Test( expected = DAOException.class )
-    public void testUpdate() {
-        eDao.update( gp );
-    }
-
-    @Test( expected = DAOException.class )
-    public void testSave() {
-        eDao.save( gp );
-    }
-
-    @Test( expected = DAOException.class )
-    public void testGetAll() {
-        eDao.getAll();
-    }
-
-    @Test( expected = DAOException.class )
-    public void testGetByColumnValues() {
-        eDao.getByColumnValues( "name", "nothing" );
-    }
-
-    @Test( expected = DAOException.class )
-    public void testLastId() {
-        eDao.lastId();
-    }
-
-    @Test( expected = DAOException.class )
-    public void testSize() {
-        eDao.size();
-    }
-
-    @Test
-    public void testSetTransactionToken() {
-        eDao.setTransactionToken( null );
-        assertTrue( "should run without issues", true );
-    }
-
-
-    @Test( expected = DAOException.class )
-    public void testIntQuery() {
-        eDao.executeIntQuery( "select count(1) from employee" );
-        
-        fail( "test method testIntQuery reached its end, you can remove this line when you aggree." );
-    }
-    
-    @Test( expected = DAOException.class )
-    public void testStartTransaction() throws Exception {
-        eDao.startTransaction();
+    @Override
+    Connection getConnection() {
+        Connection conn = mock( Connection.class, anything -> {
+            throw new SQLException( "I am supposed to" );
+        } );
+        return conn;
     }
 }
