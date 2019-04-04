@@ -142,7 +142,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         try ( Connection con = ds.getConnection(); ) {
             delete( con, t );
-        } catch ( SQLException ex ) {
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
@@ -169,7 +169,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         try ( Connection con = this.getConnection(); ) {
             return update( con, t );
-        } catch ( SQLException ex ) {
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
@@ -222,7 +222,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
         try ( Connection c = this.getConnection(); ) {
             return save( c, t );
-        } catch ( SQLException ex ) {
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
