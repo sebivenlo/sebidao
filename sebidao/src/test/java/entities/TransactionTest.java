@@ -1,5 +1,6 @@
 package entities;
 
+import com.sun.javafx.geom.Edge;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -38,6 +39,7 @@ public class TransactionTest {
 
     @Before
     public void setup() {
+        DBTestHelpers.loadDatabase();
         checkEmpDao = daof.createDao( Employee.class );
         checkDepDao = daof.createDao( Department.class );
     }
@@ -229,6 +231,8 @@ public class TransactionTest {
 
         j = checkEmpDao.get( sid ).get();
         assertEquals( "Nashville", "Sue", j.getFirstname() );
+        checkEmpDao.delete( j );
+         
         //fail( "testUpdate not yet implemented. Review the code and comment or delete this line" );
     }
 

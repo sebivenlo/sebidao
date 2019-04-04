@@ -26,6 +26,7 @@ public class EmployeeDaoTest {
 
     @BeforeClass
     public static void setupClass() {
+        loadDatabase();
         daof = new PGDAOFactory( ds );
         daof.registerMapper( Employee.class, new EmployeeMapper() );
     }
@@ -33,7 +34,6 @@ public class EmployeeDaoTest {
 
     @Before
     public void setupData() throws Exception {
-        loadDatabase();
     }
 
     @After
@@ -87,10 +87,10 @@ public class EmployeeDaoTest {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Collection<Employee> el = edao.getAll();
         int preSize = el.size();
-        edao.save( JAN );
+        Employee savedJan = edao.save( JAN );
         int postSize = edao.getAll().size();
         assertEquals( "no Jan?", 1 + preSize, postSize );
-
+        edao.delete( savedJan );
         // fail( "testCreate not yet implemented. Review the code and comment or delete this line" );
     }
     private static final Employee JAN = new Employee( 0, "Klaassen", "Jan",
@@ -113,13 +113,15 @@ public class EmployeeDaoTest {
     }
 
     @Test
-    public void testGetByKeyValues() {
+    public void test00GetByKeyValues() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         // should get default piet.
-        Collection<Employee> col = edao.getByColumnValues( "email","p.puk@vanderheiden.nl");
+        Employee savedJan = edao.save( JAN );
+        Collection<Employee> col = edao.getByColumnValues( "email",JAN.getEmail());
         assertFalse(col.isEmpty());
         Employee firstEmployee = col.iterator().next();
-        assertEquals("Hi Piet", "Piet",firstEmployee.getFirstname());
+        assertEquals("Hi Piet", "Jan",firstEmployee.getFirstname());
+        edao.delete( savedJan );
         
         //fail( "test method testGetByKeyValues reached its end, you can remove this line when you aggree." );
     }

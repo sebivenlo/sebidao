@@ -33,7 +33,7 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
     private Connection connection;
 
     abstract Connection getConnection();
-    
+
     @After
     public void cleanup() {
         try {
@@ -43,7 +43,7 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
                     log( Level.SEVERE, null, zipit );
         }
     }
-    
+
     @Test( expected = DAOException.class )
     public void testDelete() {
         eDao.delete( gp );
@@ -76,7 +76,11 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
     }
 
     @Test( expected = DAOException.class )
-    public void testSave() {
+    public void testSave() throws SQLException {
+        PGTransactionToken tok = eDao.getTransactionToken();
+        if ( null != tok ) {
+            tok.getConnection().close();
+        }
         eDao.save( gp );
     }
 
@@ -99,7 +103,7 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
     @Before
     public void setup() throws SQLException {
         MockitoAnnotations.initMocks( this );
-        this.connection=getConnection();
+        this.connection = getConnection();
         Mockito.when( ds.getConnection() ).thenReturn( this.connection );
         mapper = new EmployeeMapper2( Integer.class, Employee.class );
         daof = new PGDAOFactory( ds );

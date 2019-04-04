@@ -187,9 +187,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 + " returning * ",
                 tableName, columns,
                 placeholders,
-                keyNames.iterator().next(),
-                key );
-
+                mapper.idName() );
+        System.out.println( "sql = " + sql );
         try ( PreparedStatement pst = c.
                 prepareStatement( sql ); ) {
             Object[] parts = mapper.explode( t );
