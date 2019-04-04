@@ -1,0 +1,5 @@
+#!/bin/bash
+##  publish to site
+rsync -av target/site/ fontysvenlo:/home/javabits/public_html/sebidao/
+
+
