@@ -1,10 +1,9 @@
 package demo;
 
-import entities.DepartmentMapper;
 import entities.Department;
 import entities.DepartmentMapper2;
 import entities.Employee;
-import entities.EmployeeMapper;
+import entities.EmployeeMapper2;
 import entities.PGDataSource;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -19,13 +18,12 @@ import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
  */
 public class TransactionMain {
 
-    public static String EMPLOYEE_FILE = "employee.ser";
 
     public static void main( String[] args ) {
 
         // register a mapper for employee
         PGDAOFactory pdaof = new PGDAOFactory( PGDataSource.DATA_SOURCE );
-        pdaof.registerMapper( Employee.class, new EmployeeMapper() );
+        pdaof.registerMapper( Employee.class, new EmployeeMapper2(Integer.class,Employee.class) );
         pdaof.registerMapper( Department.class, new DepartmentMapper2(String.class,Department.class) );
 
         // get a dao (no transactions).

@@ -22,7 +22,7 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.3</version>
         </dependency>
 	 <dependency>
             <groupId>org.postgresql</groupId>

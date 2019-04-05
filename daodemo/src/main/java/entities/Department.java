@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.COMMENTS;
 import nl.fontys.sebivenlo.dao.Entity2;
+import nl.fontys.sebivenlo.dao.Generated;
 import nl.fontys.sebivenlo.dao.ID;
 
 /**
@@ -16,11 +17,12 @@ import nl.fontys.sebivenlo.dao.ID;
 public class Department implements Entity2<String> {
 
     private static final long serialVersionUID = 1L;
-
-    private String name;
     private String description;
     @ID(generated = false)
+    private String name;
     private String email;
+    @Generated
+    private int departmentid;
 
     public Department( String name ) {
         this.name = name;
@@ -92,11 +94,6 @@ public class Department implements Entity2<String> {
         return this.name;
     }
 
-    @Override
-    public ToIntFunction<String> idMapper() {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
-    }
-
     
     @Override
     public String toString() {
@@ -111,7 +108,13 @@ public class Department implements Entity2<String> {
     }
 
     Object[] explode() {
-        return new Object[]{ name, description, email };
+        return new Object[]{ description, name, email };
     }
 
+    @Override
+    public int getId() {
+        return departmentid;
+    }
+
+    
 }

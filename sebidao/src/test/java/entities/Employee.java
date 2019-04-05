@@ -44,6 +44,7 @@ public class Employee implements Entity2<Integer> {
         this.employeeid = employeeid;
     }
 
+    @Override
     public int getId() {
         return employeeid;
     }
@@ -119,11 +120,6 @@ public class Employee implements Entity2<Integer> {
     @Override
     public Integer getNaturalId() {
         return this.employeeid;
-    }
-
-    @Override
-    public ToIntFunction<Integer> idMapper() {
-        return Integer::intValue;
     }
 
 }

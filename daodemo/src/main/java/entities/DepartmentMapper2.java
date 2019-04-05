@@ -21,7 +21,7 @@ public class DepartmentMapper2 extends AbstractMapper<String, Department> {
 
     @Override
     public Department implode( Object[] parts ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return new Department( (String) parts[ 0 ], (String) parts[ 1 ], (String) parts[ 2 ] );
     }
 
     @Override

@@ -12,7 +12,7 @@ import nl.fontys.sebivenlo.dao.ID;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class Department implements Entity2<Integer> {
+public class Department implements Entity2<String> {
 
     private static final long serialVersionUID = 1L;
     @Generated
@@ -113,17 +113,13 @@ public class Department implements Entity2<Integer> {
     }
 
     @Override
-    public Integer getNaturalId() {
-        return departmentid;
-    }
-
-    @Override
-    public ToIntFunction<Integer> idMapper() {
-        return Integer::intValue;
+    public String getNaturalId() {
+        return name;
     }
 
     Object[] asParts() {
         return new Object[] { getDepartmentid(), getName(), getDescription(),
             getEmail() };
     }
+    
 }

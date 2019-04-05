@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Function;
 import nl.fontys.sebivenlo.dao.Mapper;
 
+@Deprecated
 public class EmployeeMapper implements Mapper<Integer, Employee> {
 
     @Override
