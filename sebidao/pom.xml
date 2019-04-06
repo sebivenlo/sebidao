@@ -7,6 +7,10 @@
     <version>0.3</version>
     
     <name>sebidao</name>
+    <description>
+        Simple DAO. 
+        Use a DAO to keep simple database stuff simple.
+    </description>
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
         <artifactId>sebipom</artifactId>

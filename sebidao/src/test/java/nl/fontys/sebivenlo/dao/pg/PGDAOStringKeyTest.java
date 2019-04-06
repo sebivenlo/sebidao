@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
  *
  * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
  */
-public class PGDAUStringKeyTest extends DBTestHelpers {
+public class PGDAOStringKeyTest extends DBTestHelpers {
 
     DAO<String, Company> cDao;
 

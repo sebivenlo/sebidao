@@ -1,5 +1,7 @@
 # sebidao
-opinionated and generic data access object implementation
+Opinionated and generic data access object implementation for postgreSQL database.
+
+It does not use postgreSQL features per see, but it is only tested with postgreSQL.
 
 This DAO is a work in progress.
 It supports the basic CRUD operations in a generic withn little help
