@@ -13,14 +13,15 @@ import java.util.Set;
  *
  * This is the data that is cached, and is typically stored in a
  * {@code Map<Type,EntityData>}.
+ *
  * @param <E> entity type.
  *
- * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
  */
 class EntityMetaData<E> {
 
     /**
-     * Contains the name to type map for all (declared) fields. Use a map that 
+     * Contains the name to type map for all (declared) fields. Use a map that
      * iterates over the keys in insertion order.
      */
     final Map<String, Class<?>> typeMap = new LinkedHashMap<>();
@@ -72,7 +73,8 @@ class EntityMetaData<E> {
     }
 
     private boolean normalField( Field f ) {
-        return !f.isSynthetic() && ( ( f.getModifiers() & ( TRANSIENT | STATIC ) ) == 0 );
+        return !f.isSynthetic()
+                && ( f.getModifiers() & ( TRANSIENT | STATIC ) ) == 0;
     }
 
     /**
@@ -89,22 +91,23 @@ class EntityMetaData<E> {
     }
 
     boolean isGenerated( String name ) {
-        return this.generatedFields != null && this.generatedFields.contains( name );
+        return this.generatedFields != null && this.generatedFields.contains(
+                name );
 
     }
 
     private void setGenerated( String name ) {
         if ( null == generatedFields ) {
-            generatedFields= new HashSet<>();
+            generatedFields = new HashSet<>();
         }
         generatedFields.add( name );
     }
 
     @Override
     public String toString() {
-        return "EntityMetaData{" + "typeMap=" + typeMap + 
-                ", \ngeneratedFields=" + generatedFields + "\n, about=" + about + ",\n idName=" + idName + ", \nidGenerated=" + idGenerated + '}';
+        return "EntityMetaData{" + "typeMap=" + typeMap + ", \ngeneratedFields="
+                + generatedFields + "\n, about=" + about + ",\n idName="
+                + idName + ", \nidGenerated=" + idGenerated + '}';
     }
 
-    
 }

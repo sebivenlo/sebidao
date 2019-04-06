@@ -90,7 +90,8 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
 
     @Override
     public String toString() {
-        return "AbstractMapper{" + "keyType=" + keyType + "\n, entityType=" + entityType + ",\n entityMetaData=" + entityMetaData + '}';
+        return "AbstractMapper{" + "keyType=" + keyType + "\n, entityType=" 
+                + entityType + ",\n entityMetaData=" + entityMetaData + '}';
     }
 
 }

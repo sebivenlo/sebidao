@@ -151,7 +151,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private void delete( final Connection con, E t ) {
-        String sql = format( "delete from %s where %s=?", tableName, mapper.naturalKeyName() );
+        String sql = format( "delete from %s where %s=?", tableName, mapper.
+                naturalKeyName() );
         try (
                 PreparedStatement pst = con.prepareStatement( sql ); ) {
             pst.setObject( 1, mapper.keyExtractor().apply( t ) );
@@ -233,7 +234,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String columns = String.join( ",", columnNames );
         String placeholders = makePlaceHolders( columnNames );
         String sql
-                = format( "insert into %s (%s) \n"
+                = format( "insert into %s (%s) %n"
                         + "values(%s) %n"
                         + "returning *", tableName,
                         columns, placeholders );
@@ -282,8 +283,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private Predicate<String> isGenerated() {
-        return s -> ( mapper.keyNames().contains( s )
-                && mapper.generateKey() );
+        return s -> mapper.keyNames().contains( s ) && mapper.generateKey();
     }
 
     private String makePlaceHolders( final List<String> columnNames ) {
@@ -531,9 +531,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     @Override
     public String toString() {
-        return "PGDAO{" + "tableName=" + tableName + ", idName=" + idName +
-                ", mapper=" + mapper + '}';
+        return "PGDAO{" + "tableName=" + tableName + ", idName=" + idName
+                + ", mapper=" + mapper + '}';
     }
 
-    
 }
