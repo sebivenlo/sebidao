@@ -151,7 +151,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private void delete( final Connection con, E t ) {
-        String sql = format( "delete from %s where %s=?", tableName, idName );
+        String sql = format( "delete from %s where %s=?", tableName, mapper.naturalKeyName() );
         try (
                 PreparedStatement pst = con.prepareStatement( sql ); ) {
             pst.setObject( 1, mapper.keyExtractor().apply( t ) );

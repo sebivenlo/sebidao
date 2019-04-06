@@ -26,7 +26,7 @@ public class DepartmentMapper2 extends AbstractMapper<String, Department> {
 
     @Override
     public Function<Department, String> keyExtractor() {
-        return Department::getEmail;
+        return Department::getName;
     }
 
 }

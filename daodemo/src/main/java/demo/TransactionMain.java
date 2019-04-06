@@ -24,7 +24,10 @@ public class TransactionMain {
         // register a mapper for employee
         PGDAOFactory pdaof = new PGDAOFactory( PGDataSource.DATA_SOURCE );
         pdaof.registerMapper( Employee.class, new EmployeeMapper2(Integer.class,Employee.class) );
-        pdaof.registerMapper( Department.class, new DepartmentMapper2(String.class,Department.class) );
+        DepartmentMapper2 departmentMapper2 = new DepartmentMapper2(String.class,Department.class);
+        System.out.println( "departmentMapper2 = " + departmentMapper2 );
+        pdaof.registerMapper( Department.class, departmentMapper2  );
+        
 
         // get a dao (no transactions).
         DAO<String, Department> dDao = pdaof.createDao( Department.class );
