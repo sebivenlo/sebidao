@@ -249,7 +249,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             try ( ResultSet rs = pst.executeQuery(); ) {
                 if ( rs.next() ) {
                     return recordToEntity( rs );
-                } else {
+                } else { // cannot cover without serious jumping through loops, so we will not bother.
                     return null;
                 }
             }

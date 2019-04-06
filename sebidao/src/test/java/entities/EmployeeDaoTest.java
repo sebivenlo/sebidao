@@ -5,7 +5,9 @@ import static entities.DBTestHelpers.ds;
 import static entities.DBTestHelpers.loadDatabase;
 import java.util.Collection;
 import java.util.Optional;
+import net.bytebuddy.agent.builder.AgentBuilder;
 import nl.fontys.sebivenlo.dao.DAO;
+import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
 import org.junit.After;
 import org.junit.Test;
@@ -22,7 +24,6 @@ import org.junit.runners.MethodSorters;
 //@Ignore
 @FixMethodOrder( MethodSorters.NAME_ASCENDING )
 public class EmployeeDaoTest {
-
 
     @BeforeClass
     public static void setupClass() {
@@ -107,8 +108,9 @@ public class EmployeeDaoTest {
         edao.update( savedJan ); // ignore result for now
         Employee updatedJan = edao.get( savedJan.getEmployeeid() ).get();
 
-        assertEquals( "see if email update worked", savedJan.getEmail(), updatedJan.
-                getEmail() );
+        assertEquals( "see if email update worked", savedJan.getEmail(),
+                updatedJan.
+                        getEmail() );
         // fail( "test05Update not yet implemented. Review the code and comment or delete this line" );
     }
 
@@ -117,12 +119,25 @@ public class EmployeeDaoTest {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         // should get default piet.
         Employee savedJan = edao.save( JAN );
-        Collection<Employee> col = edao.getByColumnValues( "email",JAN.getEmail());
-        assertFalse(col.isEmpty());
+        Collection<Employee> col = edao.getByColumnValues( "email", JAN.
+                getEmail() );
+        assertFalse( col.isEmpty() );
         Employee firstEmployee = col.iterator().next();
-        assertEquals("Hi Piet", "Jan",firstEmployee.getFirstname());
+        assertEquals( "Hi Piet", "Jan", firstEmployee.getFirstname() );
         edao.delete( savedJan );
-        
+
         //fail( "test method testGetByKeyValues reached its end, you can remove this line when you aggree." );
+    }
+
+    @Test(expected = DAOException.class)
+    public void testSaveUniqueViolation() {
+        Employee jean = new Employee( 0, "Klaassen", "Jean",
+                "jan@example.com", 1 );
+        DAO<Integer, Employee> edao = daof.createDao( Employee.class );
+        // should get default piet.
+        Employee savedJean = edao.save( JAN );
+        Employee savedJan = edao.save( jean );
+       
+       // fail( "testSaveUniqueViolation not yet implemented. Review the code and comment or delete this line" );
     }
 }

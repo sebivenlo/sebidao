@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.DAOException;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class PGDAOTest extends DBTestHelpers {
     @Before
     public void setUp() throws Throwable {
         assertNotNull( daof );
-        eDao = (PGDAO<Integer, Employee>) daof.createDao( Employee.class );
+        eDao = (PGDAO<Integer, Employee>)daof.createDao( Employee.class );
     }
 
     @Test
@@ -84,8 +85,8 @@ public class PGDAOTest extends DBTestHelpers {
         eDao.setTransactionToken( tok );
         Connection c = eDao.getConnection();
         assertSame( "using one and the same connection", tokCon, c );
-        assertSame(tok,eDao.getTransactionToken());
-        
+        assertSame( tok, eDao.getTransactionToken() );
+
         //fail( "testUsingTransactionConnection not yet implemented. Review the code and comment or delete this line" );
     }
 }

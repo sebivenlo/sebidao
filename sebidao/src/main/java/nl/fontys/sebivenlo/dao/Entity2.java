@@ -24,15 +24,4 @@ public interface Entity2<K extends Serializable> extends SimpleEntity {
      * @return the key.
      */
     K getNaturalId();
-
-    /**
-     * Get the function to transform the natural and potential composite key to
-     * a surrogate key.
-     *
-     * @param <E> entity type.
-     * @return the function
-     */
-    static <E extends Entity2> ToIntFunction<E> idMapper(){
-        return x -> x.getId();
-    }
 }

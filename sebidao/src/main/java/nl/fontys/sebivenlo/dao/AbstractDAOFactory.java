@@ -34,7 +34,7 @@ public abstract class AbstractDAOFactory {
      * @param forClass actual type of the entity
      * @return the prepared DAO
      */
-    public abstract <K, E> DAO createDao( Class<? extends SimpleEntity> forClass );
+    public abstract <K extends Serializable, E extends Entity2<K>> DAO<K,E> createDao( Class<E> forClass );
 
     /**
      *
@@ -47,6 +47,6 @@ public abstract class AbstractDAOFactory {
      * @param token transaction token.
      * @return the prepared DAO
      */
-    public abstract <K, E> DAO createDao( Class<? extends SimpleEntity> forClass,
+    public abstract <K extends Serializable, E extends Entity2<K>> DAO<K,E> createDao( Class<E> forClass,
             TransactionToken token );
 }
