@@ -35,7 +35,7 @@ public class TransactionTest {
     }
 
     DAO<Integer, Employee> checkEmpDao;
-    DAO<Integer, Department> checkDepDao;
+    DAO<String, Department> checkDepDao;
 
     @Before
     public void setup() {
@@ -79,7 +79,7 @@ public class TransactionTest {
         int empSize = checkEmpDao.size();
 
         try (
-                DAO<Integer, Department> ddao = daof.createDao( Department.class );
+                DAO<String, Department> ddao = daof.createDao( Department.class );
                 TransactionToken tok = ddao.startTransaction();
                 DAO<Integer, Employee> edao = daof.createDao( Employee.class, tok ); ) {
             Department save = ddao.save( engineering );
@@ -115,7 +115,7 @@ public class TransactionTest {
         Employee savedDilbert = null;
 
         try (
-                DAO<Integer, Department> ddao = daof.createDao( Department.class );
+                DAO<String, Department> ddao = daof.createDao( Department.class );
                 TransactionToken tok = ddao.startTransaction();
                 DAO<Integer, Employee> edao = daof.createDao( Employee.class, tok ); ) {
             System.out.println( "tok = " + tok );

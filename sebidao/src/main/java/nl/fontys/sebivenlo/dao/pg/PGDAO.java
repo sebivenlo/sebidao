@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.stream.Collectors.toList;
@@ -150,7 +151,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private void delete( final Connection con, E t ) {
-        String sql = format( "delete from %s where %s=?", tableName, idName );
+        String sql = format( "delete from %s where %s=?", tableName, mapper.naturalKeyName() );
         try (
                 PreparedStatement pst = con.prepareStatement( sql ); ) {
             pst.setObject( 1, mapper.keyExtractor().apply( t ) );
@@ -228,7 +229,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private E save( final Connection c, E t ) {
         final List<String> columnNames
-                = getColumnNames();
+                = getFilteredColumnNames();
         String columns = String.join( ",", columnNames );
         String placeholders = makePlaceHolders( columnNames );
         String sql
@@ -238,10 +239,9 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                         columns, placeholders );
         try (
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
-            Object[] parts = mapper.explode( t );
+            Object[] parts = dropGeneneratedParts( mapper.explode( t ) );
             int j = 1;
-            for ( int i = mapper.generateKey() ? 1 : 0; i < parts.length;
-                    i++ ) {
+            for ( int i = 0; i < parts.length; i++ ) {
                 pst.setObject( j++, parts[ i ] );
             }
 
@@ -259,12 +259,31 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
     }
 
-    private List<String> getColumnNames() {
+    private List<String> getFilteredColumnNames() {
         return mapper.persistentFieldNames()
                 .stream()
-                .filter( s -> !( mapper.keyNames().contains( s )
-                && mapper.generateKey() ) )
+                .filter( isGenerated().negate() )
                 .collect( toList() );
+    }
+
+    Object[] dropGeneneratedParts( Object[] parts ) {
+        Set<String> persistentFieldNames = mapper.persistentFieldNames();
+
+        List<Object> result = new ArrayList<>();
+        Predicate<String> notGen = isGenerated().negate();
+        int i = 0;
+        for ( String pfn : persistentFieldNames ) {
+            if ( notGen.test( pfn ) ) {
+                result.add( parts[ i ] );
+            }
+            i++;
+        }
+        return result.toArray();
+    }
+
+    private Predicate<String> isGenerated() {
+        return s -> ( mapper.keyNames().contains( s )
+                && mapper.generateKey() );
     }
 
     private String makePlaceHolders( final List<String> columnNames ) {

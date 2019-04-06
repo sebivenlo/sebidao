@@ -12,6 +12,7 @@ import nl.fontys.sebivenlo.dao.Mapper;
  *
  * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
+@Deprecated
 public class DepartmentMapper implements Mapper<String, Department> {
 
     @Override

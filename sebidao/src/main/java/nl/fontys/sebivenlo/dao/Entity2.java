@@ -26,21 +26,13 @@ public interface Entity2<K extends Serializable> extends SimpleEntity {
     K getNaturalId();
 
     /**
-     * The backing store is easiest to implement using a simple number.
-     *
-     * @return the id in int form
-     */
-    @Override
-    default int getId() {
-        return idMapper().applyAsInt( getNaturalId() );
-    }
-
-    /**
      * Get the function to transform the natural and potential composite key to
      * a surrogate key.
      *
+     * @param <E> entity type.
      * @return the function
      */
-    ToIntFunction<K> idMapper();
-
+    static <E extends Entity2> ToIntFunction<E> idMapper(){
+        return x -> x.getId();
+    }
 }

@@ -100,4 +100,11 @@ class EntityMetaData<E> {
         generatedFields.add( name );
     }
 
+    @Override
+    public String toString() {
+        return "EntityMetaData{" + "typeMap=" + typeMap + 
+                ", \ngeneratedFields=" + generatedFields + "\n, about=" + about + ",\n idName=" + idName + ", \nidGenerated=" + idGenerated + '}';
+    }
+
+    
 }

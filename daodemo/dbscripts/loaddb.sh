@@ -12,3 +12,4 @@ createdb -h ${server} ${ADMINUSER}  -O ${dbuser} ${db}
 
 cat ${scriptdir}/schema.sql | psql -h ${server} ${ADMINUSER}  -X ${db} 
 cat ${scriptdir}/newpiet.sql | psql -h ${server} ${ADMINUSER}   -X ${db} 
+
