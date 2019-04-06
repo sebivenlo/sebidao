@@ -22,9 +22,20 @@ CREATE TABLE employees (
 
 ) WITHOUT oids;
 
+CREATE TABLE companies (
+        name text ,
+        country text,
+        city text,
+        address text,
+        ticker text primary key,
+        postcode text
+
+) WITHOUT oids;
+
 
 ALTER DOMAIN public.email OWNER TO exam;
 ALTER TABLE public.departments OWNER TO exam;
 ALTER TABLE public.employees OWNER TO exam;
+ALTER TABLE public.companies OWNER TO exam;
 
 COMMIT;

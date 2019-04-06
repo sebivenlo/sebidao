@@ -241,8 +241,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
             Object[] parts = dropGeneneratedParts( mapper.explode( t ) );
             int j = 1;
-            for ( int i = 0; i < parts.length; i++ ) {
-                pst.setObject( j++, parts[ i ] );
+            for ( Object part : parts ) {
+                pst.setObject( j++, part );
             }
 
             try ( ResultSet rs = pst.executeQuery(); ) {
@@ -529,4 +529,11 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
     }
 
+    @Override
+    public String toString() {
+        return "PGDAO{" + "tableName=" + tableName + ", idName=" + idName +
+                ", mapper=" + mapper + '}';
+    }
+
+    
 }

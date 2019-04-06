@@ -2,6 +2,7 @@ begin work;
 
 truncate employees;
 truncate departments cascade;
+truncate companies;
 
 alter sequence employees_employeeid_seq restart;
 alter sequence departments_departmentid_seq restart;
@@ -15,3 +16,4 @@ commit;
 
 table employees;
 table departments;
+table companies;

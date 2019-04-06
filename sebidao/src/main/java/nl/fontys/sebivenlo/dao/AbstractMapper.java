@@ -80,12 +80,12 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
 
     @Override
     public boolean generateKey() {
-        return Mapper.super.generateKey();
+        return entityMetaData.isIDGenerated();
     }
 
     @Override
     public String idName() {
-        return Mapper.super.idName();
+        return entityMetaData.getIdName();
     }
 
     @Override
@@ -93,5 +93,4 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
         return "AbstractMapper{" + "keyType=" + keyType + "\n, entityType=" + entityType + ",\n entityMetaData=" + entityMetaData + '}';
     }
 
-    
 }
