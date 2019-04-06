@@ -11,6 +11,11 @@ import java.lang.annotation.Target;
  * Just adding the annotation will tag the id generated, i.e. typically using some sequence.
  * Use @ID(generated=false) if you have a natural key that should NOT be generated.
  * 
+ * There is companion annotation {@link Generated} that can be used in case the ID annotation is set
+ * on a field that is NOT generated {@code @ID( generated = false) } and the user still want to have
+ * a generated column value, as surrogate key. A use case could also be an import from another system,
+ * where the field is key and generated in said system, but should not be generated on this system.
+ * 
  * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
  */
 @Retention(RetentionPolicy.RUNTIME)
