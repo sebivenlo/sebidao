@@ -1,7 +1,6 @@
 package nl.fontys.sebivenlo.dao;
 
 import java.io.Serializable;
-import java.util.function.ToIntFunction;
 
 /**
  * An entity that is accessible via a key.
