@@ -112,7 +112,7 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 
     }
 
-    private HttpURLConnection post( String eLoc, int length ) throws ProtocolException, MalformedURLException, IOException {
+    private HttpURLConnection post( String eLoc, int bodySize ) throws ProtocolException, MalformedURLException, IOException {
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod( "POST" );
@@ -123,7 +123,22 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
         con.setDoOutput( true );
         con.setRequestProperty( "Accept", "application/json" );
 
-        con.setRequestProperty( "Content-Length", "" + length );
+        con.setRequestProperty( "Content-Length", "" + bodySize );
+
+        return con;
+    }
+
+    private HttpURLConnection delete( String eLoc, int bodySize  ) throws ProtocolException, MalformedURLException, IOException {
+        URL url = new URL( eLoc );
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod( "DELETE" );
+        con.setInstanceFollowRedirects( false );
+        con.setRequestProperty( "Content-Type", "application/json" );
+        con.setRequestProperty( "charset", "utf-8" );
+        con.setUseCaches( false );
+        con.setDoOutput( true );
+        con.setRequestProperty( "Accept", "application/json" );
+        con.setRequestProperty( "Content-Length", "" + bodySize );
 
         return con;
     }
@@ -168,7 +183,27 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 
     @Override
     public void delete( E e ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        try {
+            Gson gson = gsonBuilder.create();
+            String toJson = gson.toJson( e, type );
+            int length = toJson.length();
+            HttpURLConnection con = delete( baseUrl, length );
+
+            try ( OutputStream out = con.getOutputStream();
+                    DataOutputStream wr = new DataOutputStream( out ); ) {
+                wr.write( toJson.getBytes() );
+                wr.flush();
+                wr.close();
+            }
+            int responseCode = con.getResponseCode();
+            if ( responseCode != 200 ) {
+                throw new DAOException( "delete failed for entity " + e );
+            }
+        } catch ( MalformedURLException ex ) {
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null, ex );
+        } catch ( IOException ex ) {
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null, ex );
+        }
     }
 
 }

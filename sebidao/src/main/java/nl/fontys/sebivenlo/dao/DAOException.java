@@ -18,4 +18,13 @@ public class DAOException extends RuntimeException {
     public DAOException( String message, Throwable cause ) {
         super( message, cause );
     }
+
+    /**
+     * When there is no underlying cause.
+     * @param message 
+     */
+    public DAOException( String message ) {
+        super( message );
+    }
+    
 }
