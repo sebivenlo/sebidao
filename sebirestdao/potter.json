@@ -1,0 +1,11 @@
+{
+    "snummer": 7654321,
+    "firstname": "Harry",
+    "lastname": "Potter",
+    "tussenvoegsel": null,
+    "email": "hpotter@hogwarts.edu.uk",
+    "cohort": 2021,
+    "student_class": "Wizzards",
+    "gender": "M",
+    "dob": "1980-07-31"
+}
