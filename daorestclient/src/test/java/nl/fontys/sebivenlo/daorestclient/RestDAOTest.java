@@ -8,6 +8,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
@@ -268,6 +269,31 @@ public class RestDAOTest {
                 .withRequestBody( containing( shella.email ) ) );
         
 //        Assert.fail( "test method testDelete reached its end, you can remove this line when you aggree." );
+    }
+    
+    @Test
+    public void testUpdate() throws IOException {
+        String baseUrl = wireMockRule.baseUrl();
+        String harryJ = readTestDataFile( "potter.json" );
+        
+        stubFor( WireMock.put( WireMock.urlMatching( endPoint ) )
+                .willReturn( aResponse()
+                        .withHeader( "Content-Type", "application/json" ).withBody( harryJ )
+                        .withStatus( 200 ) ) );
+        
+        String loc = baseUrl + endPoint;
+        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+         
+        Student harry = gsonBuilder().create().fromJson( harryJ, Student.class );
+        harry.email="hpotter@fontys.nl";
+        Student updatedHarry= dao.update( harry );
+
+//        printServeEvents();
+        verify( putRequestedFor( urlEqualTo( endPoint ) )
+                .withHeader( "Content-Type", equalTo( "application/json" ) ) );
+        
+        assertEquals( "Harry starts with fontys", harry, updatedHarry );
+        //Assert.fail( "testUpdate not yet implemented. Review the code and comment or delete this line" );
     }
     
     private void printServeEvents() {

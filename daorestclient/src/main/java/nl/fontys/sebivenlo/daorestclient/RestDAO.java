@@ -51,7 +51,8 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
     }
     private final String USER_AGENT = "Mozilla/5.0";
     private static final GsonBuilder gsonBuilder
-            = new GsonBuilder().registerTypeAdapter( LocalDate.class, new LocalDateJsonAdapter() );
+            = new GsonBuilder().registerTypeAdapter( LocalDate.class,
+                    new LocalDateJsonAdapter() );
 
     public static GsonBuilder gsonBuilder() {
         return gsonBuilder;
@@ -74,14 +75,16 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
         }
     }
 
-    private HttpURLConnection get( String eLoc ) throws ProtocolException, MalformedURLException, IOException {
+    private HttpURLConnection get( String eLoc ) throws ProtocolException,
+            MalformedURLException, IOException {
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod( "GET" );
         return con;
     }
 
-    private Optional<E> readEntity( HttpURLConnection con, Gson gson ) throws JsonSyntaxException, JsonIOException, IOException {
+    private Optional<E> readEntity( HttpURLConnection con, Gson gson ) throws
+            JsonSyntaxException, JsonIOException, IOException {
         Optional<E> result = Optional.empty();
         try (
                 InputStream inputStream = con.getInputStream();
@@ -100,42 +103,46 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 //            System.out.println( "QRS start for url '" + baseUrl + "'" );
             URL url = new URL( baseUrl );
 
-            Type typeToken = TypeToken.getParameterized( ArrayList.class, type ).
-                    getType();
+            Type typeToken
+                    = TypeToken.getParameterized( ArrayList.class, type ).
+                            getType();
             Reader reader = new InputStreamReader( url.openConnection().
                     getInputStream(), StandardCharsets.UTF_8 );
             Gson gson = gsonBuilder.create();
             List<E> p = gson.fromJson( reader, typeToken );
             return p;
         } catch ( MalformedURLException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
         } catch ( IOException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
         }
         return Collections.EMPTY_LIST;
 
     }
 
-    private HttpURLConnection post( String eLoc, int bodySize ) throws ProtocolException, MalformedURLException, IOException {
+    private HttpURLConnection post( String eLoc, int bodySize ) throws
+            ProtocolException, MalformedURLException, IOException {
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod( "POST" );
-        con.setInstanceFollowRedirects( false );
-        con.setRequestProperty( "Content-Type", "application/json" );
-        con.setRequestProperty( "charset", "utf-8" );
-        con.setUseCaches( false );
-        con.setDoOutput( true );
-        con.setRequestProperty( "Accept", "application/json" );
-
-        con.setRequestProperty( "Content-Length", "" + bodySize );
+        setJsonHeaders(con, bodySize);
 
         return con;
     }
 
-    private HttpURLConnection delete( String eLoc, int bodySize  ) throws ProtocolException, MalformedURLException, IOException {
+    private HttpURLConnection put( String eLoc, int bodySize ) throws
+            ProtocolException, MalformedURLException, IOException {
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod( "DELETE" );
+        con.setRequestMethod( "PUT" );
+        setJsonHeaders(con, bodySize);
+
+        return con;
+    }
+
+    private void setJsonHeaders( HttpURLConnection con, int bodySize ) {
         con.setInstanceFollowRedirects( false );
         con.setRequestProperty( "Content-Type", "application/json" );
         con.setRequestProperty( "charset", "utf-8" );
@@ -143,7 +150,14 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
         con.setDoOutput( true );
         con.setRequestProperty( "Accept", "application/json" );
         con.setRequestProperty( "Content-Length", "" + bodySize );
+    }
 
+    private HttpURLConnection delete( String eLoc, int bodySize ) throws
+            ProtocolException, MalformedURLException, IOException {
+        URL url = new URL( eLoc );
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod( "DELETE" );
+        setJsonHeaders(con, bodySize);
         return con;
     }
 
@@ -155,34 +169,56 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
             String toJson = gson.toJson( e, type );
             int length = toJson.length();
             HttpURLConnection con = post( baseUrl, length );
-
-            try ( OutputStream out = con.getOutputStream();
-                    DataOutputStream wr = new DataOutputStream( out ); ) {
-                wr.write( toJson.getBytes() );
-                wr.flush();
-                wr.close();
-            }
-            try ( BufferedReader br = new BufferedReader(
-                    new InputStreamReader( con.getInputStream(), "utf-8" ) ) ) {
-                StringBuilder response = new StringBuilder();
-                String responseLine = null;
-                while ( ( responseLine = br.readLine() ) != null ) {
-                    response.append( responseLine.trim() );
-                }
-                System.out.println( "response=" + response.toString() );
-                result = gson.fromJson( response.toString(), type );
-            }
+            result = createOrUpdate( con, toJson, gson );
         } catch ( MalformedURLException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
         } catch ( IOException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+        }
+        return result;
+    }
+
+    private E createOrUpdate( HttpURLConnection con, String toJson, Gson gson )
+            throws IOException, JsonSyntaxException {
+        E result;
+        try ( OutputStream out = con.getOutputStream();
+                DataOutputStream wr = new DataOutputStream( out ); ) {
+            wr.write( toJson.getBytes() );
+            wr.flush();
+            wr.close();
+        }
+        try ( BufferedReader br = new BufferedReader(
+                new InputStreamReader( con.getInputStream(), "utf-8" ) ) ) {
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ( ( responseLine = br.readLine() ) != null ) {
+                response.append( responseLine.trim() );
+            }
+            System.out.println( "response=" + response.toString() );
+            result = gson.fromJson( response.toString(), type );
         }
         return result;
     }
 
     @Override
     public E update( E e ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        E result = null;
+        try {
+            Gson gson = gsonBuilder.create();
+            String toJson = gson.toJson( e, type );
+            int length = toJson.length();
+            HttpURLConnection con = put( baseUrl, length );
+            result = createOrUpdate( con, toJson, gson );
+        } catch ( MalformedURLException ex ) {
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+        } catch ( IOException ex ) {
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+        }
+        return result;
     }
 
     @Override
@@ -204,9 +240,11 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
                 throw new DAOException( "delete failed for entity " + e );
             }
         } catch ( MalformedURLException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
         } catch ( IOException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
         }
     }
 
