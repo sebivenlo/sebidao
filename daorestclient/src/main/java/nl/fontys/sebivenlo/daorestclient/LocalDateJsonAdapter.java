@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nl.fontys.sebivenlo.restdao;
+package nl.fontys.sebivenlo.daorestclient;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

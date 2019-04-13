@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.restdao;
+package nl.fontys.sebivenlo.daorestclient;
 
 import java.io.Serializable;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.restdao;
+package nl.fontys.sebivenlo.daorestclient;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import static nl.fontys.sebivenlo.daorestclient.RestDAO.gsonBuilder;
 import org.assertj.core.api.Assertions;
 import org.json.JSONException;
 import org.junit.Test;
@@ -81,7 +82,7 @@ public class RestDAOTest {
     @BeforeClass
     public static void setupClass() throws IOException {
         shellaAsJosnString = readTestDataFile( "shellaclifton.json" );
-        shella = RestDAO.gsonBuilder.create().fromJson( shellaAsJosnString, Student.class );
+        shella = gsonBuilder().create().fromJson( shellaAsJosnString, Student.class );
     }
     
     private static String readTestDataFile( String fileName ) throws IOException {
@@ -139,7 +140,7 @@ public class RestDAOTest {
         int responseCode = con.getResponseCode();
         String r = readconnection( con );
         
-        Gson g = RestDAO.gsonBuilder.create();
+        Gson g = gsonBuilder().create();
         Student hi = g.fromJson( r, Student.class );
         
         JSONAssert.assertEquals( shellaAsJosnString, r, JSONCompareMode.STRICT );
@@ -199,7 +200,7 @@ public class RestDAOTest {
                 readAllLines( Paths.get( "students.json" ) ) );
 
         // get the json as list of students, for later comparison
-        Gson gson = RestDAO.gsonBuilder.create();
+        Gson gson = gsonBuilder().create();
         Type typeToken = TypeToken.getParameterized( ArrayList.class, Student.class ).
                 getType();
         Reader sr = new StringReader( studentJson );
@@ -238,7 +239,7 @@ public class RestDAOTest {
         String loc = baseUrl + endPoint;
         RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
         
-        Student harry = RestDAO.gsonBuilder.create().fromJson( harryJ, Student.class );
+        Student harry = gsonBuilder().create().fromJson( harryJ, Student.class );
         
         Student savedHarry = dao.save( harry );
 

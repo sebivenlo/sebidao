@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.restdao;
+package nl.fontys.sebivenlo.daorestclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,8 +50,12 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 
     }
     private final String USER_AGENT = "Mozilla/5.0";
-    static final GsonBuilder gsonBuilder
+    private static final GsonBuilder gsonBuilder
             = new GsonBuilder().registerTypeAdapter( LocalDate.class, new LocalDateJsonAdapter() );
+
+    public static GsonBuilder gsonBuilder() {
+        return gsonBuilder;
+    }
 
     @Override
     public Optional<E> get( K key ) {

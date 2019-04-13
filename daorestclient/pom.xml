@@ -5,7 +5,7 @@
     <artifactId>sebirestdao</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
-    <name>sebi :: RestDAO</name>
+    <name>sebi :: DaoRestClient</name>
     <description>A DAO is a simple way to chop your business and presentation logic apart and redistribute it amongst
     serveral layers or tiers.
     
