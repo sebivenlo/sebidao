@@ -29,11 +29,7 @@ public class LocalDateJsonAdapter implements JsonSerializer<LocalDate>,
     @Override
     public LocalDate deserialize( JsonElement json, Type typeOfT,
             JsonDeserializationContext context ) throws JsonParseException {
-//        System.out.println( "json = " + json);
-//        JsonPrimitive asJsonPrimitive = json.getAsJsonPrimitive();
-//        System.out.println( "toString = " + asJsonPrimitive );
         return LocalDate.parse( json.getAsString() );
-        //throw new UnsupportedOperationException( "Not supported yet." );
     }
 
 }

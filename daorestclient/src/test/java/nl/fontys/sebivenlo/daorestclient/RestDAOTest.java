@@ -52,36 +52,37 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class RestDAOTest {
-    
+
     @ClassRule
     public static WireMockClassRule wireMockRule
             = new WireMockClassRule( 18080 );
-    
+
     @Rule
     public WireMockClassRule instanceRule = wireMockRule;
-    
+
     static class Hi {
-        
+
         String hi;
-        
+
         @Override
         public String toString() {
             return hi;
         }
-        
+
     }
-    
+
     final String endPoint = "/students/";
     static int shellaSnummer = 3640450;
     static String shellaAsJosnString;
     static Student shella;
-    
+
     @BeforeClass
     public static void setupClass() throws IOException {
         shellaAsJosnString = readTestDataFile( "shellaclifton.json" );
-        shella = gsonBuilder().create().fromJson( shellaAsJosnString, Student.class );
+        shella = gsonBuilder().create().fromJson( shellaAsJosnString,
+                Student.class );
     }
-    
+
     private static String readTestDataFile( String fileName ) throws IOException {
         return String.join( System.lineSeparator(), Files.
                 readAllLines( Paths.get( fileName ) ) );
@@ -102,16 +103,16 @@ public class RestDAOTest {
                 .willReturn( aResponse()
                         .withHeader( "Content-Type", "application/json" )
                         .withBody( hello ) ) );
-        
+
         URL url = new URL( wireMockRule.baseUrl() + "/some/thing" );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         int responseCode = con.getResponseCode();
         String r = readconnection( con );
-        
+
         assertEquals( "ping ", hello, r );
         Gson g = new Gson();
         Hi hi = g.fromJson( r, RestDAOTest.Hi.class );
-        
+
         assertEquals( "Hello world!", hi.toString() );
 //        Assert.fail( "test method testPing reached its end, you can remove this line when you aggree." );
     }
@@ -126,23 +127,24 @@ public class RestDAOTest {
      */
     ////@Ignore
     @Test
-    public void testPing2() throws MalformedURLException, IOException, JSONException {
+    public void testPing2() throws MalformedURLException, IOException,
+            JSONException {
         stubFor( get( urlEqualTo( "/some/thing" ) )
                 .willReturn( aResponse()
                         .withHeader( "Content-Type", "application/json" )
                         .withBody( shellaAsJosnString ) ) );
-        
+
         URL url = new URL( wireMockRule.baseUrl() + "/some/thing" );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         int responseCode = con.getResponseCode();
         String r = readconnection( con );
-        
+
         Gson g = gsonBuilder().create();
         Student hi = g.fromJson( r, Student.class );
-        
+
         JSONAssert.assertEquals( shellaAsJosnString, r, JSONCompareMode.STRICT );
     }
-    
+
     private String readconnection( HttpURLConnection con ) throws IOException {
         BufferedReader in = readerFor( con );
         StringBuilder r = new StringBuilder();
@@ -152,18 +154,18 @@ public class RestDAOTest {
         }
         return r.toString();
     }
-    
+
     private BufferedReader readerFor( HttpURLConnection con ) throws IOException {
         InputStream openStream = con.getInputStream();
         BufferedReader in = new BufferedReader( new InputStreamReader(
                 openStream ) );
         return in;
     }
-    
+
     ////@Ignore
     @Test
     public void testGet() {
-        
+
         Integer snummer = shellaSnummer;
         String baseUrl = wireMockRule.baseUrl();
         stubFor(
@@ -171,13 +173,13 @@ public class RestDAOTest {
                         .willReturn( aResponse()
                                 .withHeader( "Content-Type", "application/json" ).
                                 withBody( shellaAsJosnString ) ) );
-        
+
         String loc = baseUrl + endPoint;
-        
+
         RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
-        
+
         Optional<Student> os = dao.get( snummer );
-        
+
         assertTrue( os.isPresent() );
         Student s = os.get();
         String email = s.getEmail();
@@ -198,106 +200,109 @@ public class RestDAOTest {
 
         // get the json as list of students, for later comparison
         Gson gson = gsonBuilder().create();
-        Type typeToken = TypeToken.getParameterized( ArrayList.class, Student.class ).
+        Type typeToken = TypeToken.getParameterized( ArrayList.class,
+                Student.class ).
                 getType();
         Reader sr = new StringReader( studentJson );
         List<Student> testStudents = gson.fromJson( sr, typeToken );
         Student[] testA = testStudents.toArray( new Student[ 0 ] );
-        
+
         stubFor(
                 get( WireMock.urlEqualTo( endPoint ) )
                         .willReturn( aResponse()
                                 .withHeader( "Content-Type", "application/json" ).
                                 withBody( studentJson ) ) );
         String baseUrl = wireMockRule.baseUrl();
-        
+
         String loc = baseUrl + endPoint;
-        
+
         RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
-        
+
         Collection<Student> all = dao.getAll();
-        
+
         Assertions.assertThat( all ).containsExactlyInAnyOrder( testA );
         printServeEvents();
 
 //        Assert.fail( "test method testGetAll reached its end, you can remove this line when you aggree." );
     }
-    
+
     @Test
     public void testSave() throws IOException {
         String baseUrl = wireMockRule.baseUrl();
         String harryJ = readTestDataFile( "potter.json" );
-        
+
         stubFor( WireMock.post( WireMock.urlMatching( endPoint ) )
                 .willReturn( aResponse()
-                        .withHeader( "Content-Type", "application/json" ).withBody( harryJ )
+                        .withHeader( "Content-Type", "application/json" ).
+                        withBody( harryJ )
                         .withStatus( 200 ) ) );
-        
+
         String loc = baseUrl + endPoint;
         RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
-        
+
         Student harry = gsonBuilder().create().fromJson( harryJ, Student.class );
-        
+
         Student savedHarry = dao.save( harry );
 
 //        printServeEvents();
         verify( postRequestedFor( urlEqualTo( endPoint ) )
                 .withHeader( "Content-Type", equalTo( "application/json" ) ) );
-        
+
         assertEquals( "Harry went through the looking glass", harry, savedHarry );
         //Assert.fail( "test method testSave reached its end, you can remove this line when you aggree." );
     }
-    
+
     @Test
     public void testDelete() {
         String baseUrl = wireMockRule.baseUrl();
+        int snummer = shella.snummer;
         String loc = baseUrl + endPoint;
-        stubFor( WireMock.delete( WireMock.urlMatching( endPoint ) )
+        stubFor( WireMock.delete( WireMock.urlMatching( endPoint+snummer ) )
                 .willReturn( aResponse()
                         .withStatus( 200 ) ) );
-        
+
         RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
-        
+
         dao.delete( shella );
         printServeEvents();
-        verify( deleteRequestedFor( urlEqualTo( endPoint ) )
-                .withHeader( "Content-Type", equalTo( "application/json" ) )
-                .withRequestBody( containing( shella.email ) ) );
-        
+        verify( deleteRequestedFor( urlEqualTo( endPoint +snummer) ) );
+
 //        Assert.fail( "test method testDelete reached its end, you can remove this line when you aggree." );
     }
-    
+
     @Test
     public void testUpdate() throws IOException {
         String baseUrl = wireMockRule.baseUrl();
         String harryJ = readTestDataFile( "potter.json" );
-        
+
         stubFor( WireMock.put( WireMock.urlMatching( endPoint ) )
                 .willReturn( aResponse()
-                        .withHeader( "Content-Type", "application/json" ).withBody( harryJ )
+                        .withHeader( "Content-Type", "application/json" ).
+                        withBody( harryJ )
                         .withStatus( 200 ) ) );
-        
+
         String loc = baseUrl + endPoint;
         RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
-         
+
         Student harry = gsonBuilder().create().fromJson( harryJ, Student.class );
-        harry.email="hpotter@fontys.nl";
-        Student updatedHarry= dao.update( harry );
+        harry.email = "hpotter@fontys.nl";
+        Student updatedHarry = dao.update( harry );
 
 //        printServeEvents();
         verify( putRequestedFor( urlEqualTo( endPoint ) )
                 .withHeader( "Content-Type", equalTo( "application/json" ) ) );
-        
+
         assertEquals( "Harry starts with fontys", harry, updatedHarry );
         //Assert.fail( "testUpdate not yet implemented. Review the code and comment or delete this line" );
     }
-    
+
     private void printServeEvents() {
         List<ServeEvent> allServeEvents = WireMock.getAllServeEvents();
         System.out.println( "serve events:" );
         for ( ServeEvent event
                 : allServeEvents ) {
-            event.getPostServeActions().forEach( ( k, v ) -> System.out.println( "post" + k + "=" + v ) );
+            event.getPostServeActions().forEach( ( k, v ) -> System.out.
+                    println( "post" + k + "=" + v ) );
             System.out.println( "     request =" + event.getRequest() );
         }
         //verify( postRequestedFor( WireMock.urlMatching( endPoint ) ) );//.withHeader("Content-Type",equalTo("application/json")));

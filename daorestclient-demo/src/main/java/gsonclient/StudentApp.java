@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 /**
  * Simple table retrieval app.
- * @author Pieter van den Hombergh (879417) {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class StudentApp extends Application {
 

@@ -149,21 +149,26 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 
     private void setJsonHeaders( HttpURLConnection con, int bodySize ) {
         con.setInstanceFollowRedirects( false );
-        con.setRequestProperty( "Content-Type", "application/json" );
-        con.setRequestProperty( "charset", "utf-8" );
-        con.setUseCaches( false );
-        con.setDoOutput( true );
-        con.setRequestProperty( "Accept", "application/json" );
+        basicJsonHeaders(con);
         con.setRequestProperty( "Content-Length", "" + bodySize );
     }
 
-    private HttpURLConnection delete( String eLoc, int bodySize ) throws
+    private HttpURLConnection delete( String eLoc ) throws
             ProtocolException, MalformedURLException, IOException {
+        
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod( "DELETE" );
-        setJsonHeaders( con, bodySize );
+        basicJsonHeaders(con);
         return con;
+    }
+
+    private void basicJsonHeaders( HttpURLConnection con ) {
+        con.setRequestProperty( "Content-Type", "application/json" );
+        con.setRequestProperty( "charset", "utf-8" );
+        con.setRequestProperty( "Accept", "application/json" );
+        con.setUseCaches( false );
+        con.setDoOutput( true );
     }
 
     @Override
@@ -229,17 +234,8 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
     @Override
     public void delete( E e ) {
         try {
-            Gson gson = gsonBuilder.create();
-            String toJson = gson.toJson( e, type );
-            int length = toJson.length();
-            HttpURLConnection con = delete( baseUrl, length );
-
-            try ( OutputStream out = con.getOutputStream();
-                    DataOutputStream wr = new DataOutputStream( out ); ) {
-                wr.write( toJson.getBytes() );
-                wr.flush();
-                wr.close();
-            }
+            K key = e.getNaturalId();
+            HttpURLConnection con = delete( baseUrl+key );
             int responseCode = con.getResponseCode();
             if ( responseCode != 200 ) {
                 throw new DAOException( "delete failed for entity " + e );

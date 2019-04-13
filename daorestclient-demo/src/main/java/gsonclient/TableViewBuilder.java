@@ -24,7 +24,7 @@ import nl.fontys.sebivenlo.dao.Entity2;
 
 /**
  *
- * @author Pieter van den Hombergh (879417) {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <E> type to be shown
  */
 public class TableViewBuilder<K extends Serializable, E extends Entity2<K>> {
