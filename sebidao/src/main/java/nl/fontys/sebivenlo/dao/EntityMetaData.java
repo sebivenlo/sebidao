@@ -16,7 +16,7 @@ import java.util.Set;
  *
  * @param <E> entity type.
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 class EntityMetaData<E> {
 

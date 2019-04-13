@@ -15,7 +15,7 @@ import nl.fontys.sebivenlo.dao.SimpleEntity;
 
 /**
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class DepartmentMapper implements Mapper<Integer, Department> {
 

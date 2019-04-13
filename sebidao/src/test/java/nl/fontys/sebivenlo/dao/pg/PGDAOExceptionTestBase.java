@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations;
 
 /**
  *
- * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
 

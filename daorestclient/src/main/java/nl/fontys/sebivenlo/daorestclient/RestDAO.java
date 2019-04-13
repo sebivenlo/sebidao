@@ -34,7 +34,7 @@ import nl.fontys.sebivenlo.dao.Entity2;
 
 /**
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key type
  * @param <E> entity
  */
@@ -48,6 +48,11 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
         this.baseUrl = baseUrl.endsWith( "/" ) ? baseUrl : baseUrl + '/';
         this.type = type;
 
+    }
+
+    public static <U extends Serializable, V extends Entity2<U>> DAO<U, V> daoFor( 
+            String baseUrl, Class<V> type ) {
+        return new RestDAO<>( baseUrl, type );
     }
     private final String USER_AGENT = "Mozilla/5.0";
     private static final GsonBuilder gsonBuilder
@@ -127,7 +132,7 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod( "POST" );
-        setJsonHeaders(con, bodySize);
+        setJsonHeaders( con, bodySize );
 
         return con;
     }
@@ -137,7 +142,7 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod( "PUT" );
-        setJsonHeaders(con, bodySize);
+        setJsonHeaders( con, bodySize );
 
         return con;
     }
@@ -157,7 +162,7 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod( "DELETE" );
-        setJsonHeaders(con, bodySize);
+        setJsonHeaders( con, bodySize );
         return con;
     }
 

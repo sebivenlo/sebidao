@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
  * broken and throws an exception.
  *
  *
- * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class PGDAOExceptionTest extends PGDAOExceptionTestBase {
 

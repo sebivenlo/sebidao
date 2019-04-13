@@ -21,7 +21,7 @@ public class DAOException extends RuntimeException {
 
     /**
      * When there is no underlying cause.
-     * @param message 
+     * @param message to transfer
      */
     public DAOException( String message ) {
         super( message );

@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * a generated column value, as surrogate key. A use case could also be an import from another system,
  * where the field is key and generated in said system, but should not be generated on this system.
  * 
- * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
 /**
  * To cover exceptions on close.
  *
- * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 class NonClosingConnection implements Connection {
 

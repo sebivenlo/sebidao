@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * Just adding the annotation will tag the id generated, i.e. typically using
  * some sequence.
  *
- * @author Pieter van den Hombergh  {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.FIELD )

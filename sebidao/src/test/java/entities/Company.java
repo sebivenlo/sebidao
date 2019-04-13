@@ -6,7 +6,7 @@ import nl.fontys.sebivenlo.dao.ID;
 /**
  * Entity with non numeric primary key.
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class Company implements Entity2<String> {
 

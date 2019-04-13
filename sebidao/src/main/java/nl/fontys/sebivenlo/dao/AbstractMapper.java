@@ -26,7 +26,7 @@ import java.util.Set;
  * }
  * </pre>
  *
- * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key type.
  * @param <E> entity type.
  */
