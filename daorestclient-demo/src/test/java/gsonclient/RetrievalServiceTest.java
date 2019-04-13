@@ -101,26 +101,24 @@ public class RetrievalServiceTest {
 //        Assert.fail(
 //                "testGetAll not yet implemented. Review the code and comment or delete this line" );
     }
-    
+
     @Test
     public void testSaveDelete() throws IOException {
         String harryJ = readTestDataFile( "potter.json" );
         String loc = baseUrl + endPoint;
-        
+
         Student harry = gsonBuilder().create().fromJson( harryJ, Student.class );
-        
+
         RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
         Student savedHarry = dao.save( harry );
 
-        assertEquals( "Harry went through the looking glass", harry, savedHarry );
-        //Assert.fail( "test method testSave reached its end, you can remove this line when you aggree." );
-        
-        // fantys has only muggles, so drop harry
-        
-        dao.delete( harry );
-        
-        Assert.fail( 
-                "testSave not yet implemented. Review the code and comment or delete this line" );
+        // cleanup before assert, to db clean.
+        dao.delete( savedHarry );
+        assertEquals( "Harry went through the looking glass", harry.email,
+                savedHarry.email );
+
+//        Assert.fail( 
+//                "testSave not yet implemented. Review the code and comment or delete this line" );
     }
 
     private static String readTestDataFile( String fileName ) throws IOException {
