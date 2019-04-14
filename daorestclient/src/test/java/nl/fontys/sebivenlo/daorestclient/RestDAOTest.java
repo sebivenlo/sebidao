@@ -33,11 +33,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import nl.fontys.sebivenlo.dao.DAO;
 import static nl.fontys.sebivenlo.daorestclient.RestDAO.gsonBuilder;
 import org.assertj.core.api.Assertions;
 import org.json.JSONException;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -72,6 +74,7 @@ public class RestDAOTest {
     }
 
     final String endPoint = "/students/";
+    RestDAOFactory dfac;
     static int shellaSnummer = 3640450;
     static String shellaAsJosnString;
     static Student shella;
@@ -81,6 +84,12 @@ public class RestDAOTest {
         shellaAsJosnString = readTestDataFile( "shellaclifton.json" );
         shella = gsonBuilder().create().fromJson( shellaAsJosnString,
                 Student.class );
+    }
+
+    @Before
+    public void setupBaseUrl() {
+        String baseUrl = wireMockRule.baseUrl() + endPoint;
+        dfac = new RestDAOFactory( baseUrl );
     }
 
     private static String readTestDataFile( String fileName ) throws IOException {
@@ -106,7 +115,6 @@ public class RestDAOTest {
 
         URL url = new URL( wireMockRule.baseUrl() + "/some/thing" );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        int responseCode = con.getResponseCode();
         String r = readconnection( con );
 
         assertEquals( "ping ", hello, r );
@@ -176,7 +184,7 @@ public class RestDAOTest {
 
         String loc = baseUrl + endPoint;
 
-        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+        DAO<Integer, Student> dao = dfac.createDao( Student.class );
 
         Optional<Student> os = dao.get( snummer );
 
@@ -191,6 +199,7 @@ public class RestDAOTest {
 
     /**
      * Test get all using as test data the students.json file.
+     * @throws java.io.IOException ignored
      */
     ////@Ignore
     @Test
@@ -214,9 +223,7 @@ public class RestDAOTest {
                                 withBody( studentJson ) ) );
         String baseUrl = wireMockRule.baseUrl();
 
-        String loc = baseUrl + endPoint;
-
-        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+        DAO<Integer, Student> dao = dfac.createDao( Student.class );
 
         Collection<Student> all = dao.getAll();
 
@@ -238,7 +245,7 @@ public class RestDAOTest {
                         .withStatus( 200 ) ) );
 
         String loc = baseUrl + endPoint;
-        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+        DAO<Integer, Student> dao = dfac.createDao( Student.class );
 
         Student harry = gsonBuilder().create().fromJson( harryJ, Student.class );
 
@@ -256,16 +263,15 @@ public class RestDAOTest {
     public void testDelete() {
         String baseUrl = wireMockRule.baseUrl();
         int snummer = shella.snummer;
-        String loc = baseUrl + endPoint;
-        stubFor( WireMock.delete( WireMock.urlMatching( endPoint+snummer ) )
+        stubFor( WireMock.delete( WireMock.urlMatching( endPoint + snummer ) )
                 .willReturn( aResponse()
                         .withStatus( 200 ) ) );
 
-        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+        DAO<Integer, Student> dao = dfac.createDao( Student.class );
 
         dao.delete( shella );
         printServeEvents();
-        verify( deleteRequestedFor( urlEqualTo( endPoint +snummer) ) );
+        verify( deleteRequestedFor( urlEqualTo( endPoint + snummer ) ) );
 
 //        Assert.fail( "test method testDelete reached its end, you can remove this line when you aggree." );
     }
@@ -281,8 +287,7 @@ public class RestDAOTest {
                         withBody( harryJ )
                         .withStatus( 200 ) ) );
 
-        String loc = baseUrl + endPoint;
-        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+        DAO<Integer, Student> dao = dfac.createDao( Student.class );
 
         Student harry = gsonBuilder().create().fromJson( harryJ, Student.class );
         harry.email = "hpotter@fontys.nl";

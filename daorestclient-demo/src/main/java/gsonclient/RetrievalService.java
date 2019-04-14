@@ -12,7 +12,7 @@ import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.List;
 import nl.fontys.sebivenlo.dao.Entity2;
-import static nl.fontys.sebivenlo.daorestclient.RestDAO.daoFor;
+import nl.fontys.sebivenlo.daorestclient.RestDAOFactory;
 
 /**
  *
@@ -25,10 +25,12 @@ public class RetrievalService<K extends Serializable, E extends Entity2<K>>
 
     private final String baseUrl;
     private final Class<E> type;
+    private final RestDAOFactory dfac;
 
     public RetrievalService( String url, Class<E> type ) {
         this.baseUrl = url;
         this.type = type;
+        dfac= new RestDAOFactory(baseUrl );
     }
 
     @Override
@@ -45,20 +47,20 @@ public class RetrievalService<K extends Serializable, E extends Entity2<K>>
 
     ObservableList<E> getAll() throws JsonSyntaxException, JsonIOException,
             MalformedURLException, IOException {
-        Collection<E> all = daoFor( baseUrl, type ).getAll();
+        Collection<E> all = dfac.createDao( type  ).getAll();
         return FXCollections.<E>observableArrayList( (List) all );
     }
 
     E save( E entity ) throws MalformedURLException, IOException {
-        return daoFor( baseUrl, type ).save( entity );
+        return dfac.createDao( type  ).save( entity );
     }
 
     E update( E entity ) {
-        return daoFor( baseUrl, type ).update( entity );
+        return dfac.createDao( type  ).update( entity );
 
     }
 
     void delete( E entity ) {
-        daoFor( baseUrl, type ).delete( entity );
+        dfac.createDao( type  ).delete( entity );
     }
 }

@@ -6,7 +6,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +22,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.fontys.sebivenlo.dao.DAO;
@@ -43,17 +42,21 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 
     private final String baseUrl;
     private final Class<E> type;
+    private final BiFunction<URL, String, HttpURLConnection> configurator;
 
-    public RestDAO( String baseUrl, Class<E> type ) {
+    RestDAO(
+            String baseUrl, Class<E> type,
+            BiFunction<URL, String, HttpURLConnection> aConfigurator ) {
+        this.configurator = aConfigurator;
         this.baseUrl = baseUrl.endsWith( "/" ) ? baseUrl : baseUrl + '/';
         this.type = type;
 
     }
 
-    public static <U extends Serializable, V extends Entity2<U>> DAO<U, V> daoFor( 
-            String baseUrl, Class<V> type ) {
-        return new RestDAO<>( baseUrl, type );
-    }
+//    public static <U extends Serializable, V extends Entity2<U>> DAO<U, V> daoFor(
+//            String baseUrl, Class<V> type ) {
+//        return new RestDAO<>( baseUrl, type );
+//    }
     private final String USER_AGENT = "Mozilla/5.0";
     private static final GsonBuilder gsonBuilder
             = new GsonBuilder().registerTypeAdapter( LocalDate.class,
@@ -68,12 +71,9 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
         Gson gson = gsonBuilder.create();
         String eLoc = baseUrl + key;
         try {
-
             HttpURLConnection con = get( eLoc );
-
-            int responseCode = con.getResponseCode();
             return readEntity( con, gson );
-        } catch ( IOException ex ) {
+        } catch ( JsonIOException | JsonSyntaxException | IOException ex ) {
             Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
@@ -83,9 +83,7 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
     private HttpURLConnection get( String eLoc ) throws ProtocolException,
             MalformedURLException, IOException {
         URL url = new URL( eLoc );
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod( "GET" );
-        return con;
+        return configurator.apply( url, "GET" );
     }
 
     private Optional<E> readEntity( HttpURLConnection con, Gson gson ) throws
@@ -105,7 +103,6 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
     @Override
     public Collection<E> getAll() {
         try {
-//            System.out.println( "QRS start for url '" + baseUrl + "'" );
             URL url = new URL( baseUrl );
 
             Type typeToken
@@ -116,32 +113,18 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
             Gson gson = gsonBuilder.create();
             List<E> p = gson.fromJson( reader, typeToken );
             return p;
-        } catch ( MalformedURLException ex ) {
+        } catch ( JsonIOException | JsonSyntaxException | IOException ex ) {
             Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-        } catch ( IOException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+            throw new DAOException( ex.getMessage(), ex );
         }
-        return Collections.EMPTY_LIST;
-
     }
 
-    private HttpURLConnection post( String eLoc, int bodySize ) throws
+    private HttpURLConnection postput( String eLoc, int bodySize, String verb )
+            throws
             ProtocolException, MalformedURLException, IOException {
         URL url = new URL( eLoc );
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod( "POST" );
-        setJsonHeaders( con, bodySize );
-
-        return con;
-    }
-
-    private HttpURLConnection put( String eLoc, int bodySize ) throws
-            ProtocolException, MalformedURLException, IOException {
-        URL url = new URL( eLoc );
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod( "PUT" );
+        HttpURLConnection con = configurator.apply( url, verb );
         setJsonHeaders( con, bodySize );
 
         return con;
@@ -149,26 +132,21 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 
     private void setJsonHeaders( HttpURLConnection con, int bodySize ) {
         con.setInstanceFollowRedirects( false );
-        basicJsonHeaders(con);
+        basicJsonHeaders( con );
         con.setRequestProperty( "Content-Length", "" + bodySize );
     }
 
     private HttpURLConnection delete( String eLoc ) throws
-            ProtocolException, MalformedURLException, IOException {
-        
+            Exception {
+
         URL url = new URL( eLoc );
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        basicJsonHeaders( con );
         con.setRequestMethod( "DELETE" );
-        basicJsonHeaders(con);
         return con;
     }
 
     private void basicJsonHeaders( HttpURLConnection con ) {
-        con.setRequestProperty( "Content-Type", "application/json" );
-        con.setRequestProperty( "charset", "utf-8" );
-        con.setRequestProperty( "Accept", "application/json" );
-        con.setUseCaches( false );
-        con.setDoOutput( true );
     }
 
     @Override
@@ -178,36 +156,35 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
             Gson gson = gsonBuilder.create();
             String toJson = gson.toJson( e, type );
             int length = toJson.length();
-            HttpURLConnection con = post( baseUrl, length );
+            HttpURLConnection con = postput( baseUrl, length, "POST" );
             result = createOrUpdate( con, toJson, gson );
-        } catch ( MalformedURLException ex ) {
+        } catch ( Exception ex ) {
             Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-        } catch ( IOException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+            throw new DAOException( ex.getMessage(), ex );
         }
         return result;
     }
 
     private E createOrUpdate( HttpURLConnection con, String toJson, Gson gson )
-            throws IOException, JsonSyntaxException {
+            throws Exception {
         E result;
         try ( OutputStream out = con.getOutputStream();
                 DataOutputStream wr = new DataOutputStream( out ); ) {
             wr.write( toJson.getBytes() );
             wr.flush();
             wr.close();
-        }
-        try ( BufferedReader br = new BufferedReader(
-                new InputStreamReader( con.getInputStream(), "utf-8" ) ) ) {
-            StringBuilder response = new StringBuilder();
-            String responseLine = null;
-            while ( ( responseLine = br.readLine() ) != null ) {
-                response.append( responseLine.trim() );
+
+            try ( BufferedReader br = new BufferedReader(
+                    new InputStreamReader( con.getInputStream(), "utf-8" ) ) ) {
+                StringBuilder response = new StringBuilder();
+                String responseLine = null;
+                while ( ( responseLine = br.readLine() ) != null ) {
+                    response.append( responseLine.trim() );
+                }
+                System.out.println( "response=" + response.toString() );
+                result = gson.fromJson( response.toString(), type );
             }
-            System.out.println( "response=" + response.toString() );
-            result = gson.fromJson( response.toString(), type );
         }
         return result;
     }
@@ -219,14 +196,12 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
             Gson gson = gsonBuilder.create();
             String toJson = gson.toJson( e, type );
             int length = toJson.length();
-            HttpURLConnection con = put( baseUrl, length );
+            HttpURLConnection con = postput( baseUrl, length, "PUT" );
             result = createOrUpdate( con, toJson, gson );
-        } catch ( MalformedURLException ex ) {
+        } catch ( Exception ex ) {
             Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-        } catch ( IOException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+            throw new DAOException( ex.getMessage(), ex );
         }
         return result;
     }
@@ -235,18 +210,15 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
     public void delete( E e ) {
         try {
             K key = e.getNaturalId();
-            HttpURLConnection con = delete( baseUrl+key );
+            HttpURLConnection con = delete( baseUrl + key );
             int responseCode = con.getResponseCode();
             if ( responseCode != 200 ) {
                 throw new DAOException( "delete failed for entity " + e );
             }
-        } catch ( MalformedURLException ex ) {
+        } catch ( Exception ex ) {
             Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
-        } catch ( IOException ex ) {
-            Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+            throw new DAOException( ex.getMessage(), ex );
         }
     }
-
 }

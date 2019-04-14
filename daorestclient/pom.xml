@@ -3,10 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.fontys.sebivenlo</groupId>
     <artifactId>daorestclient</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
-    <name>sebi :: DaoRestClient</name>
-    <description>A DAO is a simple way to chop your business and presentation logic apart and redistribute it amongst
+    <name>sebidao :: DAORestClient</name>
+    <description>
+        DAO implementation against a rest endpoint.
+        
+        A DAO is a simple way to chop your business and presentation logic apart and redistribute it amongst
     serveral layers or tiers.
     
         The dependencies may seem scary, but rest assured (pun intended), most are transitive and only to test this criter.

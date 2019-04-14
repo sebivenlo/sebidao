@@ -5,7 +5,6 @@ import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.Entity2;
-import nl.fontys.sebivenlo.dao.SimpleEntity;
 import nl.fontys.sebivenlo.dao.TransactionToken;
 
 /**

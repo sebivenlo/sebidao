@@ -18,12 +18,15 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.daorestclient.RestDAO;
 import static nl.fontys.sebivenlo.daorestclient.RestDAO.gsonBuilder;
+import nl.fontys.sebivenlo.daorestclient.RestDAOFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 /**
@@ -33,6 +36,8 @@ import org.junit.BeforeClass;
 public class RetrievalServiceTest {
 
     static String baseUrl;
+    final String endPoint = "/students/";
+    RestDAOFactory dfac;
 
     @BeforeClass
     public static void setupClass() throws IOException {
@@ -53,7 +58,11 @@ public class RetrievalServiceTest {
 
     }
 
-    final String endPoint = "/students/";
+    @Before 
+    public void setup(){
+        dfac= new RestDAOFactory(baseUrl+endPoint );
+    
+    }
     static int shellaSnummer = 3640450;
     static String shellaAsJosnString;
     static Student shella;
@@ -62,7 +71,7 @@ public class RetrievalServiceTest {
     public void testGet() {
         String loc = baseUrl + endPoint;
 
-        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+        DAO<Integer, Student> dao = dfac.createDao(  Student.class );
 
         Optional<Student> os = dao.get( shellaSnummer );
 
@@ -85,7 +94,7 @@ public class RetrievalServiceTest {
 
         String loc = baseUrl + endPoint;
 
-        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+        DAO<Integer, Student> dao = dfac.createDao(  Student.class );
 
         Collection<Student> all = dao.getAll();
 
@@ -109,7 +118,7 @@ public class RetrievalServiceTest {
 
         Student harry = gsonBuilder().create().fromJson( harryJ, Student.class );
 
-        RestDAO<Integer, Student> dao = new RestDAO<>( loc, Student.class );
+        DAO<Integer, Student> dao = dfac.createDao(  Student.class );
         Student savedHarry = dao.save( harry );
 
         // cleanup before assert, to db clean.

@@ -1,6 +1,5 @@
 package nl.fontys.sebivenlo.daorestclient;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 import nl.fontys.sebivenlo.dao.Entity2;
