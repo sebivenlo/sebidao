@@ -25,13 +25,13 @@ public class PGDAOFactory extends AbstractDAOFactory {
     }
 
     @Override
-    public <K extends Serializable, E extends Entity2<K>> DAO<K, E> createDao(
+    public <K extends Serializable, E extends Entity2<K>> PGDAO<K, E> createDao(
             Class<E> forClass ) {
         return new PGDAO( ds, this.mappers.get( forClass ) );
     }
 
     @Override
-    public <K extends Serializable, E extends Entity2<K>> DAO<K, E> createDao( 
+    public <K extends Serializable, E extends Entity2<K>> PGDAO<K, E> createDao( 
             Class<E> forClass,
             TransactionToken token ) {
         return new PGDAO( ds, this.mappers.get( forClass ) ).

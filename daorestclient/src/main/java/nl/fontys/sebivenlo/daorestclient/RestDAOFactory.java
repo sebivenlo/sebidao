@@ -32,7 +32,7 @@ public class RestDAOFactory extends AbstractDAOFactory {
     }
 
     @Override
-    public <K extends Serializable, E extends Entity2<K>> DAO<K, E> createDao(
+    public <K extends Serializable, E extends Entity2<K>> RestDAO<K, E> createDao(
             Class<E> forClass ) {
         return new RestDAO<>( baseUrl,
                 forClass, this.connectionConfigurator() );
@@ -49,7 +49,7 @@ public class RestDAOFactory extends AbstractDAOFactory {
      * @return
      */
     @Override
-    public <K extends Serializable, E extends Entity2<K>> DAO<K, E> createDao(
+    public <K extends Serializable, E extends Entity2<K>> RestDAO<K, E> createDao(
             Class<E> forClass, TransactionToken token ) {
         return createDao( forClass );
     }

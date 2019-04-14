@@ -29,21 +29,30 @@ public class MemoryDAOFactory extends AbstractDAOFactory {
         return Holder.INSTANCE;
     }
 
-    private final Map<Class<?>, InMemoryDAO<? extends Serializable, ? extends Entity2>> factorStorage
+    private final Map<Class<?>, InMemoryDAO<? extends Serializable, ? extends Entity2>> factoryStorage
             = new HashMap<>();
 
     @Override
-    public <K extends Serializable, E extends Entity2<K>> DAO<K, E> createDao(
+    public <K extends Serializable, E extends Entity2<K>> InMemoryDAO<K, E> createDao(
             Class<E> forClass ) {
-        return factorStorage.computeIfAbsent( forClass, c
+        return factoryStorage.computeIfAbsent( forClass, c
                 -> new InMemoryDAO( c ) );
     }
 
+    /**
+     * This implementation ignores the transaction token.
+     * @param <K> key
+     * @param <E> entity
+     * @param forClass the enity type
+     * @param token ignored
+     * @return the DAO.
+     */
     @Override
-    public <K extends Serializable, E extends Entity2<K>> DAO<K, E> createDao(
+    public <K extends Serializable, E extends Entity2<K>> InMemoryDAO<K, E> createDao(
             Class<E> forClass,
             TransactionToken token ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return createDao(forClass);
+        //throw new UnsupportedOperationException( "Not supported yet." );
     }
 
 }

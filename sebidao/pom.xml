@@ -4,7 +4,7 @@
     
     <groupId>nl.fontys.sebivenlo</groupId>
     <artifactId>sebidao</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     
     <name>sebidao</name>
     <description>
