@@ -46,7 +46,7 @@ public class RestDAOFactory extends AbstractDAOFactory {
      * @param <E> entity
      * @param forClass type
      * @param token ignored
-     * @return
+     * @return the DAO
      */
     @Override
     public <K extends Serializable, E extends Entity2<K>> RestDAO<K, E> createDao(
