@@ -227,6 +227,21 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             throw new DAOException( ex.getMessage(), ex );
         }
     }
+    
+    @Override
+    public Collection<E> saveAll( Iterable<E> entity ) {
+        if ( null != transactionToken ) {
+            return saveAll( transactionToken.getConnection(), entity );
+        }
+
+        try ( Connection c = this.getConnection(); ) {
+            return saveAll( c, entity );
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+            throw new DAOException( ex.getMessage(), ex );
+        }
+    }
 
     private E save( final Connection c, E t ) {
         final List<String> columnNames
@@ -240,11 +255,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                         columns, placeholders );
         try (
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
-            Object[] parts = dropGeneneratedParts( mapper.explode( t ) );
-            int j = 1;
-            for ( Object part : parts ) {
-                pst.setObject( j++, part );
-            }
+            populatePrepared( t, pst );
 
             try ( ResultSet rs = pst.executeQuery(); ) {
                 if ( rs.next() ) {
@@ -257,6 +268,45 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
             throw new DAOException( ex.getMessage(), ex );
+        }
+    }
+
+    private Collection<E> saveAll( final Connection c, Iterable<E> elements ) {
+        final List<String> columnNames
+                = getFilteredColumnNames();
+        String columns = String.join( ",", columnNames );
+        String placeholders = makePlaceHolders( columnNames );
+        String sql
+                = format( "insert into %s (%s) %n"
+                        + "values(%s) %n"
+                        + "returning *", tableName,
+                        columns, placeholders );
+        List<E> result = new ArrayList<>( );
+        try (
+                PreparedStatement pst = c.prepareStatement( sql ); ) {
+            for ( E t : elements ) {
+
+                populatePrepared( t, pst );
+
+                try ( ResultSet rs = pst.executeQuery(); ) {
+                    if ( rs.next() ) {
+                        result.add( recordToEntity( rs ) );
+                    }
+                }
+            }
+            return result;
+        } catch ( SQLException ex ) {
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+            throw new DAOException( ex.getMessage(), ex );
+        }
+    }
+
+    private void populatePrepared( E t, final PreparedStatement pst ) throws SQLException {
+        Object[] parts = dropGeneneratedParts( mapper.explode( t ) );
+        int j = 1;
+        for ( Object part : parts ) {
+            pst.setObject( j++, part );
         }
     }
 
