@@ -50,6 +50,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     final DataSource ds;
     @Resource
     final Mapper<K, E> mapper;
+    final String allColumns;
 
     /**
      * Create a DAO for a data source and a mapper.
@@ -62,8 +63,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         this.mapper = mapper;
         this.tableName = mapper.tableName();
         this.idName = mapper.idName();
+        allColumns = String.join( ",", mapper.persistentFieldNames() );
     }
 
+    
     /**
      * Transaction capable version.
      *
@@ -93,8 +96,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @return Optional of E
      */
     private Optional<E> get( final Connection con, K id ) {
-        String columns = String.join( ",", mapper.persistentFieldNames() );
-        String sql = format( "select %s from %s where %s=?", columns, tableName,
+        String sql = format( "select %s from %s where %s=?", allColumns, tableName,
                 idName );
         try (
                 PreparedStatement pst = con.prepareStatement( sql ); ) {
@@ -320,12 +322,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     Object[] dropGeneneratedParts( Object[] parts ) {
-        Set<String> persistentFieldNames = mapper.persistentFieldNames();
-
         List<Object> result = new ArrayList<>();
         Predicate<String> notGen = isGenerated().negate();
         int i = 0;
-        for ( String pfn : persistentFieldNames ) {
+        for ( String pfn : mapper.persistentFieldNames() ) {
             if ( notGen.test( pfn ) ) {
                 result.add( parts[ i ] );
             }
@@ -360,9 +360,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private Collection<E> getAll( final Connection c ) {
-        String columns = String.join( ",", mapper.persistentFieldNames() );
 
-        String sql = format( "select %s from %s ", columns, tableName );
+        String sql = format( "select %s from %s ", allColumns, tableName );
         try (
                 PreparedStatement pst = c.prepareStatement( sql );
                 ResultSet rs = pst.executeQuery(); ) {
@@ -408,11 +407,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
         String columns = String.join( ",", keys );
         String placeholders = makePlaceHolders( keys );
-                String cols = String.join( ",", mapper.persistentFieldNames() );
 
         String sql
                 = format( "select %s from %s where (%s) =(%s)",
-                        cols,tableName,
+                        allColumns, tableName,
                         columns, placeholders );
         try (
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
