@@ -29,19 +29,17 @@ public class PGDAOFactory extends AbstractDAOFactory {
     @Override
     public <K extends Serializable, E extends Entity2<K>> PGDAO<K, E> createDao(
             Class<E> forClass ) {
-        Map<String, String> queryTextCache = queryStringCache.computeIfAbsent( forClass, ( x ) -> new HashMap<>() );
-        System.out.println( "queryTextCache = " + queryTextCache );
-        System.out.println( "querytet size "+queryTextCache.size() );
+        Map<String, String> queryTextCache = queryStringCache
+                .computeIfAbsent( forClass, ( x ) -> new HashMap<>() );
         return new PGDAO( ds, this.mappers.get( forClass ), queryTextCache );
     }
 
     @Override
     public <K extends Serializable, E extends Entity2<K>> PGDAO<K, E> createDao(
             Class<E> forClass, TransactionToken token ) {
-        Map<String, String> queryTextCache = queryStringCache.computeIfAbsent( forClass, ( x ) -> new HashMap<>() );
-        System.out.println( "queryTextCache = " + queryTextCache );
-        return new PGDAO( ds, this.mappers.get( forClass ), queryTextCache ).
-                setTransactionToken( token );
+        Map<String, String> queryTextCache = queryStringCache.computeIfAbsent( 
+                forClass, ( x ) -> new HashMap<>() );
+        return createDao( forClass ).setTransactionToken( token );
     }
 
     final Map<Class<?>, Map<String, String>> queryStringCache;

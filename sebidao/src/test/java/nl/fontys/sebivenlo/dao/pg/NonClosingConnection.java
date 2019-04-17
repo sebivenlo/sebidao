@@ -28,7 +28,7 @@ class NonClosingConnection implements Connection {
 
     final Connection delegate;
 
-    public NonClosingConnection( Connection delegate ) {
+    NonClosingConnection( Connection delegate ) {
         this.delegate = delegate;
     }
 

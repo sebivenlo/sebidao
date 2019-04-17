@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
-import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.Entity2;
-import nl.fontys.sebivenlo.dao.SimpleEntity;
 import nl.fontys.sebivenlo.dao.TransactionToken;
 
 /**

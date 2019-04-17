@@ -3,14 +3,11 @@ package nl.fontys.sebivenlo.dao;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
-import java.util.Spliterator;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Simplify the creation of a Mapper by using a bit of reflection and some
@@ -54,7 +51,7 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
     /**
      * Cached knowledge about the entity type.
      */
-    private EntityMetaData<E> entityMetaData;
+    private final EntityMetaData<E> entityMetaData;
 
     /**
      * Create a mapper for entity and key type.
@@ -98,7 +95,6 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
                         | IllegalArgumentException | InvocationTargetException ex ) {
                     Logger.getLogger( AbstractMapper.class.getName() ).
                             log( Level.SEVERE, null, ex );
-                    ex.printStackTrace();
                     throw new DAOException(
                             "could not invoke assembler constructor "
                             + assemblerCtor, ex );

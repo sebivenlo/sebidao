@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,8 +58,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      *
      * @param ds injected through this ctor.
      * @param mapper injected through this ctor.
+     * @param queryTextCache cache to save work
      */
-    public PGDAO( DataSource ds, Mapper<K, E> mapper, Map<String, String> queryTextCache ) {
+    public PGDAO( DataSource ds, Mapper<K, E> mapper,
+            Map<String, String> queryTextCache ) {
         this.ds = ds;
         this.mapper = mapper;
         this.tableName = mapper.tableName();
@@ -119,7 +120,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private String getQueryText() {
         String sql = queryTextCache.computeIfAbsent( "selectsingle", ( x )
-                -> String.format( "select %s from %s where %s=?", allColumns, tableName,
+                -> String.format( "select %s from %s where %s=?", allColumns,
+                        tableName,
                         idName ) );
         return sql;
     }
@@ -280,7 +282,9 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             try ( ResultSet rs = pst.executeQuery(); ) {
                 if ( rs.next() ) {
                     return recordToEntity( rs );
-                } else { // cannot cover without serious jumping through loops, so we will not bother.
+                } else {
+                    // cannot cover without serious jumping through loops, 
+                    // so we will not bother.
                     return null;
                 }
             }
