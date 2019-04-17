@@ -37,7 +37,7 @@ public class RestDAOFactory extends AbstractDAOFactory {
 
     /**
      * Required by the DAO super class, but since rest does not have a true
-     * transactional model, this implementation ignores the token
+     * transactional model, this implementation ignores the token.
      *
      * @param <K> key
      * @param <E> entity

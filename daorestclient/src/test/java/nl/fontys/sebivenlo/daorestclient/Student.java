@@ -142,8 +142,11 @@ public class Student implements Entity2<Integer> {
 
     @Override
     public String toString() {
-        return "Student{" + "snummer=" + snummer + ", lastname=" + lastname + ", tussenvoegsel=" 
-                + tussenvoegsel + ", firstname=" + firstname + ", cohort=" + cohort + ", email=" + email + ", gender=" + gender + ", student_class=" + student_class + '}';
+        return "Student{" + "snummer=" + snummer + ", lastname=" 
+                + lastname + ", tussenvoegsel=" 
+                + tussenvoegsel + ", firstname=" + firstname 
+                + ", cohort=" + cohort + ", email=" + email 
+                + ", gender=" + gender + ", student_class=" + student_class + '}';
     }
 
 }
