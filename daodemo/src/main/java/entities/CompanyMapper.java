@@ -18,11 +18,6 @@ public class CompanyMapper extends AbstractMapper<String,Company> {
         return e.asParts();
     }
 
-//    @Override
-//    public Company implode( Object[] parts ) {
-//        return Company.fromParts( parts );
-//    }
-
     @Override
     public Function<Company, String> keyExtractor() {
         return Company::getTicker;

@@ -1,6 +1,16 @@
 package nl.fontys.sebivenlo.dao;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Simplify the creation of a Mapper by using a bit of reflection and some
@@ -56,7 +66,53 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
         this.entityType = entityType;
         this.keyType = keyType;
         entityMetaData = new EntityMetaData<>( entityType );
+        deriveAssemblerFunction( entityType );
     }
+
+    /**
+     * Try to find a constructor that take as parameter types the fields types
+     * in fieldn declaration order.
+     *
+     * If the method succeeds the result will be stored as a
+     * {@code Function&lt;Object[],E&gt;} assembler.
+     * 
+     * The programmer of the entity class is kindly advised to create the desired 
+     * constructor.
+     *
+     * @param entityType1
+     */
+    final void deriveAssemblerFunction( Class<E> entityType1 ) {
+        Collection<Class<?>> fieldTypes = entityMetaData.typeMap.values();
+        Class[] types = new Class[ fieldTypes.size() ];
+        int p = 0;
+        for ( Class<?> clz : fieldTypes ) {
+            types[ p++ ] = clz;
+        }
+        try {
+            Constructor<E> assemblerCtor = entityType1.getConstructor( types );
+            System.out.println( "found assemblerCtor = " + assemblerCtor );
+            assembler = ( Object[] a ) -> {
+                try {
+                    return assemblerCtor.newInstance( a );
+                } catch ( InstantiationException | IllegalAccessException
+                        | IllegalArgumentException | InvocationTargetException ex ) {
+                    Logger.getLogger( AbstractMapper.class.getName() ).
+                            log( Level.SEVERE, null, ex );
+                    ex.printStackTrace();
+                    throw new DAOException(
+                            "could not invoke assembler constructor "
+                            + assemblerCtor, ex );
+                }
+            };
+        } catch ( NoSuchMethodException | SecurityException ex ) {
+            Logger.getLogger( AbstractMapper.class.getName() ).
+                    log( Level.INFO, "cannot find assembler constructor "
+                            + assemblerCtor(), ex );
+            //throw new DAOException( "cannot find assembler constructor "+assemblerCtor(), ex );
+        }
+    }
+
+    Function<Object[], E> assembler;
 
     /**
      * Get entity type.
@@ -90,8 +146,33 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
 
     @Override
     public String toString() {
-        return "AbstractMapper{" + "keyType=" + keyType + "\n, entityType=" 
+        return "AbstractMapper{" + "keyType=" + keyType + "\n, entityType="
                 + entityType + ",\n entityMetaData=" + entityMetaData + '}';
+    }
+
+    @Override
+    public E implode( Object[] parts ) {
+        if ( assembler != null ) {
+            return assembler.apply( parts );
+        } else {
+            throw new DAOException(
+                    "No assembler constructor found with signature "
+                    + assemblerCtor() );
+        }
+    }
+
+    /**
+     * A string representation of a constructor the entityType prefreably should have.
+     * @return the string
+     */
+    String assemblerCtor() {
+        StringBuilder sb = new StringBuilder( entityType.getSimpleName() );
+        sb.append( "( " );
+        String params
+                = entityMetaData.typeMap.values().stream().map( c -> c.
+                getSimpleName() )
+                        .collect( Collectors.joining( ", " ) );
+        return sb.append( params ).append( ')' ).toString();
     }
 
 }

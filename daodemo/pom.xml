@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>daodemo</groupId>
     <artifactId>daodemo</artifactId>
-    <version>0.1</version>
+    <version>0.6</version>
     <packaging>jar</packaging>
-    <name>dao :: demo</name>
+    <name>sebidao :: Demo</name>
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
         <artifactId>sebipom</artifactId>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.3</version>
+            <version>0.6</version>
         </dependency>
 	 <dependency>
             <groupId>org.postgresql</groupId>
