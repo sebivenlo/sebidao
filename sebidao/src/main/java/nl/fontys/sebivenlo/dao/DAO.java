@@ -160,7 +160,7 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
      * @return the saved entities
      * @since 0.4
      */
-    default Collection<E> saveAll( Iterable<E> entities ) {
+    default Collection<? extends E> saveAll( Iterable<E> entities ) {
         return StreamSupport.stream( entities.spliterator(), false )
                 .map( e -> this.save( e ) ).collect( toList() );
     }
@@ -174,8 +174,28 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
      * @return the saved versions of the entities in a list.
      * @since 0.4
      */
-    default Collection<E> saveAll( E... entities ) {
+    default Collection<? extends E> saveAll( E... entities ) {
 
         return saveAll( Arrays.asList( entities ) );
+    }
+    
+    /**
+     * Delete the given entities.
+     * 
+     * @param entities to delete.
+     * @since 0.5
+     */
+    default void deleteAll(Iterable<E> entities){
+        StreamSupport.stream( entities.spliterator(), false ).forEach( this::delete);
+    }
+    
+    /**
+     * Delete the given entities, array version.
+     * 
+     * @param entities to delete
+     * @since 0.5
+     */
+    default void deleteAll(E... entities){
+        deleteAll(Arrays.asList( entities ));
     }
 }

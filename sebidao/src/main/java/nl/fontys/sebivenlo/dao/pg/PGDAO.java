@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -51,6 +52,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     @Resource
     final Mapper<K, E> mapper;
     final String allColumns;
+    final Map<String, String> queryTextCache;
 
     /**
      * Create a DAO for a data source and a mapper.
@@ -58,15 +60,15 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @param ds injected through this ctor.
      * @param mapper injected through this ctor.
      */
-    public PGDAO( DataSource ds, Mapper<K, E> mapper ) {
+    public PGDAO( DataSource ds, Mapper<K, E> mapper, Map<String, String> queryTextCache ) {
         this.ds = ds;
         this.mapper = mapper;
         this.tableName = mapper.tableName();
         this.idName = mapper.idName();
         allColumns = String.join( ",", mapper.persistentFieldNames() );
+        this.queryTextCache = queryTextCache;
     }
 
-    
     /**
      * Transaction capable version.
      *
@@ -96,8 +98,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @return Optional of E
      */
     private Optional<E> get( final Connection con, K id ) {
-        String sql = format( "select %s from %s where %s=?", allColumns, tableName,
-                idName );
+        String sql = getQueryText();
         try (
                 PreparedStatement pst = con.prepareStatement( sql ); ) {
             pst.setObject( 1, id );
@@ -114,6 +115,13 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                     ex );
             throw new DAOException( ex.getMessage(), ex );
         }
+    }
+
+    private String getQueryText() {
+        String sql = queryTextCache.computeIfAbsent( "selectsingle", ( x )
+                -> String.format( "select %s from %s where %s=?", allColumns, tableName,
+                        idName ) );
+        return sql;
     }
 
     private E recordToEntity( final ResultSet rs ) throws SQLException {
@@ -154,8 +162,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private void delete( final Connection con, E t ) {
-        String sql = format( "delete from %s where %s=?", tableName, mapper.
-                naturalKeyName() );
+        String sql = deleteQueryText();
         try (
                 PreparedStatement pst = con.prepareStatement( sql ); ) {
             pst.setObject( 1, mapper.keyExtractor().apply( t ) );
@@ -165,6 +172,14 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                     ex );
             throw new DAOException( ex.getMessage(), ex );
         }
+    }
+
+    private String deleteQueryText() {
+
+        String sql = queryTextCache.computeIfAbsent( "delete",
+                x -> format( "delete from %s where %s=?", tableName, mapper.
+                        naturalKeyName() ) );
+        return sql;
     }
 
     @Override
@@ -182,16 +197,9 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private E update( final Connection c, E t ) {
-        List<String> columnNames
-                = mapper.persistentFieldNames().stream().collect( toList() );
-        String columns = String.join( ",", columnNames );
-        String placeholders = makePlaceHolders( columnNames );
+        String sql
+                = updateQueryText();
         K key = mapper.keyExtractor().apply( t );
-        String sql = format( "update %s set (%s)=(%s) where (%s)=(?)"
-                + " returning * ",
-                tableName, columns,
-                placeholders,
-                mapper.idName() );
         try ( PreparedStatement pst = c.
                 prepareStatement( sql ); ) {
             Object[] parts = mapper.explode( t );
@@ -214,6 +222,22 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                     ex );
             throw new DAOException( ex.getMessage(), ex );
         }
+    }
+
+    private String updateQueryText() {
+        String sql = queryTextCache.computeIfAbsent( "update", x -> {
+            List<String> columnNames
+                    = mapper.persistentFieldNames().stream().collect( toList() );
+            String columns = String.join( ",", columnNames );
+            String placeholders = makePlaceHolders( columnNames );
+            String sqlt = format( "update %s set (%s)=(%s) where (%s)=(?)"
+                    + " returning * ",
+                    tableName, columns,
+                    placeholders,
+                    mapper.idName() );
+            return sqlt;
+        } );
+        return sql;
     }
 
     @Override
@@ -247,15 +271,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private E save( final Connection c, E t ) {
-        final List<String> columnNames
-                = getFilteredColumnNames();
-        String columns = String.join( ",", columnNames );
-        String placeholders = makePlaceHolders( columnNames );
         String sql
-                = format( "insert into %s (%s) %n"
-                        + "values(%s) %n"
-                        + "returning *", tableName,
-                        columns, placeholders );
+                = saveQueryText();
         try (
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
             populatePrepared( t, pst );
@@ -274,16 +291,25 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
     }
 
+    private String saveQueryText() {
+        String sql = queryTextCache.computeIfAbsent( "save", x -> {
+            final List<String> columnNames
+                    = getFilteredColumnNames();
+            String columns = String.join( ",", columnNames );
+            String placeholders = makePlaceHolders( columnNames );
+            String sqlt
+                    = format( "insert into %s (%s) %n"
+                            + "values(%s) %n"
+                            + "returning *", tableName,
+                            columns, placeholders );
+            return sqlt;
+        } );
+        return sql;
+    }
+
     private Collection<E> saveAll( final Connection c, Iterable<E> elements ) {
-        final List<String> columnNames
-                = getFilteredColumnNames();
-        String columns = String.join( ",", columnNames );
-        String placeholders = makePlaceHolders( columnNames );
         String sql
-                = format( "insert into %s (%s) %n"
-                        + "values(%s) %n"
-                        + "returning *", tableName,
-                        columns, placeholders );
+                = saveQueryText();
         List<E> result = new ArrayList<>();
         try (
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
@@ -361,7 +387,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private Collection<E> getAll( final Connection c ) {
 
-        String sql = format( "select %s from %s ", allColumns, tableName );
+        String sql = allQuery();
         try (
                 PreparedStatement pst = c.prepareStatement( sql );
                 ResultSet rs = pst.executeQuery(); ) {
@@ -379,6 +405,12 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                     ex );
             throw new DAOException( ex.getMessage(), ex );
         }
+    }
+
+    private String allQuery() {
+        String sql = queryTextCache.computeIfAbsent( "all", x
+                -> format( "select %s from %s ", allColumns, tableName ) );
+        return sql;
     }
 
     @Override

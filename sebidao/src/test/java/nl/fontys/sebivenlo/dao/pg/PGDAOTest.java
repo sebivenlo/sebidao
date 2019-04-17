@@ -1,14 +1,20 @@
 package nl.fontys.sebivenlo.dao.pg;
 
+import entities.Company;
+import entities.CompanyMapper;
 import entities.DBTestHelpers;
 import entities.Employee;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.DAOException;
+import nl.fontys.sebivenlo.dao.TransactionToken;
+import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -31,7 +37,7 @@ public class PGDAOTest extends DBTestHelpers {
     @Before
     public void setUp() throws Throwable {
         assertNotNull( daof );
-        eDao = (PGDAO<Integer, Employee>)daof.createDao( Employee.class );
+        eDao = daof.createDao( Employee.class );
     }
 
     @Test
@@ -88,5 +94,42 @@ public class PGDAOTest extends DBTestHelpers {
         assertSame( tok, eDao.getTransactionToken() );
 
         //fail( "testUsingTransactionConnection not yet implemented. Review the code and comment or delete this line" );
+    }
+
+    @Test
+    public void testSaveAll() throws SQLException, Exception {
+        Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1 );
+        Employee kat = new Employee( 0, "Hansen", "Katrien", "j.hansen@fontys.nl", 1 );
+        DAO dao = daof.createDao( Employee.class );
+        try (
+                TransactionToken tok = dao.startTransaction(); ) {
+            Collection<Employee> saveAll = dao.saveAll( jan, kat );
+            assertEquals( "should have 2 saved emps", 2, saveAll.size() );
+            //Assertions.assertThat( saveAll).containsExactlyInAnyOrder( kat, jan );
+            Employee e1 = saveAll.iterator().next();
+            Employee e2 = saveAll.iterator().next();
+            dao.deleteAll( e1, e2 );
+            tok.commit();
+        }
+
+        //Assert.fail( "test method testSaveAll reached its end, you can remove this line when you aggree." );
+    }
+
+    @Test
+    public void testNullableFields() {
+        String tick = "BAS";
+        Company c = new Company( null, null, null, null, tick, null );
+        daof.registerMapper( Company.class, new CompanyMapper( String.class, Company.class ) );
+        DAO<String, Company> cdao = daof.createDao( Company.class );
+
+        Company sC = cdao.save( c );
+
+        assertEquals( tick, sC.getTicker() );
+
+        assertNull( "name is null", sC.getName() );
+        assertEquals( "someint", 0, sC.getSomeInt() );
+        assertEquals( "someinteger", null, sC.getSomeInteger() );
+
+        //Assert.fail( "test method testNullableFields reached its end, you can remove this line when you aggree." );
     }
 }

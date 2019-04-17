@@ -17,15 +17,24 @@ public class Company implements Entity2<String> {
     @ID( generated = false )
     private String ticker;
     private String postcode;
+    private int someInt;
+    private Integer someInteger;
 
     public Company( String name, String country, String city,
-            String address, String ticker,String postcode ) {
+            String address, String ticker, String postcode ) {
+        this(name,country,city,address,ticker,postcode,0,null);
+    }
+
+    public Company( String name, String country, String city,
+            String address, String ticker, String postcode, int i, Integer j ) {
         this.name = name;
         this.country = country;
         this.city = city;
         this.address = address;
         this.ticker = ticker;
         this.postcode = postcode;
+        this.someInt=i;
+        this.someInteger=j;
     }
 
     @Override
@@ -84,25 +93,20 @@ public class Company implements Entity2<String> {
     }
 
     static Company fromParts( Object[] parts ) {
-        String[] str = new String[ parts.length ];
-        int i = 0;
-        for ( Object part : parts ) {
-            str[ i++ ] = String.class.cast( part );
-        }
 
-        return new Company( str[ 0 ], str[ 1 ], str[ 2 ], str[ 3 ], str[ 4 ],
-                str[ 5 ] );
+        return new Company( (String)parts[ 0 ], (String)parts[ 1 ], (String)parts[ 2 ], (String)parts[ 3 ], (String)parts[ 4 ],
+                (String)parts[ 5 ], (Integer)parts[6], (Integer)parts[7] );
     }
 
     Object[] asParts() {
 
-        return new Object[] {
+        return new Object[]{
             name,
             country,
             city,
             address,
             ticker,
-            postcode
+            postcode, someInt, someInteger
         };
     }
 
@@ -115,6 +119,21 @@ public class Company implements Entity2<String> {
     public int getId() {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
-    
-    
+
+    public int getSomeInt() {
+        return someInt;
+    }
+
+    public void setSomeInt( int someInt ) {
+        this.someInt = someInt;
+    }
+
+    public Integer getSomeInteger() {
+        return someInteger;
+    }
+
+    public void setSomeInteger( Integer someInteger ) {
+        this.someInteger = someInteger;
+    }
+
 }

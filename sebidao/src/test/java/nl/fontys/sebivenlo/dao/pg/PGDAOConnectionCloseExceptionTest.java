@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.fontys.sebivenlo.dao.pg;
 
 import entities.DBTestHelpers;
@@ -10,6 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import static java.util.logging.Logger.*;
+import org.junit.Ignore;
 
 /**
  * Test if all sql exceptions are properly translated (as in wrapped in) into
@@ -19,6 +15,7 @@ import static java.util.logging.Logger.*;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
+//@Ignore
 public class PGDAOConnectionCloseExceptionTest extends PGDAOExceptionTestBase {
 
     @Override

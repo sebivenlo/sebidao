@@ -28,8 +28,9 @@ CREATE TABLE companies (
         city text,
         address text,
         ticker text primary key,
-        postcode text
-
+        postcode text,
+	someint integer,
+	someinteger integer
 ) WITHOUT oids;
 
 
