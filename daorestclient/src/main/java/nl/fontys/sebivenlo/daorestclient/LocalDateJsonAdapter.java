@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.fontys.sebivenlo.daorestclient;
 
 import com.google.gson.JsonDeserializationContext;
@@ -16,7 +11,11 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 
 /**
- *
+ * Some java types are not available in either the json library or produced the wrong kind of (de)serialisation.
+ * This is the case for LoacalDate, from which we want ISO8601, YYYY-MM-DD e.g. 2019-04-17.
+ * 
+ * The approach is to have a converter that translates in two ways.
+ * 
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class LocalDateJsonAdapter implements JsonSerializer<LocalDate>,
@@ -34,11 +33,7 @@ public class LocalDateJsonAdapter implements JsonSerializer<LocalDate>,
     @Override
     public LocalDate deserialize( JsonElement json, Type typeOfT,
             JsonDeserializationContext context ) throws JsonParseException {
-//        System.out.println( "json = " + json);
-//        JsonPrimitive asJsonPrimitive = json.getAsJsonPrimitive();
-//        System.out.println( "toString = " + asJsonPrimitive );
         return LocalDate.parse( json.getAsString() );
-        //throw new UnsupportedOperationException( "Not supported yet." );
     }
 
 }

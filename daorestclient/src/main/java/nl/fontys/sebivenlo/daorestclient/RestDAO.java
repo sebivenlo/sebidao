@@ -32,7 +32,8 @@ import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.Entity2;
 
 /**
- *
+ * A DAO that talks to a rest API that  provides GET, POST, PUT, and DELETE operations.
+ * 
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key type
  * @param <E> entity
@@ -44,6 +45,12 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
     private final Class<E> type;
     private final BiFunction<URL, String, HttpURLConnection> configurator;
 
+    /**
+     * Create a DAO connection to url  for entity type and configured by a configurator.
+     * @param baseUrl to connect to
+     * @param type to fetch or save
+     * @param aConfigurator sets headers and a like.
+     */
     RestDAO(
             String baseUrl, Class<E> type,
             BiFunction<URL, String, HttpURLConnection> aConfigurator ) {
@@ -53,10 +60,6 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 
     }
 
-//    public static <U extends Serializable, V extends Entity2<U>> DAO<U, V> daoFor(
-//            String baseUrl, Class<V> type ) {
-//        return new RestDAO<>( baseUrl, type );
-//    }
     private final String USER_AGENT = "Mozilla/5.0";
     private static final GsonBuilder gsonBuilder
             = new GsonBuilder().registerTypeAdapter( LocalDate.class,

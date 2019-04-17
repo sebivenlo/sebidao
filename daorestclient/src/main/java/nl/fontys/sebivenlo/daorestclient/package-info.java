@@ -1,11 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Rest DAO client with factory.
- * 
+ *
+ * Talking to a REST api is also talking to a persistence service, so why not approach it in the same way.
+ *
+ * This DAO implementation and helper classes provide just taht.
+ *
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
+ *
+ *
  */
 package nl.fontys.sebivenlo.daorestclient;
