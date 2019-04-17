@@ -1,9 +1,10 @@
 package nl.fontys.sebivenlo.dao.pg;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
-import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.TransactionToken;
 
@@ -22,6 +23,7 @@ public class PGDAOFactory extends AbstractDAOFactory {
      */
     public PGDAOFactory( DataSource ds ) {
         this.ds = ds;
+        queryStringCache = new HashMap<>();
     }
 
     @Override
@@ -31,11 +33,11 @@ public class PGDAOFactory extends AbstractDAOFactory {
     }
 
     @Override
-    public <K extends Serializable, E extends Entity2<K>> PGDAO<K, E> createDao( 
-            Class<E> forClass,
-            TransactionToken token ) {
+    public <K extends Serializable, E extends Entity2<K>> PGDAO<K, E> createDao(
+            Class<E> forClass, TransactionToken token ) {
         return new PGDAO( ds, this.mappers.get( forClass ) ).
                 setTransactionToken( token );
     }
 
+    final Map<Class<?>, Map<String, String>> queryStringCache;
 }

@@ -6,7 +6,7 @@
     <artifactId>sebidao</artifactId>
     <version>0.4.1</version>
     
-    <name>sebidao</name>
+    <name>sebidao :: DAO</name>
     <description>
         Simple DAO. 
         Use a DAO to keep simple database stuff simple.
