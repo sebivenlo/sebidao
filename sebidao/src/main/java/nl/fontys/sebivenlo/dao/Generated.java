@@ -10,7 +10,8 @@ import java.lang.annotation.Target;
  * as the id field of the entity, use this annotation instead.
  *
  * Just adding the annotation will tag the id generated, i.e. typically using
- * some sequence.
+ * some sequence. It is also applicable to fields that get their value at database insertion time,
+ * like where the default value of a time stamp is {@code now()}.
  *
  * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
  */
