@@ -19,16 +19,22 @@ import java.util.stream.Collectors;
  * <pre class='brush:java'>
  * public class EmployeeMapper2 extends AbstractMapper&lt;Integer,Employee&gt; {
  *
- * public EmployeeMapper2( Class&lt;Integer&gt; keyType ,Class&lt;Employee&gt;
- * entityType) { super( keyType,entityType ); }
+ *    public EmployeeMapper2( Class&lt;Integer&gt; keyType ,Class&lt;Employee&gt; entityType) { 
+ *       super( keyType,entityType ); 
+ *    }
  *
- * &#64;Override public Object[] explode( Employee e ) { return e.asParts(); }
+ *    &#64;Override 
+ *    public Object[] explode( Employee e ) { return e.asParts(); }
  *
- * &#64;Override public Employee implode( Object... parts ) { return new
- * Employee(parts ); }
+ *    &#64;Override 
+ *    public Employee implode( Object... parts ) { 
+ *          return new  Employee(parts ); 
+ *    }
  *
- * &#64;Override public Function&lt;Employee, Integer&gt; keyExtractor() {
- * return Employee::getEmployeeid; }
+ *    &#64;Override 
+ *    public Function&lt;Employee, Integer&gt; keyExtractor() {
+ *       return Employee::getEmployeeid; 
+ *    }
  *
  * }
  * </pre>

@@ -2,27 +2,29 @@
  *  A DAO makes persistence to a database both simple and flexbile.
  *
  * Here is what you do to setup a DAO factory and prepare it to create a DAO&lt;Employee&gt;.
+ * You typically do that once for the whole application, maybe soon at or after initalisation.
  * <pre class='brush:java'>
  *
- * PGDAOFactory daof = new PGDAOFactory(dataSource); daof.registerMapper(
- * Employee.class, new EmployeeMapper() ); daof.registerMapper(
- * Department.class, new DepartmentMapper() ); daof.registerMapper(
- * Companies.class, new CompanyMapper() );
+ * PGDAOFactory daof = new PGDAOFactory(dataSource); 
+ * daof.registerMapper( Employee.class, new EmployeeMapper() ); 
+ * daof.registerMapper( Department.class, new DepartmentMapper() ); 
+ * daof.registerMapper( Companies.class, new CompanyMapper() );
  *
  * </pre>
  *
- * To Use the DAO, create one just before use.
+ * To use a DAO, create one just before use, using the factory. A DAO should be rather cheap to create
+ * and most of the costs would amortized over all creations, by applying caching of computed values where appropriate.
+ * 
  * <pre class='brush:java'>
- * DAO&lt;Integer, Employee&gt; 
- * eDao = daof.createDao( Employee.class );
+ * DAO&lt;Integer, Employee&gt;   eDao = daof.createDao( Employee.class );
  * DAO&lt;Integer, Department&gt; dDao = daof.createDao( Department.class );
  * Employee joe = new Employee(....); 
- * joe = eDao.save(joe); // note that you get a new Employee with all fields, including id field set.
+ * joe = eDao.save(joe); // note that you get a new Employee-instance with all fields, including id field set.
  * </pre>
  *
  * <h2>The DAO can also be used transactionally</h2>
  *
- * <b>Use case</b>: create a new department and set the departments id to joe
+ * <b>Use case</b>: Create a new department and set the department's id to joe
  * and hank. Create the eDAO as before, then do:
  *
  * <pre class='brush:java'>
@@ -32,17 +34,20 @@
  *
  *    savedDept = ddao.save( engineering );
  *    int depno = savedDept.getDepartmentid(); 
- *    dilbert.setDepartmentid( depno );
- *    savedDilbert = edao.save( dilbert ); 
- *    System.out.println( "savedDilbert = " + savedDilbert ); 
- *     tok.commit(); 
+ *    joe.setDepartmentid( depno );
+ *    hank.setDepartmentid( depno );
+ *    joe = edao.save( joe ); // capture saved joe
+ *    hank = edao.save( joe ); // capture saved hank
+ *    System.out.println( "joe = " + joe ); 
+ *    System.out.println( "hank = " + hank ); 
+ *    tok.commit(); 
  * } catch ( Exception ex ) { 
  *    tok.rollback();
  *    Logger.getLogger( TransactionTest.class.getName() ). log( Level.SEVERE, null, 
  *    ex ); 
  * }
  * </pre> The order in which you create the DAOs does not matter, but you must
- * make sure they use the same transaction token to make the cooperate in a
+ * make sure they use the same transaction token to make them cooperate in a
  * transaction.
  *
  * <h2>Entity and Mapper Recipes</h2>
@@ -103,5 +108,6 @@
  *  }
  *  </pre>
  * 
+ * You can apply the same trick if you do not like the idName's default.
  */
 package nl.fontys.sebivenlo.dao;
