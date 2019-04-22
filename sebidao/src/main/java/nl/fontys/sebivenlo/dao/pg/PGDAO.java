@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.stream.Collectors.toList;
+import java.util.stream.StreamSupport;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.DAO;
@@ -159,6 +160,43 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
                     ex );
+            throw new DAOException( ex.getMessage(), ex );
+        }
+    }
+
+    @Override
+    public void deleteAll( Iterable<E> entities ) {
+        if ( null != transactionToken ) {
+            deleteAll( transactionToken.getConnection(), entities );
+            return;
+        }
+
+        try ( Connection con = ds.getConnection(); ) {
+            deleteAll( con, entities );
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+            throw new DAOException( ex.getMessage(), ex );
+        }
+
+    }
+
+    private void deleteAll( Connection con, Iterable<E> entities ) {
+        List<K> keys = StreamSupport.stream( entities.spliterator(), false )
+                .map( mapper.keyExtractor() )
+                .collect( toList() );
+        String[] questionMarks = new String[ keys.size() ];
+        Arrays.fill( questionMarks, "?" );
+        String marks = String.join( ",", questionMarks );
+        String sql = String.format( "delete from %s where %s in (%s)", mapper.tableName(), mapper.idName(), marks );
+        try ( PreparedStatement pst = con.prepareStatement( sql ); ) {
+            int col = 1;
+            for ( K key : keys ) {
+                pst.setObject( col++, key );
+            }
+            boolean ignored = pst.execute();
+        } catch ( SQLException ex ) {
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null, ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
