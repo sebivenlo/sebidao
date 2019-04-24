@@ -158,7 +158,7 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
     }
 
     /**
-     * A string representation of a constructor the entityType prefreably should have.
+     * A string representation of a constructor the entityType preferably should have.
      * @return the string
      */
     String assemblerCtor() {
