@@ -32,7 +32,7 @@ public class PGDAOFactoryQueryCacheTest extends DBTestHelpers {
         PGDAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Optional<Employee> get = edao.get( 1 );
         int size = edao.queryTextCache.size();
-        assertEquals( "must have a mapping", 1, size );
+        assertTrue( "must have a mapping", 1<= size );
 //        Assert.fail( "test method testComputeSelect reached its end, you can remove this line when you aggree." );
     }
     
