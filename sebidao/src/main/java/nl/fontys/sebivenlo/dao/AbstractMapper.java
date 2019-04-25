@@ -142,7 +142,7 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
      * Get the types of the columns (fields) in declaration order.
      * @return the java types of the fields.
      */
-    public List<Class<?>> persitentFieldTypes(){
+    public List<Class<?>> persistentFieldTypes(){
         List<Class<?>> result= new ArrayList<>(entityMetaData.typeMap.size());
         result.addAll( entityMetaData.typeMap.values());
         return result;
