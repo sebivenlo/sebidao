@@ -29,7 +29,7 @@ public class EmployeeDaoTest {
     public static void setupClass() {
         loadDatabase();
         daof = new PGDAOFactory( ds );
-        daof.registerMapper( Employee.class, new EmployeeMapper() );
+        daof.registerMapper( Employee.class, new EmployeeMapper2( Integer.class, Employee.class ) );
     }
     //DAO<Integer, Employee> edao;
 
@@ -129,7 +129,7 @@ public class EmployeeDaoTest {
         //fail( "test method testGetByKeyValues reached its end, you can remove this line when you aggree." );
     }
 
-    @Test(expected = DAOException.class)
+    @Test( expected = DAOException.class )
     public void testSaveUniqueViolation() {
         Employee jean = new Employee( 0, "Klaassen", "Jean",
                 "jan@example.com", 1 );
@@ -137,7 +137,7 @@ public class EmployeeDaoTest {
         // should get default piet.
         Employee savedJean = edao.save( JAN );
         Employee savedJan = edao.save( jean );
-       
-       // fail( "testSaveUniqueViolation not yet implemented. Review the code and comment or delete this line" );
+
+        // fail( "testSaveUniqueViolation not yet implemented. Review the code and comment or delete this line" );
     }
 }

@@ -1,7 +1,6 @@
 package nl.fontys.sebivenlo.dao.pg;
 
 import java.io.Serializable;
-import nl.fontys.sebivenlo.dao.Mapper;
 import static java.lang.String.format;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,8 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.StreamSupport;
-import javax.annotation.Resource;
 import javax.sql.DataSource;
+import nl.fontys.sebivenlo.dao.AbstractMapper;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.TransactionToken;
@@ -42,7 +41,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     final DataSource ds;
 
-    final Mapper<K, E> mapper;
+    final AbstractMapper<K, E> mapper;
 
     //private final String allColumns;
     final Map<String, String> queryTextCache;
@@ -54,7 +53,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @param mapper injected through this ctor.
      * @param queryTextCache cache to save work
      */
-    public PGDAO( DataSource ds, Mapper<K, E> mapper,
+    public PGDAO( DataSource ds, AbstractMapper<K, E> mapper,
             Map<String, String> queryTextCache ) {
         this.ds = ds;
         this.mapper = mapper;
@@ -155,6 +154,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private Object[] fillPartsArray( Object[] parts, final ResultSet rs ) throws
             SQLException {
+        
         for ( int i = 0; i < parts.length; i++ ) {
             parts[ i ] = rs.getObject( i + 1 );
         }

@@ -31,7 +31,7 @@ public class TransactionTest {
         DBTestHelpers.loadDatabase();
         daof = new PGDAOFactory( ds );
         daof.registerMapper( Employee.class, new EmployeeMapper2(Integer.class, Employee.class));
-        daof.registerMapper( Department.class, new DepartmentMapper() );
+        daof.registerMapper( Department.class, new DepartmentMapper(String.class, Department.class) );
     }
 
     DAO<Integer, Employee> checkEmpDao;

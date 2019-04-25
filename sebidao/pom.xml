@@ -4,7 +4,7 @@
     
     <groupId>nl.fontys.sebivenlo</groupId>
     <artifactId>sebidao</artifactId>
-    <version>0.6.1</version>
+    <version>0.7</version>
     
     <name>sebidao :: DAO</name>
     <description>

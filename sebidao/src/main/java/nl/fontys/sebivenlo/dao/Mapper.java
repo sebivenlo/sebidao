@@ -13,7 +13,7 @@ import java.util.function.Function;
  * @param <K> key for access.
  * @param <E> mapped type
  */
-public interface Mapper<K, E> {
+interface Mapper<K, E> {
 
     /**
      * Get the type that is mapped by this mapper.
