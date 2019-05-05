@@ -70,9 +70,6 @@ public class NoDoublePlansTest extends DBTestHelpers {
             pDao.save( plan2 );
             fail("should not be reached");
             tok.commit();
-        } catch ( SQLException ex ) { 
-            
-            Logger.getLogger( NoDoublePlansTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
         
         

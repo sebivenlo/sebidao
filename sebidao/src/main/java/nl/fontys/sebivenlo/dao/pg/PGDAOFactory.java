@@ -67,10 +67,10 @@ public class PGDAOFactory extends AbstractDAOFactory {
     /**
      * Register a pg data type or user type.
      *
-     * @param name
-     * @param type
+     * @param name postgresql type name
+     * @param type java type, e.g. TsRange like in this package.
      */
-    public void registerPGdataType( String name, Class<? extends PGobject> type ) {
+    public final void registerPGdataType( String name, Class<? extends PGobject> type ) {
         pgTypeMap.put( name, type );
     }
 }
