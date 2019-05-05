@@ -69,7 +69,6 @@ public class NoDoublePlansTest extends DBTestHelpers {
             pDao.save( plan1 );
             pDao.save( plan2 );
             fail("should not be reached");
-            tok.commit();
         }
         
         
