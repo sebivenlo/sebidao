@@ -4,6 +4,7 @@ import entities.Employee;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.fontys.sebivenlo.dao.DAOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,8 +26,8 @@ public class PGDAOTransactionalTest extends PGDAOTest {
         eDao.close(); // close existing from super
         eDao = (PGDAO<Integer, Employee>) daof.createDao( Employee.class );
         try {
-            tok = (PGTransactionToken) eDao.startTransaction();
-        } catch ( SQLException notexpected ) {
+            tok = eDao.startTransaction();
+        } catch ( DAOException notexpected ) {
             Logger.getLogger( PGDAOTransactionalTest.class.getName() ).
                     log( Level.SEVERE, null, notexpected );
         }
