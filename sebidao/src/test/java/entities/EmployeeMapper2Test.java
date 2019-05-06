@@ -46,14 +46,14 @@ public class EmployeeMapper2Test {
 
     @Test
     public void testGetTableName() {
-        assertEquals( "employee table", "employees", new EmployeeMapper().
+        assertEquals( "employee table", "employees", new EmployeeMapper2(Integer.class, Employee.class ).
                 tableName() );
     }
 
     @Test
     public void testGetIdName() {
         Set<String> expected = new HashSet<>( Arrays.asList( "employeeid" ) );
-        assertEquals( "employee id", expected, new EmployeeMapper().keyNames() );
+        assertEquals( "employee id", expected, new EmployeeMapper2(Integer.class, Employee.class).keyNames() );
     }
 
     private static <T, U> void assertEqualsExtracting( String msg, T expected,

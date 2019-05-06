@@ -12,8 +12,10 @@ import java.util.function.Function;
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key for access.
  * @param <E> mapped type
+ * @deprecated do not implement this interface, instead extend AbstractMapper and do less work.
  */
-public interface Mapper<K, E> {
+@Deprecated
+interface Mapper<K, E> {
 
     /**
      * Get the type that is mapped by this mapper.

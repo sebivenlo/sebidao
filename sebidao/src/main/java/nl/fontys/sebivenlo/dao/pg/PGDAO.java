@@ -1,7 +1,6 @@
 package nl.fontys.sebivenlo.dao.pg;
 
 import java.io.Serializable;
-import nl.fontys.sebivenlo.dao.Mapper;
 import static java.lang.String.format;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,8 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.StreamSupport;
-import javax.annotation.Resource;
 import javax.sql.DataSource;
+import nl.fontys.sebivenlo.dao.AbstractMapper;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.TransactionToken;
@@ -40,9 +39,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      */
     protected PGTransactionToken transactionToken;
 
-    final DataSource ds;
+//    final DataSource ds;
 
-    final Mapper<K, E> mapper;
+    final PGDAOFactory factory;
+    final AbstractMapper<K, E> mapper;
 
     //private final String allColumns;
     final Map<String, String> queryTextCache;
@@ -54,9 +54,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @param mapper injected through this ctor.
      * @param queryTextCache cache to save work
      */
-    public PGDAO( DataSource ds, Mapper<K, E> mapper,
+    PGDAO( PGDAOFactory fac,DataSource ds, AbstractMapper<K, E> mapper,
             Map<String, String> queryTextCache ) {
-        this.ds = ds;
+        this.factory =fac;
+//        this.ds = ds;
         this.mapper = mapper;
         //this.tableName = mapper.tableName();
         //this.idName = mapper.idName();
@@ -155,6 +156,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private Object[] fillPartsArray( Object[] parts, final ResultSet rs ) throws
             SQLException {
+        
         for ( int i = 0; i < parts.length; i++ ) {
             parts[ i ] = rs.getObject( i + 1 );
         }
@@ -171,7 +173,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             delete( transactionToken.getConnection(), t );
             return;
         }
-        try ( Connection con = ds.getConnection(); ) {
+        try ( Connection con = factory.getConnection(); ) {
             delete( con, t );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -187,7 +189,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return;
         }
 
-        try ( Connection con = ds.getConnection(); ) {
+        try ( Connection con = this.getConnection(); ) {
             deleteAll( con, entities );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -622,7 +624,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return tok.getConnection();
         } else {
             try {
-                return ds.getConnection();
+                return factory.getConnection();
             } catch ( SQLException ex ) {
                 Logger.getLogger( PGDAO.class.getName() ).
                         log( Level.SEVERE, null, ex );
@@ -645,7 +647,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     @Override
-    public PGTransactionToken startTransaction() throws SQLException {
+    public PGTransactionToken startTransaction() {
         if ( null == transactionToken ) {
             transactionToken = new PGTransactionToken( getConnection() );
         }

@@ -2,7 +2,9 @@ package nl.fontys.sebivenlo.dao;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -74,7 +76,7 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
 
     /**
      * Try to find a constructor that take as parameter types the fields types
-     * in fieldn declaration order.
+     * in field declaration order.
      *
      * If the method succeeds the result will be stored as a
      * {@code Function&lt;Object[],E&gt;} assembler.
@@ -136,6 +138,16 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
         return entityMetaData.typeMap.keySet();
     }
 
+    /**
+     * Get the types of the columns (fields) in declaration order.
+     * @return the java types of the fields.
+     */
+    public List<Class<?>> persistentFieldTypes(){
+        List<Class<?>> result= new ArrayList<>(entityMetaData.typeMap.size());
+        result.addAll( entityMetaData.typeMap.values());
+        return result;
+    }
+    
     @Override
     public boolean generateKey() {
         return entityMetaData.isIDGenerated();

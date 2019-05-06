@@ -13,7 +13,7 @@ public abstract class AbstractDAOFactory {
      * Map  type to TypeMappper.
      */
     protected final HashMap<Class<? extends SimpleEntity>, 
-            Mapper<? extends Serializable, ? extends SimpleEntity>> mappers
+            AbstractMapper<? extends Serializable, ? extends SimpleEntity>> mappers
             = new HashMap<>();
 
     /**
@@ -22,7 +22,7 @@ public abstract class AbstractDAOFactory {
      * @param mappedBy this mapper
      */
     public void registerMapper( Class<? extends SimpleEntity> forClass,
-            Mapper<? extends Serializable, ? extends SimpleEntity> mappedBy ) {
+            AbstractMapper<? extends Serializable, ? extends SimpleEntity> mappedBy ) {
         mappers.put( forClass, mappedBy );
     }
 
