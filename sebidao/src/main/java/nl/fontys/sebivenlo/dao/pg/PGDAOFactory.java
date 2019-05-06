@@ -15,12 +15,12 @@ import org.postgresql.util.PGobject;
 /**
  * Factory for postgresql database.
  *
- * This factory registers TsRaange, because it is required in the first project
+ * This factory registers TsRange, because it is required in the first project
  * that uses it and serves as a demo.
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class PGDAOFactory extends AbstractDAOFactory {
+public final class PGDAOFactory extends AbstractDAOFactory {
 
     private final DataSource ds;
 
@@ -53,7 +53,13 @@ public class PGDAOFactory extends AbstractDAOFactory {
 
     final Map<String, Class<? extends PGobject>> pgTypeMap = new HashMap<>();
 
-    Connection getConnection() throws SQLException {
+    /**
+     * Get a connection to be used by the DAOs created by the factory. 
+     * Loads any maped types using {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class) .
+     * @return a connection
+     * @throws SQLException when connection cannot be retreived.
+     */
+    final Connection getConnection() throws SQLException {
         Connection con = ds.getConnection();
         if ( con instanceof PGConnection && !pgTypeMap.isEmpty() ) {
             final PGConnection pgcon = (PGConnection) con;
