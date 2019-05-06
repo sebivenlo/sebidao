@@ -39,12 +39,9 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      */
     protected PGTransactionToken transactionToken;
 
-//    final DataSource ds;
-
     final PGDAOFactory factory;
     final AbstractMapper<K, E> mapper;
 
-    //private final String allColumns;
     final Map<String, String> queryTextCache;
 
     /**
@@ -54,13 +51,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @param mapper injected through this ctor.
      * @param queryTextCache cache to save work
      */
-    PGDAO( PGDAOFactory fac,DataSource ds, AbstractMapper<K, E> mapper,
+    PGDAO( PGDAOFactory fac, DataSource ds, AbstractMapper<K, E> mapper,
             Map<String, String> queryTextCache ) {
-        this.factory =fac;
-//        this.ds = ds;
+        this.factory = fac;
         this.mapper = mapper;
-        //this.tableName = mapper.tableName();
-        //this.idName = mapper.idName();
         this.queryTextCache = queryTextCache;
     }
 
@@ -81,9 +75,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     /**
      * The name of the key column.
+     *
      * @return the name of the key column
      */
-   protected String idName() {
+    protected String idName() {
         return this.queryTextCache.computeIfAbsent( "idName",
                 x -> mapper.idName() );
     }
@@ -156,7 +151,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private Object[] fillPartsArray( Object[] parts, final ResultSet rs ) throws
             SQLException {
-        
+
         for ( int i = 0; i < parts.length; i++ ) {
             parts[ i ] = rs.getObject( i + 1 );
         }
@@ -411,7 +406,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         List<Object> result = new ArrayList<>();
         Predicate<String> notGen = isGenerated().negate();
         int i = 0;
-        
+
         for ( String pfn : mapper.persistentFieldNames() ) {
             if ( notGen.test( pfn ) ) {
                 result.add( parts[ i ] );
