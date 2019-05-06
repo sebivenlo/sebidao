@@ -12,7 +12,7 @@ import org.junit.Ignore;
  */
 public class TransactionMainTest {
 
-    @Ignore
+    //@Ignore
     @Test
     public void testMain() {
         TransactionMain.main( new String[0]);
