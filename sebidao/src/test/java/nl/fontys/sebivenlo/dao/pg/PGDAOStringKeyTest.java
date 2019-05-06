@@ -23,8 +23,7 @@ public class PGDAOStringKeyTest extends DBTestHelpers {
 
     public void setup() throws Exception {
         loadDatabase();
-        daof.registerMapper( Company.class, new CompanyMapper( String.class,
-                Company.class ) );
+        daof.registerMapper( Company.class, new CompanyMapper() );
         cDao = (DAO<String, Company>) daof.createDao(
                 Company.class );
 
@@ -66,26 +65,26 @@ public class PGDAOStringKeyTest extends DBTestHelpers {
 
     @Test
     public void testUpdate() {
-        Company  sFontys= cDao.save( fontys);
-        
-        sFontys.setAddress( "Hulsterweg 6");
-        sFontys.setPostcode("5912 PL");
-        
-        Company uFontys = cDao.update( sFontys);
-        
-        Company dFontys = cDao.get( sFontys.getNaturalId()).get();
-        
-        assertEquals(sFontys.getPostcode(),dFontys.getPostcode());
+        Company sFontys = cDao.save( fontys );
+
+        sFontys.setAddress( "Hulsterweg 6" );
+        sFontys.setPostcode( "5912 PL" );
+
+        Company uFontys = cDao.update( sFontys );
+
+        Company dFontys = cDao.get( sFontys.getNaturalId() ).get();
+
+        assertEquals( sFontys.getPostcode(), dFontys.getPostcode() );
         Collection<Company> all = cDao.getAll();
-        assertFalse(all.isEmpty());
+        assertFalse( all.isEmpty() );
         // fail( "testUpdate not yet implemented. Review the code and comment or delete this line" );
     }
-    
+
     @Test
     public void testSanityAnCoverage() {
-        
-        assertFalse(cDao.toString().isEmpty());
-        assertEquals(0,cDao.size());
+
+        assertFalse( cDao.toString().isEmpty() );
+        assertEquals( 0, cDao.size() );
         //fail( "testSanityAnCoverage not yet implemented. Review the code and comment or delete this line" );
     }
 }

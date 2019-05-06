@@ -10,6 +10,7 @@ import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.memory.InMemoryDAO;
 import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
+import pgtypes.Email;
 
 /**
  *
@@ -23,6 +24,7 @@ public class MainDB {
 
         // register a mapper for employee
         PGDAOFactory pdaof = new PGDAOFactory( PGDataSource.DATA_SOURCE );
+        pdaof.registerPGdataType( "email", Email.class );
         pdaof.registerMapper( Employee.class, new EmployeeMapper() );
         pdaof.registerMapper( Department.class, new DepartmentMapper() );
 

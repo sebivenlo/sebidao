@@ -15,29 +15,29 @@ import nl.fontys.sebivenlo.dao.ID;
 public class Department implements Entity2<String> {
 
     private static final long serialVersionUID = 1L;
-    @Generated
-    private Integer departmentid;
     @ID( generated = false )
     private String name;
 
     private String description;
     private String email;
+    @Generated
+    private Integer departmentid;
 
     public Department( Integer departmentId ) {
         this.departmentid = departmentId;
     }
 
-    public Department( int departmentid, String name, String desciption,
-            String email ) {
-        this.departmentid = departmentid;
+    public Department( String name, String desciption,
+            String email, Integer departmentid ) {
         this.name = name;
         this.description = desciption;
         setEmail( email );
+        this.departmentid = departmentid;
     }
 
     public Department( Object[] parts ) {
-        this( (int) parts[ 0 ], (String) parts[ 1 ], (String) parts[ 2 ],
-                (String) parts[ 3 ] );
+        this( (String) parts[ 0 ], (String) parts[ 1 ],
+                (String) parts[ 2 ], (Integer) parts[ 3 ] );
 
     }
 
@@ -118,8 +118,8 @@ public class Department implements Entity2<String> {
     }
 
     Object[] asParts() {
-        return new Object[] { getDepartmentid(), getName(), getDescription(),
-            getEmail() };
+        return new Object[]{ getName(), getDescription(),
+            getEmail(), getDepartmentid() };
     }
-    
+
 }

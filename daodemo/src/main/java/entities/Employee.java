@@ -19,7 +19,7 @@ public class Employee implements Entity2<Integer> {
     private String email;
     private String department;
 
-    public Employee( int employeeid, String lastname, String firstname,
+    public Employee( Integer employeeid, String lastname, String firstname,
             String email,
             String department ) {
         this.employeeid = employeeid;
@@ -29,6 +29,7 @@ public class Employee implements Entity2<Integer> {
         this.department = department;
     }
 
+    
     Employee( Object[] parts ) {
         this( ( int ) parts[ 0 ], ( String ) parts[ 1 ],
                 ( String ) parts[ 2 ],( String ) parts[ 3 ], (String ) parts[ 4 ] );

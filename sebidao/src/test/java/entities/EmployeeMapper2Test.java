@@ -16,7 +16,7 @@ public class EmployeeMapper2Test {
     @Test
     public void testImplode() {
 
-        EmployeeMapper2 em = new EmployeeMapper2(Integer.class,Employee.class);
+        EmployeeMapper2 em = new EmployeeMapper2();
         Employee ip = em.implode( 1, "Puk", "Piet", "piet@fontys.nl", 10 );
 
         Employee ep = new Employee( 1, "Puk", "Piet", "piet@fontys.nl", 10 );
@@ -34,7 +34,7 @@ public class EmployeeMapper2Test {
     public void testExplode() {
         Employee jan = new Employee( 3, "Klaassen", "Jan", "jan@google.com",42 );
 
-        EmployeeMapper2 em = new EmployeeMapper2(Integer.class, Employee.class );
+        EmployeeMapper2 em = new EmployeeMapper2();
         Object[] parts = em.explode( jan );
         assertEquals( "id", parts[ 0 ], jan.getEmployeeid() );
         assertEquals( "ln", parts[ 1 ], jan.getLastname() );
@@ -46,14 +46,14 @@ public class EmployeeMapper2Test {
 
     @Test
     public void testGetTableName() {
-        assertEquals( "employee table", "employees", new EmployeeMapper2(Integer.class, Employee.class ).
+        assertEquals( "employee table", "employees", new EmployeeMapper2( ).
                 tableName() );
     }
 
     @Test
     public void testGetIdName() {
         Set<String> expected = new HashSet<>( Arrays.asList( "employeeid" ) );
-        assertEquals( "employee id", expected, new EmployeeMapper2(Integer.class, Employee.class).keyNames() );
+        assertEquals( "employee id", expected, new EmployeeMapper2().keyNames() );
     }
 
     private static <T, U> void assertEqualsExtracting( String msg, T expected,
@@ -65,7 +65,7 @@ public class EmployeeMapper2Test {
 
     @Test
     public void testPersistentFieldNames() {
-        EmployeeMapper2 em = new EmployeeMapper2(Integer.class, Employee.class );
+        EmployeeMapper2 em = new EmployeeMapper2( );
         Set<String> pfn = em.persistentFieldNames();
         assertTrue( "all mapped columns", pfn.contains( "employeeid" )
                 && pfn.contains( "lastname" )
@@ -77,7 +77,7 @@ public class EmployeeMapper2Test {
     @Test
     public void testKeyExtractor() {
         Employee jan = new Employee( 3, "Beton", "Bob","bob@truckers.org", 42 );
-        EmployeeMapper2 em = new EmployeeMapper2(Integer.class, Employee.class );
+        EmployeeMapper2 em = new EmployeeMapper2( );
         assertTrue( "Bob was here", em.keyExtractor().apply( jan ).equals( 3 ) );
 
         //fail( "testKeyExtractor not yet implemented. Review the code and comment or delete this line" );

@@ -1,23 +1,16 @@
 package entities;
 
-import entities.Department;
-import java.util.Arrays;
-import static java.util.Arrays.asList;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.function.Function;
-import nl.fontys.sebivenlo.dao.Mapper;
+import nl.fontys.sebivenlo.dao.AbstractMapper;
 
 /**
  *
- * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-@Deprecated
-public class DepartmentMapper implements Mapper<String, Department> {
+public class DepartmentMapper extends AbstractMapper<String, Department> {
 
-    @Override
-    public Class<Department> entityType() {
-        return Department.class;
+    public DepartmentMapper( ) {
+        super( String.class, Department.class );
     }
 
     @Override
@@ -27,38 +20,12 @@ public class DepartmentMapper implements Mapper<String, Department> {
 
     @Override
     public Department implode( Object[] parts ) {
-        return Department.implode( parts );
+        return new Department( (String) parts[ 0 ], (String) parts[ 1 ], (String) parts[ 2 ] );
     }
 
     @Override
     public Function<Department, String> keyExtractor() {
-        return Department::getEmail;
-    }
-   
-    
-    static final Set<String> FIELD_NAMES
-            = new LinkedHashSet<>( Arrays.asList(
-                     "name", "description", "email" ) );
-
-    @Override
-    public Set<String> persistentFieldNames() {
-        return FIELD_NAMES;
-    }
-
-    @Override
-    public String idName() {
-        return "email";
-    }
-
-    @Override
-    public boolean generateKey() {
-        return false;
-    }
-
-    Set<String> keyNames = new LinkedHashSet<>(asList("email"));
-    @Override
-    public Set<String> keyNames() {
-        return keyNames;
+        return Department::getName;
     }
 
 }

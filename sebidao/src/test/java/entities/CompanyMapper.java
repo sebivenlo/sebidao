@@ -7,10 +7,10 @@ import nl.fontys.sebivenlo.dao.AbstractMapper;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class CompanyMapper extends AbstractMapper<String,Company> {
+public class CompanyMapper extends AbstractMapper<String, Company> {
 
-    public CompanyMapper( Class<String> keyType, Class<Company> entityType ) {
-        super( keyType, entityType );
+    public CompanyMapper() {
+        super( String.class, Company.class );
     }
 
     @Override
@@ -22,7 +22,6 @@ public class CompanyMapper extends AbstractMapper<String,Company> {
 //    public Company implode( Object[] parts ) {
 //        return Company.fromParts( parts );
 //    }
-
     @Override
     public Function<Company, String> keyExtractor() {
         return Company::getTicker;
@@ -32,5 +31,5 @@ public class CompanyMapper extends AbstractMapper<String,Company> {
     public String tableName() {
         return "companies";
     }
-    
+
 }

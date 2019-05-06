@@ -1,8 +1,10 @@
 package nl.fontys.sebivenlo.dao;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +12,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Simplify the creation of a Mapper by using a bit of reflection and some
@@ -21,25 +24,24 @@ import java.util.stream.Collectors;
  * <pre class='brush:java'>
  * public class EmployeeMapper2 extends AbstractMapper&lt;Integer,Employee&gt; {
  *
- *    public EmployeeMapper2( Class&lt;Integer&gt; keyType ,Class&lt;Employee&gt; entityType) { 
- *       super( keyType,entityType ); 
- *    }
+ * public EmployeeMapper2( Class&lt;Integer&gt; keyType ,Class&lt;Employee&gt;
+ * entityType) { super( keyType,entityType ); }
  *
- *    &#64;Override 
- *    public Object[] explode( Employee e ) { return e.asParts(); }
+ * &#64;Override public Object[] explode( Employee e ) { return e.asParts(); }
  *
- *    &#64;Override 
- *    public Employee implode( Object... parts ) { 
- *          return new  Employee(parts ); 
- *    }
+ * &#64;Override public Employee implode( Object... parts ) { return new
+ * Employee(parts ); }
  *
- *    &#64;Override 
- *    public Function&lt;Employee, Integer&gt; keyExtractor() {
- *       return Employee::getEmployeeid; 
- *    }
+ * &#64;Override public Function&lt;Employee, Integer&gt; keyExtractor() {
+ * return Employee::getEmployeeid; }
  *
  * }
  * </pre>
+ *
+ * If the entity class provides an 'all-fields' constructor, with the field
+ * parameters in field declaration order, this mapper is able to find that
+ * combination and can use it in the default implode method.
+ *
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key type.
@@ -61,6 +63,8 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
      */
     private final EntityMetaData<E> entityMetaData;
 
+    private List<String> generatedFields = null;
+
     /**
      * Create a mapper for entity and key type.
      *
@@ -71,7 +75,7 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
         this.entityType = entityType;
         this.keyType = keyType;
         entityMetaData = new EntityMetaData<>( entityType );
-        deriveAssemblerFunction( entityType );
+        deriveAssemblerFunction();
     }
 
     /**
@@ -80,13 +84,13 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
      *
      * If the method succeeds the result will be stored as a
      * {@code Function&lt;Object[],E&gt;} assembler.
-     * 
-     * The programmer of the entity class is kindly advised to create the desired 
-     * constructor.
+     *
+     * The programmer of the entity class is kindly advised to create the
+     * desired constructor.
      *
      * @param entityType1
      */
-    final void deriveAssemblerFunction( Class<E> entityType1 ) {
+    final void deriveAssemblerFunction() {
         Collection<Class<?>> fieldTypes = entityMetaData.typeMap.values();
         Class[] types = new Class[ fieldTypes.size() ];
         int p = 0;
@@ -94,7 +98,7 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
             types[ p++ ] = clz;
         }
         try {
-            Constructor<E> assemblerCtor = entityType1.getConstructor( types );
+            Constructor<E> assemblerCtor = entityType.getConstructor( types );
             System.out.println( "found assemblerCtor = " + assemblerCtor );
             assembler = ( Object[] a ) -> {
                 try {
@@ -140,14 +144,15 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
 
     /**
      * Get the types of the columns (fields) in declaration order.
+     *
      * @return the java types of the fields.
      */
-    public List<Class<?>> persistentFieldTypes(){
-        List<Class<?>> result= new ArrayList<>(entityMetaData.typeMap.size());
-        result.addAll( entityMetaData.typeMap.values());
+    public List<Class<?>> persistentFieldTypes() {
+        List<Class<?>> result = new ArrayList<>( entityMetaData.typeMap.size() );
+        result.addAll( entityMetaData.typeMap.values() );
         return result;
     }
-    
+
     @Override
     public boolean generateKey() {
         return entityMetaData.isIDGenerated();
@@ -164,6 +169,12 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
                 + entityType + ",\n entityMetaData=" + entityMetaData + '}';
     }
 
+    /**
+     * Override this method for a more efficient implementation.
+     *
+     * @param parts to use in the construction of the entity
+     * @return the fresh entity instance.
+     */
     @Override
     public E implode( Object[] parts ) {
         if ( assembler != null ) {
@@ -176,7 +187,9 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
     }
 
     /**
-     * A string representation of a constructor the entityType preferably should have.
+     * A string representation of a constructor the entityType preferably should
+     * have.
+     *
      * @return the string
      */
     String assemblerCtor() {
@@ -187,6 +200,25 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
                 getSimpleName() )
                         .collect( Collectors.joining( ", " ) );
         return sb.append( params ).append( ')' ).toString();
+    }
+
+    public List<String> generatedFields() {
+        if ( generatedFields == null ) {
+            Field[] declaredFields = entityType.getDeclaredFields();
+
+            generatedFields = Arrays.stream( declaredFields )
+                    .filter( this::isGenerated )
+                    .map( Field::getName )
+                    .collect( toList() );
+        }
+        return generatedFields;
+    }
+
+    private boolean isGenerated( Field f ) {
+        ID idannotation = f.getAnnotation( ID.class );
+        Generated genannotation = f.getAnnotation( Generated.class );
+
+        return null != genannotation || ( null != idannotation && idannotation.generated() );
     }
 
 }

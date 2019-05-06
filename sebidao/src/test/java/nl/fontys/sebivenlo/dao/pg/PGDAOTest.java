@@ -3,6 +3,8 @@ package nl.fontys.sebivenlo.dao.pg;
 import entities.Company;
 import entities.CompanyMapper;
 import entities.DBTestHelpers;
+import entities.Department;
+import entities.DepartmentMapper;
 import entities.Employee;
 import java.io.IOException;
 import java.sql.Connection;
@@ -119,7 +121,7 @@ public class PGDAOTest extends DBTestHelpers {
     public void testNullableFields() {
         String tick = "BAS";
         Company c = new Company( null, null, null, null, tick, null );
-        daof.registerMapper( Company.class, new CompanyMapper( String.class, Company.class ) );
+        daof.registerMapper( Company.class, new CompanyMapper() );
         DAO<String, Company> cdao = daof.createDao( Company.class );
 
         Company sC = cdao.save( c );
@@ -131,5 +133,22 @@ public class PGDAOTest extends DBTestHelpers {
         assertEquals( "someinteger", null, sC.getSomeInteger() );
 
         //Assert.fail( "test method testNullableFields reached its end, you can remove this line when you aggree." );
+    }
+
+    @Test
+    public void testDropGenerated() {
+        DepartmentMapper departmentMapper = new DepartmentMapper();
+        daof.registerMapper( Department.class, departmentMapper );
+
+        PGDAO<String, Department> ddao = daof.createDao( Department.class );
+        Department e = new Department( "engineering", "The geniusses", "engineering@example.com,", null );
+
+        Object[] parts = departmentMapper.explode( e );
+        assertEquals( "part count", 4, parts.length );
+
+        Object[] nonGeneratedParts = ddao.dropGeneneratedParts( parts );
+        assertEquals( "normal field count", 3, nonGeneratedParts.length );
+
+//        Assert.fail( "test testDropGenerated reached its end, you can remove me when you aggree." );
     }
 }

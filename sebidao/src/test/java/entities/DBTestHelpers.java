@@ -47,8 +47,7 @@ public class DBTestHelpers {
     @BeforeClass
     public static void setupClass() {
         daof = new PGDAOFactory( ds );
-        daof.registerMapper( Employee.class, new EmployeeMapper2( Integer.class,
-                Employee.class ) );
+        daof.registerMapper( Employee.class, new EmployeeMapper2() );
 //        daof.registerMapper( Employee.class, new EmployeeMapper());
 
     }

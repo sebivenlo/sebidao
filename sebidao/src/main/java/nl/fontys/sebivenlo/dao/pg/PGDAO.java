@@ -407,10 +407,11 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 .collect( toList() );
     }
 
-    Object[] dropGeneneratedParts( Object[] parts ) {
+    final Object[] dropGeneneratedParts( Object[] parts ) {
         List<Object> result = new ArrayList<>();
         Predicate<String> notGen = isGenerated().negate();
         int i = 0;
+        
         for ( String pfn : mapper.persistentFieldNames() ) {
             if ( notGen.test( pfn ) ) {
                 result.add( parts[ i ] );
@@ -421,7 +422,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private Predicate<String> isGenerated() {
-        return s -> mapper.keyNames().contains( s ) && mapper.generateKey();
+        return s -> mapper.generatedFields().contains( s );
     }
 
     private String makePlaceHolders( final List<String> columnNames ) {

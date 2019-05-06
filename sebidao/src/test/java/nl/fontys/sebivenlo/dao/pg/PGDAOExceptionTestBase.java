@@ -31,23 +31,23 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
     Employee gp = new Employee( 1 );
     @Mock
     DataSource ds;
-    
+
     DAO<Integer, Employee> eDao;
     EmployeeMapper2 mapper;
     private Connection connection;
 
     abstract Connection getConnection();
+
     @Before
     public void setup() throws SQLException {
         MockitoAnnotations.initMocks( this );
         this.connection = getConnection();
         Mockito.when( ds.getConnection() ).thenReturn( this.connection );
-        mapper = new EmployeeMapper2( Integer.class, Employee.class );
+        mapper = new EmployeeMapper2();
         daof = new PGDAOFactory( ds );
         daof.registerMapper( Employee.class, mapper );
         eDao = daof.createDao( Employee.class );
     }
-    
 
     @After
     public void cleanup() {
@@ -81,7 +81,7 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
 
     @Test( expected = DAOException.class )
     public void testIntQuery() {
-        ((PGDAO)eDao).executeIntQuery( "select count(1) from employees" );
+        ( (PGDAO) eDao ).executeIntQuery( "select count(1) from employees" );
         fail( "test method testIntQuery reached its end, you can remove this line when you aggree." );
     }
 
@@ -117,7 +117,7 @@ public abstract class PGDAOExceptionTestBase extends DBTestHelpers {
 
     @Test( expected = DAOException.class )
     public void testExecuteIntQueryInt1() {
-        ((PGDAO)eDao).executeIntQuery(
+        ( (PGDAO) eDao ).executeIntQuery(
                 "select departmentid from employees where employeeid=?", 1 );
         // fail( "testExecuteIntQueryInt1 not yet implemented. Review the code and comment or delete this line" );
     }

@@ -18,7 +18,7 @@ public class AbstractMapperTest {
     @Before
     public void setup() {
 
-        mapper = new CompanyMapper( String.class, Company.class );
+        mapper = new CompanyMapper();
 
     }
 
@@ -29,10 +29,10 @@ public class AbstractMapperTest {
 
     @Test
     public void testCreateCompany() {
-        Object[] a = new Object[] { "Pieters", "Belgium", "Waterschei",
+        Object[] a = new Object[]{ "Pieters", "Belgium", "Waterschei",
             "Molenstraat 20", "PITRS", "B46587", 0, null };
         Company comp = mapper.assembler.apply( a );
-        assertNotNull("Got a product",comp);
+        assertNotNull( "Got a product", comp );
         System.out.println( "comp = " + comp );
     }
 }

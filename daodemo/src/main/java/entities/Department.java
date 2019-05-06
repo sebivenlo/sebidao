@@ -1,14 +1,18 @@
 package entities;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.COMMENTS;
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.Generated;
 import nl.fontys.sebivenlo.dao.ID;
+import pgtypes.Email;
 
 /**
  *
@@ -20,7 +24,7 @@ public class Department implements Entity2<String> {
     private String description;
     @ID(generated = false)
     private String name;
-    private String email;
+    private Email email;
     @Generated
     private int departmentid;
 
@@ -34,6 +38,14 @@ public class Department implements Entity2<String> {
         setEmail( email );
     }
 
+    public Department( String description, String name, Email email, int departmentid ) {
+        this.description = description;
+        this.name = name;
+        this.email = email;
+        this.departmentid = departmentid;
+    }
+
+    
     public String getName() {
         return name;
     }
@@ -56,7 +68,7 @@ public class Department implements Entity2<String> {
         return Objects.hash( this.name );
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
@@ -71,7 +83,11 @@ public class Department implements Entity2<String> {
             throw new IllegalArgumentException( "not a valid email address: "
                     + email );
         }
-        this.email = email;
+        try {
+            this.email = new Email(email);
+        } catch ( SQLException ex ) {
+            Logger.getLogger( Department.class.getName() ).log( Level.SEVERE, null, ex );
+        }
     }
 
     @Override

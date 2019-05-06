@@ -30,8 +30,8 @@ public class TransactionTest {
     public static void setupClass() throws IOException, SQLException {
         DBTestHelpers.loadDatabase();
         daof = new PGDAOFactory( ds );
-        daof.registerMapper( Employee.class, new EmployeeMapper2(Integer.class, Employee.class));
-        daof.registerMapper( Department.class, new DepartmentMapper(String.class, Department.class) );
+        daof.registerMapper( Employee.class, new EmployeeMapper2());
+        daof.registerMapper( Department.class, new DepartmentMapper() );
     }
 
     DAO<Integer, Employee> checkEmpDao;
@@ -71,8 +71,8 @@ public class TransactionTest {
 
     @Test
     public void testAddDeptWithBossRollBack() {
-        Department engineering = new Department( 0, "Engineering",
-                "Where value creation happens", "dilbert@example.com" );
+        Department engineering = new Department( "Engineering",
+                "Where value creation happens", "dilbert@example.com",0 );
         Employee dilbert = new Employee( 0, "O'Hana", "Dilbert",
                 "dilbert@example.com", 1 );
         int deptSize = checkDepDao.size();
@@ -105,8 +105,8 @@ public class TransactionTest {
 
     @Test
     public void testAddDeptWithBossCommit() {
-        Department engineering = new Department( 0, "Engineering",
-                "Where value creation happens", "dilbert@example.com" );
+        Department engineering = new Department(  "Engineering",
+                "Where value creation happens", "dilbert@example.com",null );
         Employee dilbert = new Employee( 0, "O'Hana", "Dilbert",
                 "dilbert@example.com", 1 );
         int deptSize = checkDepDao.size();
@@ -120,7 +120,7 @@ public class TransactionTest {
                 DAO<Integer, Employee> edao = daof.createDao( Employee.class, tok ); ) {
             System.out.println( "tok = " + tok );
             savedDept = ddao.save( engineering );
-            int depno = savedDept.getDepartmentid();
+            Integer depno = savedDept.getDepartmentid();
             dilbert.setDepartmentid( depno );
             savedDilbert = edao.save( dilbert );
             System.out.println( "savedDilbert = " + savedDilbert );

@@ -1,9 +1,9 @@
 package demo;
 
 import entities.Department;
-import entities.DepartmentMapper2;
+import entities.DepartmentMapper;
 import entities.Employee;
-import entities.EmployeeMapper2;
+import entities.EmployeeMapper;
 import entities.PGDataSource;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -23,8 +23,8 @@ public class TransactionMain {
 
         // register a mapper for employee
         PGDAOFactory pdaof = new PGDAOFactory( PGDataSource.DATA_SOURCE );
-        pdaof.registerMapper( Employee.class, new EmployeeMapper2(Integer.class,Employee.class) );
-        DepartmentMapper2 departmentMapper2 = new DepartmentMapper2(String.class,Department.class);
+        pdaof.registerMapper(Employee.class, new EmployeeMapper() );
+        DepartmentMapper departmentMapper2 = new DepartmentMapper( );
         System.out.println( "departmentMapper2 = " + departmentMapper2 );
         pdaof.registerMapper( Department.class, departmentMapper2  );
         

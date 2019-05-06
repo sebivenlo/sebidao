@@ -1,10 +1,6 @@
 package nl.fontys.sebivenlo.dao.pg;
 
-import java.sql.SQLData;
 import java.sql.SQLException;
-import java.sql.SQLInput;
-import java.sql.SQLOutput;
-import java.sql.SQLType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;

@@ -29,7 +29,7 @@ public class EmployeeDaoTest {
     public static void setupClass() {
         loadDatabase();
         daof = new PGDAOFactory( ds );
-        daof.registerMapper( Employee.class, new EmployeeMapper2( Integer.class, Employee.class ) );
+        daof.registerMapper( Employee.class, new EmployeeMapper2( ) );
     }
     //DAO<Integer, Employee> edao;
 

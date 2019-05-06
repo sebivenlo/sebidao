@@ -16,8 +16,8 @@ public class EmployeeMapper2Test {
     @Test
     public void testImplode() {
 
-        EmployeeMapper2 em
-                = new EmployeeMapper2( Integer.class, Employee.class );
+        EmployeeMapper em
+                = new EmployeeMapper( );
         Employee ip = em.implode( 1, "Puk", "Piet", "piet@fontys.nl", "sales" );
 
         Employee ep
@@ -37,8 +37,8 @@ public class EmployeeMapper2Test {
         Employee jan = new Employee( 3, "Klaassen", "Jan", "jan@google.com",
                 "unkown" );
 
-        EmployeeMapper2 em
-                = new EmployeeMapper2( Integer.class, Employee.class );
+        EmployeeMapper em
+                = new EmployeeMapper( );
         Object[] parts = em.explode( jan );
         assertEquals( "id", parts[ 0 ], jan.getEmployeeid() );
         assertEquals( "ln", parts[ 1 ], jan.getLastname() );
@@ -69,8 +69,8 @@ public class EmployeeMapper2Test {
 
     @Test
     public void testPersistentFieldNames() {
-        EmployeeMapper2 em
-                = new EmployeeMapper2( Integer.class, Employee.class );
+        EmployeeMapper em
+                = new EmployeeMapper( );
         Set<String> pfn = em.persistentFieldNames();
         assertTrue( "all mapped columns", pfn.contains( "employeeid" )
                 && pfn.contains( "lastname" )
@@ -82,8 +82,8 @@ public class EmployeeMapper2Test {
     @Test
     public void testKeyExtractor() {
         Employee jan = new Employee( 3, "Beton", "Bob", "bob@truckers.org", "unknown" );
-        EmployeeMapper2 em
-                = new EmployeeMapper2( Integer.class, Employee.class );
+        EmployeeMapper em
+                = new EmployeeMapper(  );
         assertTrue( "Bob was here", em.keyExtractor().apply( jan ).equals( 3 ) );
 
         //fail( "testKeyExtractor not yet implemented. Review the code and comment or delete this line" );

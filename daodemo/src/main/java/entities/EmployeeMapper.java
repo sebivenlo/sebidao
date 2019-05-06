@@ -1,14 +1,17 @@
 package entities;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.function.Function;
-import nl.fontys.sebivenlo.dao.Mapper;
+import nl.fontys.sebivenlo.dao.AbstractMapper;
 
-@Deprecated
-public class EmployeeMapper implements Mapper<Integer, Employee> {
+/**
+ *
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
+ */
+public class EmployeeMapper extends AbstractMapper<Integer, Employee> {
+
+    public EmployeeMapper() {
+        super( Integer.class, Employee.class );
+    }
 
     @Override
     public Object[] explode( Employee e ) {
@@ -21,34 +24,8 @@ public class EmployeeMapper implements Mapper<Integer, Employee> {
     }
 
     @Override
-    public Set<String> persistentFieldNames() {
-        return FIELD_NAMES;
-    }
-    static final Set<String> FIELD_NAMES
-            = new LinkedHashSet<>( Arrays.asList(
-                    "employeeid",
-                    "lastname",
-                    "firstname",
-                    "email",
-                    "department"
-            ) );
-
-    private static final Set<String> KEYS = new HashSet<>( Arrays.asList(
-            "employeeid" ) );
-
-    @Override
-    public Set<String> keyNames() {
-        return KEYS;
-
-    }
-
-    @Override
     public Function<Employee, Integer> keyExtractor() {
-        return Employee::getId;
+        return Employee::getEmployeeid;
     }
 
-    @Override
-    public Class<Employee> entityType() {
-        return Employee.class;
-    }
 }
