@@ -55,7 +55,9 @@ public final class PGDAOFactory extends AbstractDAOFactory {
 
     /**
      * Get a connection to be used by the DAOs created by the factory. 
-     * Loads any maped types using {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class) .
+     * Loads any maped types using
+     * {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class).
+     * 
      * @return a connection
      * @throws SQLException when connection cannot be retreived.
      */
