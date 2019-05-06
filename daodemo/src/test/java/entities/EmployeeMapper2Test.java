@@ -1,5 +1,6 @@
 package entities;
 
+import static java.lang.Integer.valueOf;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +19,9 @@ public class EmployeeMapper2Test {
 
         EmployeeMapper em
                 = new EmployeeMapper( );
-        Employee ip = em.implode( 1, "Puk", "Piet", "piet@fontys.nl", "sales" );
+        
+        em.implode( 1, "Puk", "Piet", "piet@fontys.nl", "sales");
+        Employee ip = em.implode(Integer.valueOf(1), "Puk", "Piet", "piet@fontys.nl", "sales" );
 
         Employee ep
                 = new Employee( 1, "Puk", "Piet", "piet@fontys.nl", "sales" );

@@ -20,8 +20,14 @@ public class EmployeeMapper extends AbstractMapper<Integer, Employee> {
 
     @Override
     public Employee implode( Object... parts ) {
-        return new Employee( parts );
+        return super.implode( parts ); //To change body of generated methods, choose Tools | Templates.
     }
+
+    
+//    @Override
+//    public Employee implode( Object... parts ) {
+//        return new Employee( parts );
+//    }
 
     @Override
     public Function<Employee, Integer> keyExtractor() {

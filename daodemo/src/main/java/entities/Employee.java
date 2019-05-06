@@ -31,7 +31,7 @@ public class Employee implements Entity2<Integer> {
 
     
     Employee( Object[] parts ) {
-        this( ( int ) parts[ 0 ], ( String ) parts[ 1 ],
+        this( ( Integer) parts[ 0 ], ( String ) parts[ 1 ],
                 ( String ) parts[ 2 ],( String ) parts[ 3 ], (String ) parts[ 4 ] );
     }
 

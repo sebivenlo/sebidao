@@ -11,7 +11,7 @@
         <artifactId>sebipom</artifactId>
         <version>1.4.6</version>
     </parent>
-    
+    <description>The TAO of a DAO in a Demo</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

@@ -37,7 +37,7 @@ interface Mapper<K, E> {
      * @param parts to construct the object from;
      * @return the new E
      */
-    E implode( Object[] parts );
+    E implode( Object... parts );
 
     /**
      * Get the table name for the entity.

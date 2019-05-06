@@ -20,7 +20,7 @@ public class DepartmentMapper extends AbstractMapper<String, Department> {
 
     @Override
     public Department implode( Object[] parts ) {
-        return new Department( (String) parts[ 0 ], (String) parts[ 1 ], (String) parts[ 2 ] );
+        return new Department( (String) parts[ 0 ], (String) parts[ 1 ], parts[ 2 ].toString() );
     }
 
     @Override

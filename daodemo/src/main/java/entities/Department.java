@@ -26,19 +26,24 @@ public class Department implements Entity2<String> {
     private String name;
     private Email email;
     @Generated
-    private int departmentid;
+    private Integer departmentid;
 
     public Department( String name ) {
         this.name = name;
     }
 
+
     public Department( String name, String desciption, String email ) {
         this.name = name;
         this.description = desciption;
-        setEmail( email );
+        try {
+            this.email= new Email(email) ;
+        } catch ( SQLException ex ) {
+            Logger.getLogger( Department.class.getName() ).log( Level.SEVERE, null, ex );
+        }
     }
 
-    public Department( String description, String name, Email email, int departmentid ) {
+    public Department( String description, String name, Email email, Integer departmentid ) {
         this.description = description;
         this.name = name;
         this.email = email;
