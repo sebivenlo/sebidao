@@ -1,21 +1,12 @@
 package nl.fontys.sebivenlo.pgtypes;
 
 import java.sql.SQLException;
-import java.time.Clock;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import static java.time.LocalDateTime.now;
-import java.time.ZoneId;
-import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.*;
-import static nl.fontys.sebivenlo.pgtypes.TimeStampRange.fromUntil;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 /**
  *
@@ -23,7 +14,7 @@ import org.junit.runners.Parameterized;
  */
 public class TimeStampRangeTest extends TimeStampTestBase {
 
-    //@Ignore( "Think TDD" )
+//    @Ignore( "Think TDD" )
     @Test
     public void testParse() throws SQLException {
         TimeStampRange ts = new TimeStampRange();
@@ -90,10 +81,45 @@ public class TimeStampRangeTest extends TimeStampTestBase {
         String s = ts0.getValue();
         TimeStampRange ts1 = new TimeStampRange();
         ts1.setValue( s );
-        
-        assertEquals("get value produces parsable value",ts0,ts1);
-        
-        
+
+        assertEquals( "get value produces parsable value", ts0, ts1 );
+
 //        Assert.fail( "method testGetValue reached end. You know what to do." );
     }
+
+//    @Ignore( "Think TDD" )
+    @Test( expected = IllegalArgumentException.class )
+    public void startBeforeEndoNotAccepted() {
+        TimeStampRange ts0 = new TimeStampRange( B, A );
+
+//        Assert.fail( "method startBeforeEndoNotAccepted reached end. You know what to do." );
+    }
+
+//    @Ignore( "Think TDD" )
+    @Test
+    public void negativeDurationStartEarlier() {
+        TimeStampRange ts0 = new TimeStampRange( B, Duration.of( -30, MINUTES ) );
+
+        assertEquals( "should produce test value A", A, ts0.getStart() );
+//        Assert.fail( "method negativeDurationStartEarlier reached end. You know what to do." );
+    }
+
+//    @Ignore( "Think TDD" )
+    @Test
+    public void testBefore() {
+        TimeStampRange ts0 = new TimeStampRange( A, Duration.of( -30, MINUTES ) );
+        System.out.println( "ts0 = " + ts0 );
+        assertTrue( "should be before", ts0.isBefore( B ) );
+//        Assert.fail( "method testIsAfter reached end. You know what to do." );
+    }
+
+//    @Ignore( "Think TDD" )
+    @Test
+    public void testAfter() {
+        TimeStampRange ts0 = new TimeStampRange( A, B );//Duration.of( -30, MINUTES ) );
+        System.out.println( "ts0 = " + ts0 );
+        assertTrue( "should be before", ts0.isAfter( A ) );
+//        Assert.fail( "method testIsAfter reached end. You know what to do." );
+    }
+
 }

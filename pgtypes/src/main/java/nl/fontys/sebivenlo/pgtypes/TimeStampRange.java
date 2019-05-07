@@ -15,6 +15,7 @@ public class TimeStampRange extends PGobject {
 
     /**
      * Helper constructor.
+     *
      * @param start time
      * @param noLater end time
      * @return the time range
@@ -29,18 +30,45 @@ public class TimeStampRange extends PGobject {
     private LocalDateTime start;
     private LocalDateTime end;
 
+    /**
+     * Default constructor to support postgresql jdbc API. This constructors
+     * leaves the fields unset.
+     */
     public TimeStampRange() {
         super.setType( "tsrange" );
     }
 
+    /**
+     * Create a range with start and end. A negative duration will use start as
+     * end and computes the start of this range by subtracting length from end.
+     *
+     * @param start of the range
+     * @param length length of the range
+     */
     public TimeStampRange( LocalDateTime start, Duration length ) {
         this();
-        this.start = start;
-        this.end = start.plus( length );
+        if ( length.isNegative() ) {
+            this.end = start;
+            this.start = end.plus( length );
+        } else {
+            this.start = start;
+            this.end = start.plus( length );
+        }
     }
 
+    /**
+     * Create a range with start and end. If end precedes start, an
+     * IllegalArgument exception will be thrown
+     *
+     * @param start begin
+     * @param end of range
+     * @throws IllegalArgumentException when end precedes start.
+     */
     public TimeStampRange( LocalDateTime start, LocalDateTime end ) {
         this();
+        if ( end.isBefore( start ) ) {
+            throw new IllegalArgumentException( "start should be before or at end" );
+        }
         this.start = start;
         this.end = end;
     }
@@ -117,7 +145,6 @@ public class TimeStampRange extends PGobject {
 
     @Override
     public String getValue() {
-        System.out.println( "get Value " + this );
         return this.toString();
     }
 
@@ -125,16 +152,26 @@ public class TimeStampRange extends PGobject {
     public void setValue( String value ) throws SQLException {
         setType( "tsrange" );
         super.setValue( value );
-        System.out.println( "setter " + value );
         String[] part = value.replace( "\"", "" ).replace( "[", "" ).replace( ")", "" ).split( "," );
         this.start = LocalDateTime.parse( part[ 0 ].replace( " ", "T" ) );
         this.end = LocalDateTime.parse( part[ 1 ].replace( " ", "T" ) );
-        System.out.println( "parsed start = " + start );
-        System.out.println( "parsed end = " + end );
     }
 
     public LocalDateTime getEnd() {
         return end;
     }
 
+    /**
+     * Check if a range is before a time.
+     * If the range is build of times A and B, then the result is true for values >= B;
+     * @param when the time
+     * @return true when there is no overlap and when is after end of this range.
+     */
+    public boolean isBefore( LocalDateTime when ) {
+        return this.end.compareTo( when ) <=0;
+    }
+
+    public boolean isAfter( LocalDateTime when ) {
+        return this.start.compareTo(when )>=0;
+    }
 }
