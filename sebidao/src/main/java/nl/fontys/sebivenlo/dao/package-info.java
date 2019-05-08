@@ -89,8 +89,8 @@
  * <pre class='brush:java'>
  *   public class EmployeeMapper extends AbstractMapper&lt;Integer,Employee&gt; {
  *   //
- *   public EmployeeMapper(  Class&lt;Integer&gt; keyType ,Class&lt;Employee&gt; entityType) {
- *      super( keyType,entityType );
+ *   public EmployeeMapper( ) {
+ *      super( Integer.class, Employee.class );
  *  }
  * </pre>
  * <p>
