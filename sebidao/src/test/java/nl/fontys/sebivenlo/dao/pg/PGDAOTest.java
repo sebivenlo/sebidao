@@ -100,8 +100,8 @@ public class PGDAOTest extends DBTestHelpers {
 
     @Test
     public void testSaveAll() throws SQLException, Exception {
-        Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1 );
-        Employee kat = new Employee( 0, "Hansen", "Katrien", "j.hansen@fontys.nl", 1 );
+        Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1, true );
+        Employee kat = new Employee( 0, "Hansen", "Katrien", "j.hansen@fontys.nl", 1,false );
         DAO dao = daof.createDao( Employee.class );
         try (
                 TransactionToken tok = dao.startTransaction(); ) {

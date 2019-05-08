@@ -19,25 +19,33 @@ public class Employee implements Entity2<Integer> {
     private String firstname;
     private String email;
     private int departmentid;
+    private Boolean available;
 
     public Employee( int employeeid, String lastname, String firstname,
             String email,
-            int departmentid ) {
+            int departmentid, Boolean available ) {
         this.employeeid = employeeid;
         this.lastname = lastname;
         this.firstname = firstname;
         this.email = email;
         this.departmentid = departmentid;
+        this.available = available;
+    }
+
+    public Employee( int employeeid, String lastname, String firstname,
+            String email,
+            int departmentid ) {
+        this( employeeid, lastname, firstname, email, departmentid, true );
     }
 
     Employee( Object[] parts ) {
         this( (int) parts[ 0 ], (String) parts[ 1 ],
-                (String) parts[ 2 ], (String) parts[ 3 ], (int) parts[ 4 ] );
+                (String) parts[ 2 ], (String) parts[ 3 ], (int) parts[ 4 ], (Boolean) parts[ 5 ] );
     }
 
     Object[] asParts() {
         return new Object[] { getEmployeeid(), getLastname(),
-            getFirstname(), getEmail(), getDepartmentid() };
+            getFirstname(), getEmail(), getDepartmentid(), getAvailable() };
     }
 
     public Employee( Integer employeeid ) {
@@ -120,6 +128,10 @@ public class Employee implements Entity2<Integer> {
     @Override
     public Integer getNaturalId() {
         return this.employeeid;
+    }
+
+    private Boolean getAvailable() {
+        return available;
     }
 
 }

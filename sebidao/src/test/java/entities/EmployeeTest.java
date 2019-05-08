@@ -12,7 +12,7 @@ public class EmployeeTest {
     @Test
     public void testFromParts() {
         Object[] parts = new Object[] {
-            1, "Puk", "Piet","piet@student.fontys.nl", 42
+            1, "Puk", "Piet","piet@student.fontys.nl", 42, true
         };
 
         Employee employee = new Employee( parts );

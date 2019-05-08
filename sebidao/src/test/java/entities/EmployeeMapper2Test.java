@@ -17,9 +17,9 @@ public class EmployeeMapper2Test {
     public void testImplode() {
 
         EmployeeMapper2 em = new EmployeeMapper2();
-        Employee ip = em.implode( 1, "Puk", "Piet", "piet@fontys.nl", 10 );
+        Employee ip = em.implode( 1, "Puk", "Piet", "piet@fontys.nl", 10,true );
 
-        Employee ep = new Employee( 1, "Puk", "Piet", "piet@fontys.nl", 10 );
+        Employee ep = new Employee( 1, "Puk", "Piet", "piet@fontys.nl", 10,false );
         assertEqualsExtracting( "wrong employeeid", ep, ip,
                 Employee::getEmployeeid );
         assertEqualsExtracting( "wrong firstname", ep, ip,

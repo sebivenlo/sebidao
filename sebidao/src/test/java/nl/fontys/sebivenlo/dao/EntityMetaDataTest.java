@@ -16,7 +16,7 @@ public class EntityMetaDataTest {
     @Test
     public void testMappedNames() {
 
-        String[] names = { "employeeid", "lastname", "firstname", "email", "departmentid" };
+        String[] names = { "employeeid", "lastname", "firstname", "email", "departmentid","available" };
 
         EntityMetaData<Employee> emd = new EntityMetaData<>( Employee.class );
 

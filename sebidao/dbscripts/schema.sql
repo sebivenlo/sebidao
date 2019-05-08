@@ -19,7 +19,8 @@ CREATE TABLE employees (
        lastname text,
        firstname text,
        email text unique not null,
-       departmentid integer references departments
+       departmentid integer references departments,
+       available boolean
 
 ) WITHOUT oids;
 

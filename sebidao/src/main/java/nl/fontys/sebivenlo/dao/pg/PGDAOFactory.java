@@ -3,8 +3,8 @@ package nl.fontys.sebivenlo.dao.pg;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.Entity2;
@@ -31,7 +31,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
      */
     public PGDAOFactory( DataSource ds ) {
         this.ds = ds;
-        queryStringCache = new HashMap<>();
+        queryStringCache = new ConcurrentHashMap<>();
         this.pgTypeMap.put( "tsrange", TsRange.class );
     }
 
@@ -39,7 +39,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     public <K extends Serializable, E extends Entity2<K>> PGDAO<K, E> createDao(
             Class<E> forClass ) {
         Map<String, String> queryTextCache = queryStringCache
-                .computeIfAbsent( forClass, ( x ) -> new HashMap<>() );
+                .computeIfAbsent( forClass, ( x ) -> new ConcurrentHashMap<>() );
         return new PGDAO( this, ds, this.mappers.get( forClass ), queryTextCache );
     }
 
@@ -51,7 +51,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
 
     final Map<Class<?>, Map<String, String>> queryStringCache;
 
-    final Map<String, Class<? extends PGobject>> pgTypeMap = new HashMap<>();
+    final Map<String, Class<? extends PGobject>> pgTypeMap = new ConcurrentHashMap<>();
 
     /**
      * Get a connection to be used by the DAOs created by the factory. 
