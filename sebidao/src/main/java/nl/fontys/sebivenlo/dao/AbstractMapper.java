@@ -5,7 +5,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -47,7 +49,7 @@ import static java.util.stream.Collectors.toList;
  * @param <K> key type.
  * @param <E> entity type.
  */
-public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
+public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
 
     /**
      * The key type for this mapper.
@@ -127,7 +129,7 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
      *
      * @return the type.
      */
-    @Override
+//    @Override
     public Class<E> entityType() {
         return this.entityType;
     }
@@ -137,14 +139,9 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
      *
      * @return the set of names.
      */
-    @Override
+//    @Override
     public Set<String> persistentFieldNames() {
         return entityMetaData.typeMap.keySet();
-    }
-
-    @Override
-    public String idName() {
-        return entityMetaData.getIdName();
     }
 
     @Override
@@ -159,7 +156,7 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
      * @param parts to use in the construction of the entity
      * @return the fresh entity instance.
      */
-    @Override
+//    @Override
     public E implode( Object[] parts ) {
         if ( assembler != null ) {
             return assembler.apply( parts );
@@ -204,5 +201,61 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
 
         return null != genannotation || ( null != idannotation && idannotation.generated() );
     }
+
+    /**
+     * Get the table name for the entity.
+     *
+     * @return the name of the table in the database
+     */
+    public String tableName() {
+        return entityType().getSimpleName().toLowerCase() + 's';
+    }
+
+    /**
+     * Get the column name(s) for the key column(e), typically the forming
+     * primary key.
+     *
+     * Note that the minimal, but also default length of the returned array is
+     * one.
+     *
+     * @return the id column name
+     */
+    public Set keyNames() {
+        return new LinkedHashSet<>( asList( idName() ) );
+    }
+
+    /**
+     * Get the name of the id field or column.
+     *
+     * @return the name.
+     */
+    public String idName() {
+        return entityType().getSimpleName().toLowerCase() + "id";
+    }
+
+    /**
+     * Get the name of the natural key of this relation, if it is not the
+     * default.
+     *
+     * @return the key name
+     */
+    public String naturalKeyName() {
+        return idName();
+    }
+
+    /**
+     * Get the id from the entity.
+     *
+     * @return a method to retrieve the id.
+     */
+    public abstract Function<E, K> keyExtractor();
+
+        /**
+     * Read the persistent fields of the object as an array.
+     *
+     * @param e the object to read.
+     * @return the fields as array.
+     */
+    public abstract Object[] explode( E e );
 
 }

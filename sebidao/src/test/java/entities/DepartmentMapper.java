@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.function.Function;
 import nl.fontys.sebivenlo.dao.AbstractMapper;
 
@@ -23,13 +25,14 @@ public class DepartmentMapper extends AbstractMapper<String, Department> {
         return e.asParts();
     }
 
-//    @Override
-//    public Department implode( Object[] parts ) {
-//        return new Department( parts );
-//    }
 
     @Override
     public Function<Department, String> keyExtractor() {
         return Department::getName;
+    }
+
+    @Override
+    public String idName() {
+        return "name";
     }
 }

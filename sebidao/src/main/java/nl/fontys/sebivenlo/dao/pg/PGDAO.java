@@ -164,27 +164,17 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     @Override
     public void delete( E e ) {
-        delete(mapper.keyExtractor().apply( e ));
+        delete( mapper.keyExtractor().apply( e ) );
     }
 
     @Override
     public void delete( K k ) {
-            delete( getConnection(), k );
-//        if ( null != transactionToken ) {
-//            return;
-//        }
-//        try ( Connection con = factory.getConnection(); ) {
-//            delete( con, k );
-//        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
-//            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-//                    ex );
-//            throw new DAOException( ex.getMessage(), ex );
-//        }
+        delete( getConnection(), k );
     }
 
     @Override
     public void deleteAll( Iterable<E> entities ) {
-            deleteAll( getConnection(), entities );
+        deleteAll( getConnection(), entities );
     }
 
     private void deleteAll( Connection con, Iterable<E> entities ) {
@@ -224,7 +214,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
         String sql = queryTextCache.computeIfAbsent( "delete",
                 x -> format( "delete from %s where %s=?", tableName(), mapper.
-                        naturalKeyName() ) );
+                        idName()) );
         return sql;
     }
 

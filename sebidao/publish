@@ -1,5 +1,6 @@
 #!/bin/bash
 ##  publish to site
+mvn -P attach-javadoc javadoc:jar site deploy
 rsync -av target/site/ fontysvenlo:/home/javabits/public_html/sebidao/
 
 
