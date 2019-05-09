@@ -1,5 +1,6 @@
 package entities;
 
+import static java.time.LocalDate.now;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +20,7 @@ public class EmployeeMapper2Test {
         EmployeeMapper2 em = new EmployeeMapper2();
         Employee ip = em.implode( 1, "Puk", "Piet", "piet@fontys.nl", 10,true );
 
-        Employee ep = new Employee( 1, "Puk", "Piet", "piet@fontys.nl", 10,false );
+        Employee ep = new Employee( 1, "Puk", "Piet", "piet@fontys.nl", 10,false,now() );
         assertEqualsExtracting( "wrong employeeid", ep, ip,
                 Employee::getEmployeeid );
         assertEqualsExtracting( "wrong firstname", ep, ip,

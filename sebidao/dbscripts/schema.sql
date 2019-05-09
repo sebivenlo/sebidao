@@ -20,7 +20,8 @@ CREATE TABLE employees (
        firstname text,
        email text unique not null,
        departmentid integer references departments,
-       available boolean
+       available boolean,
+       dob date not null default now()
 
 ) WITHOUT oids;
 

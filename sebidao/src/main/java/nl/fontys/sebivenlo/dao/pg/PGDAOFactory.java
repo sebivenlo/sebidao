@@ -2,9 +2,12 @@ package nl.fontys.sebivenlo.dao.pg;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.Entity2;
@@ -33,6 +36,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
         this.ds = ds;
         queryStringCache = new ConcurrentHashMap<>();
         this.pgTypeMap.put( "tsrange", TsRange.class );
+//        this.pgTypeMap.put( "date", LocalDate.class );
     }
 
     @Override
@@ -52,12 +56,22 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     final Map<Class<?>, Map<String, String>> queryStringCache;
 
     final Map<String, Class<? extends PGobject>> pgTypeMap = new ConcurrentHashMap<>();
+    //<T>static final Map<Class<T>, Function<Object,T>> marshallInMap = new ConcurrentHashMap<>();
+    static final Map<Class<?>, Function<?, ?>> marshallInMap = new ConcurrentHashMap<>();
+    static final Map<Class<?>, Function<?, ?>> marshallOutMap = new ConcurrentHashMap<>();
+
+    static {
+//        Function<Date, LocalDate> f = (Date d) -> d.toLocalDate();
+//        Function<Object, Object> f2 = ( d ) -> ( (Date) d ).toLocalDate();
+        marshallInMap.put( LocalDate.class, ( Date d ) -> d.toLocalDate() );
+        marshallOutMap.put( LocalDate.class, ( LocalDate l ) -> java.sql.Date.valueOf( l ) );
+//        marshallInMap.put( LocalDate.class, (Date d) -> d.toLocalDate() );
+    }
 
     /**
-     * Get a connection to be used by the DAOs created by the factory. 
-     * Loads any maped types using
-     * {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class).
-     * 
+     * Get a connection to be used by the DAOs created by the factory. Loads any
+     * maped types using null     {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class).
+     *
      * @return a connection
      * @throws SQLException when connection cannot be retreived.
      */

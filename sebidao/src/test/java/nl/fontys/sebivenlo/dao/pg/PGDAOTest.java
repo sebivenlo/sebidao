@@ -9,6 +9,7 @@ import entities.Employee;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,8 +101,9 @@ public class PGDAOTest extends DBTestHelpers {
 
     @Test
     public void testSaveAll() throws SQLException, Exception {
-        Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1, true );
-        Employee kat = new Employee( 0, "Hansen", "Katrien", "j.hansen@fontys.nl", 1,false );
+        LocalDate d = LocalDate.of( 1999, 5, 6 );
+        Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1, true, d );
+        Employee kat = new Employee( 0, "Hansen", "Katrien", "j.hansen@fontys.nl", 1, false, d );
         DAO dao = daof.createDao( Employee.class );
         try (
                 TransactionToken tok = dao.startTransaction(); ) {

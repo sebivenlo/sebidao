@@ -1,5 +1,7 @@
 package entities;
 
+import java.time.LocalDate;
+import static java.time.LocalDateTime.now;
 import java.util.Objects;
 import java.util.function.ToIntFunction;
 import nl.fontys.sebivenlo.dao.Entity2;
@@ -20,32 +22,34 @@ public class Employee implements Entity2<Integer> {
     private String email;
     private int departmentid;
     private Boolean available;
+    private LocalDate dob;
 
     public Employee( int employeeid, String lastname, String firstname,
             String email,
-            int departmentid, Boolean available ) {
+            int departmentid, Boolean available, LocalDate bornAt ) {
         this.employeeid = employeeid;
         this.lastname = lastname;
         this.firstname = firstname;
         this.email = email;
         this.departmentid = departmentid;
         this.available = available;
+        this.dob=bornAt;
     }
 
     public Employee( int employeeid, String lastname, String firstname,
             String email,
             int departmentid ) {
-        this( employeeid, lastname, firstname, email, departmentid, true );
+        this( employeeid, lastname, firstname, email, departmentid, true, LocalDate.now() );
     }
 
     Employee( Object[] parts ) {
         this( (int) parts[ 0 ], (String) parts[ 1 ],
-                (String) parts[ 2 ], (String) parts[ 3 ], (int) parts[ 4 ], (Boolean) parts[ 5 ] );
+                (String) parts[ 2 ], (String) parts[ 3 ], (int) parts[ 4 ], (Boolean) parts[ 5 ], (LocalDate)parts[6] );
     }
 
     Object[] asParts() {
         return new Object[] { getEmployeeid(), getLastname(),
-            getFirstname(), getEmail(), getDepartmentid(), getAvailable() };
+            getFirstname(), getEmail(), getDepartmentid(), getAvailable(),getDob() };
     }
 
     public Employee( Integer employeeid ) {
@@ -132,6 +136,14 @@ public class Employee implements Entity2<Integer> {
 
     private Boolean getAvailable() {
         return available;
+    }
+
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob( LocalDate dob ) {
+        this.dob = dob;
     }
 
 }
