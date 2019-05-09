@@ -614,7 +614,17 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     }
 
-    Connection getConnection() {
+    /**
+     * Get the connection this DAO is using.
+     * Get the connection to do hand crafted queries for problems that this DAO does not support.
+     * The returned connection may already be participating in a transaction when this DAO already is.
+     * 
+     * When using the returned connection it is still good style to use {@link TransactionToken#commit} to
+     * commit the transaction. You can obtain the token by invoking {@link DAO#getTransactionToken()}. 
+     * 
+     * @return the connection.
+     */
+    public Connection getConnection() {
         PGTransactionToken tok = getTransactionToken();
         if ( tok != null ) {
             return tok.getConnection();
