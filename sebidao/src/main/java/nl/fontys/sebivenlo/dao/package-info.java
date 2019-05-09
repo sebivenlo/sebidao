@@ -94,8 +94,8 @@
  *  }
  * </pre>
  * <p>
- * and implement the required methods {@link nl.fontys.sebivenlo.dao.Mapper#explode Mapper.explode}, 
- * {@link nl.fontys.sebivenlo.dao.Mapper#implode Mapper.implode} and {@link nl.fontys.sebivenlo.dao.Mapper#keyExtractor Mapper.keyExtractor}.
+ * and implement the required methods {@link nl.fontys.sebivenlo.dao.AbstractMapper#explode AbstractMapper.explode}, 
+ * {@link nl.fontys.sebivenlo.dao.AbstractMapper#implode AbstractMapper.implode} and {@link nl.fontys.sebivenlo.dao.AbstractMapper#keyExtractor AbstractMapper.keyExtractor}.
  * </p>
  * <h3>Mappers: Custom name for table</h3>
  * <p>You disapprove of the result of the simple plural table name generated and want your own decision.<br>
