@@ -80,11 +80,19 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
     E update( E e );
 
     /**
-     * Delete t using its primary key.
+     * Delete t using its  key (id).
+     * This method extracts the key and uses that to delete the entity.
      *
      * @param e entity to delete
      */
     void delete( E e );
+
+    /**
+     * Delete an entity by key.
+     *
+     * @param k the key (id) of the entity to delete
+     */
+    void delete( K k );
 
     /**
      * Start a transaction and create a token carrying the transaction relevant

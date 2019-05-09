@@ -12,7 +12,7 @@ import java.util.Set;
  * reflectively found type information by caching it.
  *
  * This is the data that is cached, and is typically stored in a
- * {@code Map<Type,EntityData>}.
+ * {@code Map<Type,EntityData>}. This class is not Thread Safe.
  *
  * @param <E> entity type.
  *

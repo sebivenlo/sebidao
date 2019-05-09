@@ -15,8 +15,8 @@ import org.junit.Ignore;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-//@Ignore
-public class PGDAOConnectionCloseExceptionTest extends PGDAOExceptionTestBase {
+@Ignore
+public class PGDAOConnectionClosedExceptionTest extends PGDAOExceptionTestBase {
 
     @Override
     Connection getConnection() {
@@ -24,7 +24,7 @@ public class PGDAOConnectionCloseExceptionTest extends PGDAOExceptionTestBase {
             Connection realConnection = DBTestHelpers.ds.getConnection();
             return new NonClosingConnection( realConnection );
         } catch ( SQLException ex ) {
-            getLogger( PGDAOConnectionCloseExceptionTest.class.getName() )
+            getLogger(PGDAOConnectionClosedExceptionTest.class.getName() )
                     .log( Level.SEVERE, null, ex );
         }
         return null;

@@ -87,9 +87,14 @@ interface Mapper<K, E> {
      * sequence number.
      *
      * return true when the key is generated.
+     * 
+     * Do not use this method. Use the Annotations ID and Generated instead to make more
+     * specific declarations on what is generated and what is not.
      *
      * @return true by default, but may very per implementation
+     * @deprecated this method should not be used. 
      */
+    @Deprecated
     default boolean generateKey() {
         return true;
     }

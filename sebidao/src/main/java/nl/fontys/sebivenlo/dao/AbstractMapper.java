@@ -142,22 +142,6 @@ public abstract class AbstractMapper<K, E> implements Mapper<K, E> {
         return entityMetaData.typeMap.keySet();
     }
 
-    /**
-     * Get the types of the columns (fields) in declaration order.
-     *
-     * @return the java types of the fields.
-     */
-    public List<Class<?>> persistentFieldTypes() {
-        List<Class<?>> result = new ArrayList<>( entityMetaData.typeMap.size() );
-        result.addAll( entityMetaData.typeMap.values() );
-        return result;
-    }
-
-    @Override
-    public boolean generateKey() {
-        return entityMetaData.isIDGenerated();
-    }
-
     @Override
     public String idName() {
         return entityMetaData.getIdName();

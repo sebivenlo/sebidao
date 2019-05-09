@@ -163,35 +163,28 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     @Override
-    public void delete( E t ) {
-        if ( null != transactionToken ) {
-            delete( transactionToken.getConnection(), t );
-            return;
-        }
-        try ( Connection con = factory.getConnection(); ) {
-            delete( con, t );
-        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
-            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
-            throw new DAOException( ex.getMessage(), ex );
-        }
+    public void delete( E e ) {
+        delete(mapper.keyExtractor().apply( e ));
+    }
+
+    @Override
+    public void delete( K k ) {
+            delete( getConnection(), k );
+//        if ( null != transactionToken ) {
+//            return;
+//        }
+//        try ( Connection con = factory.getConnection(); ) {
+//            delete( con, k );
+//        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
+//            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+//                    ex );
+//            throw new DAOException( ex.getMessage(), ex );
+//        }
     }
 
     @Override
     public void deleteAll( Iterable<E> entities ) {
-        if ( null != transactionToken ) {
-            deleteAll( transactionToken.getConnection(), entities );
-            return;
-        }
-
-        try ( Connection con = this.getConnection(); ) {
-            deleteAll( con, entities );
-        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
-            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
-            throw new DAOException( ex.getMessage(), ex );
-        }
-
+            deleteAll( getConnection(), entities );
     }
 
     private void deleteAll( Connection con, Iterable<E> entities ) {
@@ -214,11 +207,11 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         }
     }
 
-    private void delete( final Connection con, E t ) {
+    private void delete( final Connection con, K k ) {
         String sql = deleteQueryText();
         try (
                 PreparedStatement pst = con.prepareStatement( sql ); ) {
-            pst.setObject( 1, mapper.keyExtractor().apply( t ) );
+            pst.setObject( 1, k );
             boolean ignored = pst.execute();
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -615,13 +608,15 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     /**
-     * Get the connection this DAO is using.
-     * Get the connection to do hand crafted queries for problems that this DAO does not support.
-     * The returned connection may already be participating in a transaction when this DAO already is.
-     * 
-     * When using the returned connection it is still good style to use {@link TransactionToken#commit} to
-     * commit the transaction. You can obtain the token by invoking {@link DAO#getTransactionToken()}. 
-     * 
+     * Get the connection this DAO is using. Get the connection to do hand
+     * crafted queries for problems that this DAO does not support. The returned
+     * connection may already be participating in a transaction when this DAO
+     * already is.
+     *
+     * When using the returned connection it is still good style to use
+     * {@link TransactionToken#commit} to commit the transaction. You can obtain
+     * the token by invoking {@link DAO#getTransactionToken()}.
+     *
      * @return the connection.
      */
     public Connection getConnection() {

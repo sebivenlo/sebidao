@@ -85,6 +85,11 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
         storage.remove( t.getId() );
     }
 
+    @Override
+    public void delete( K k ) {
+        storage.remove( k );
+    }
+
     private void persistToDisk() {
         if ( storage.isEmpty() ) {
             return; // nothing to do
