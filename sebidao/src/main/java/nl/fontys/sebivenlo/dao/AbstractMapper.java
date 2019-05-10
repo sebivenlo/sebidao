@@ -3,6 +3,7 @@ package nl.fontys.sebivenlo.dao;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static java.util.Arrays.asList;
@@ -78,6 +79,7 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         this.keyType = keyType;
         entityMetaData = new EntityMetaData<>( entityType );
         deriveAssemblerFunction();
+        deriveDisAssemblerFunction();
     }
 
     /**
@@ -123,6 +125,73 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
     }
 
     Function<Object[], E> assembler;
+
+    Function<E, Object[]> disAssembler;
+
+    /**
+     * Reflect on fields and methods and try to find getters for all persistent
+     * fields. Combine getter invocations to take the E apart.
+     */
+    final void deriveDisAssemblerFunction() {
+
+        if ( tryAsPart() ) {
+            return;
+        }
+        
+        tryFieldAndMethodReflection();
+    }
+
+    final void tryFieldAndMethodReflection() {
+        Set<String> fieldNames = entityMetaData.typeMap.keySet();
+        final Method[] getters = new Method[ fieldNames.size() ];
+        final int fieldCount = entityMetaData.typeMap.size();
+        int g = 0;
+        for ( String fieldName : fieldNames ) {
+            try {
+                String getterName = "get" + fieldName.substring( 0, 1 ).toUpperCase() + fieldName.substring( 1 );
+                getters[ g++ ] = entityType.getDeclaredMethod( getterName );
+            } catch ( NoSuchMethodException | SecurityException ex ) {
+                Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+            }
+        }
+        if ( g == entityMetaData.typeMap.size() ) {
+            disAssembler = ( E e ) -> {
+                Object[] result = new Object[ fieldCount ];
+                int i = 0;
+                for ( Method getter : getters ) {
+                    try {
+                        result[ i++ ] = getter.invoke( e );
+                    } catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex ) {
+                        Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+                    }
+                }
+                return result;
+            };
+        }
+    }
+
+    final boolean tryAsPart() {
+        try {
+            // first try asParts
+            final Method asParts = entityType.getMethod( "asParts" );
+            Class<?> returnType = asParts.getReturnType();
+            if ( returnType.isArray() ) {
+                disAssembler = ( E e ) -> {
+                    Object[] result = null;
+                    try {
+                        result = (Object[]) asParts.invoke( e );
+                    } catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex ) {
+                        Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+                    }
+                    return result;
+                };
+                return true;
+            }
+        }catch ( NoSuchMethodException | SecurityException ex ) {
+            Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+        }
+        return false;
+    }
 
     /**
      * Get entity type.
@@ -202,6 +271,20 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         return null != genannotation || ( null != idannotation && idannotation.generated() );
     }
 
+        /**
+     * Read the persistent fields of the object as an array.
+     *
+     * @param e the object to read.
+     * @return the fields as array.
+     */
+    public Object[] explode( E e ) {
+        if ( null == disAssembler ) {
+            throw new IllegalStateException( "the definition of " + entityType.getCanonicalName()
+                    + " does provide the required getters" );
+        }
+        return disAssembler.apply( e );
+    }
+
     /**
      * Get the table name for the entity.
      *
@@ -249,13 +332,4 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
      * @return a method to retrieve the id.
      */
     public abstract Function<E, K> keyExtractor();
-
-        /**
-     * Read the persistent fields of the object as an array.
-     *
-     * @param e the object to read.
-     * @return the fields as array.
-     */
-    public abstract Object[] explode( E e );
-
 }

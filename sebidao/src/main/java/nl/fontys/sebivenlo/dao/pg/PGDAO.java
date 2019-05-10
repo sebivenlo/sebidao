@@ -238,7 +238,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         K key = mapper.keyExtractor().apply( t );
         try ( PreparedStatement pst = c.
                 prepareStatement( sql ); ) {
-            Object[] parts = mapper.explode( t );
+            Object[] parts = check(mapper.explode( t ));
+            check(parts);
             int j = 1;
 
             // all fields
@@ -371,7 +372,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private void populatePrepared( E t, final PreparedStatement pst ) throws
             SQLException {
-        Object[] parts = dropGeneneratedParts( mapper.explode( t ) );
+        Object[] parts = dropGeneneratedParts( check(mapper.explode( t )) );
         int j = 1;
         for ( Object part : parts ) {
             pst.setObject( j++, part );
@@ -670,6 +671,15 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     public String toString() {
         return "PGDAO{" + "tableName=" + tableName() + ", idName=" + idName()
                 + ", mapper=" + mapper + '}';
+    }
+
+    private Object[] check( Object[] parts ) {
+        if (parts.length != mapper.persistentFieldNames().size()) 
+            throw new RuntimeException("The number of parts in produced by the explode method"
+                    + "does not match the number of fields in the entity, please check you Entity.asPart() method"
+        );
+
+        return parts;
     }
 
 }

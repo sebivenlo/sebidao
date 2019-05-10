@@ -15,15 +15,15 @@ public class DepartmentMapper extends AbstractMapper<String, Department> {
         super( String.class, Department.class );
     }
 
-    @Override
-    public Class<Department> entityType() {
-        return Department.class;
-    }
-
-    @Override
-    public Object[] explode( Department e ) {
-        return e.asParts();
-    }
+//    @Override
+//    public Class<Department> entityType() {
+//        return Department.class;
+//    }
+//
+//    @Override
+//    public Object[] explode( Department e ) {
+//        return e.asParts();
+//    }
 
 
     @Override
