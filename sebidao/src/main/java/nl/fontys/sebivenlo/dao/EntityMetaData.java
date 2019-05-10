@@ -2,8 +2,11 @@ package nl.fontys.sebivenlo.dao;
 
 import java.lang.reflect.Field;
 import static java.lang.reflect.Modifier.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +28,7 @@ class EntityMetaData<E> {
      * iterates over the keys in insertion order.
      */
     final Map<String, Class<?>> typeMap = new LinkedHashMap<>();
-    private Set<String> generatedFields;
+    private Set<String> generatedFieldNames;
     /**
      * What are these meta data about.
      */
@@ -35,7 +38,8 @@ class EntityMetaData<E> {
      */
     private String idName;
     private boolean idGenerated;
-
+    private List<Field> fields = new ArrayList<>();
+    private List<Field> publicFields = Collections.unmodifiableList( fields );
     EntityMetaData( Class<E> about ) {
         this.about = about;
         register( about );
@@ -63,11 +67,36 @@ class EntityMetaData<E> {
                 if ( gAnnotation != null ) {
                     setGenerated( name );
                 }
-
+                fields.add( field );
             }
         }
     }
 
+    /**
+     * Get the declared fields as a list.
+     * @return the list, unmodifiable
+     */
+    List<Field> getFields(){
+        return publicFields;
+    }
+    /**
+     * Get a field by position.
+     * @param i the field position (order) in the entity.
+     * @return the field.
+     */
+    public Field getField(int i){
+        return fields.get( i );
+    }
+
+    /**
+     * Get a field type by position.
+     * @param i the field position (order) in the entity.
+     * @return the field.
+     */
+    public Class<?> getFieldType(int i){
+        return fields.get( i ).getType();
+    }
+    
     String getIdName() {
         return idName;
     }
@@ -91,23 +120,25 @@ class EntityMetaData<E> {
     }
 
     boolean isGenerated( String name ) {
-        return this.generatedFields != null && this.generatedFields.contains(
+        return this.generatedFieldNames != null && this.generatedFieldNames.contains(
                 name );
 
     }
 
     private void setGenerated( String name ) {
-        if ( null == generatedFields ) {
-            generatedFields = new HashSet<>();
+        if ( null == generatedFieldNames ) {
+            generatedFieldNames = new HashSet<>();
         }
-        generatedFields.add( name );
+        generatedFieldNames.add( name );
     }
 
     @Override
     public String toString() {
         return "EntityMetaData{" + "typeMap=" + typeMap + ", \ngeneratedFields="
-                + generatedFields + "\n, about=" + about + ",\n idName="
+                + generatedFieldNames + "\n, about=" + about + ",\n idName="
                 + idName + ", \nidGenerated=" + idGenerated + '}';
     }
 
+    
+    
 }

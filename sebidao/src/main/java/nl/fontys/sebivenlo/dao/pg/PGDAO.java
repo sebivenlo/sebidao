@@ -153,13 +153,14 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             SQLException {
 
         for ( int i = 0; i < parts.length; i++ ) {
-            parts[ i ] = rs.getObject( i + 1 );
+            Class<?> type = mapper.getFieldType( i ); //generatedFields().get( i );
+            parts[ i ] = factory.marshallIn( type, rs.getObject( i + 1 ) );
         }
         return parts;
     }
 
     private Object[] createPartsArray( final ResultSet rs ) throws SQLException {
-        return new Object[ rs.getMetaData().getColumnCount() ];
+        return new Object[ mapper.getFieldCount() ];
     }
 
     @Override
@@ -214,7 +215,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
         String sql = queryTextCache.computeIfAbsent( "delete",
                 x -> format( "delete from %s where %s=?", tableName(), mapper.
-                        idName()) );
+                        idName() ) );
         return sql;
     }
 
@@ -238,8 +239,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         K key = mapper.keyExtractor().apply( t );
         try ( PreparedStatement pst = c.
                 prepareStatement( sql ); ) {
-            Object[] parts = check(mapper.explode( t ));
-            check(parts);
+            Object[] parts = check( mapper.explode( t ) );
+            check( parts );
             int j = 1;
 
             // all fields
@@ -372,7 +373,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private void populatePrepared( E t, final PreparedStatement pst ) throws
             SQLException {
-        Object[] parts = dropGeneneratedParts( check(mapper.explode( t )) );
+        Object[] parts = dropGeneneratedParts( check( mapper.explode( t ) ) );
         int j = 1;
         for ( Object part : parts ) {
             pst.setObject( j++, part );
@@ -435,8 +436,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             Object[] parts = createPartsArray( rs );
             while ( rs.next() ) {
                 // note columns start at 1
-                fillPartsArray( parts, rs );
-                E e = mapper.implode( parts );
+                E e = recordToEntity( rs ); 
                 result.add( e );
             }
             return result;
@@ -495,8 +495,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 Object[] parts = createPartsArray( rs );
                 while ( rs.next() ) {
                     // note columns start at 1
-                    fillPartsArray( parts, rs );
-                    E e = mapper.implode( parts );
+                    E e = recordToEntity( rs );
                     result.add( e );
                 }
                 return result;
@@ -674,10 +673,11 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     private Object[] check( Object[] parts ) {
-        if (parts.length != mapper.persistentFieldNames().size()) 
-            throw new RuntimeException("The number of parts in produced by the explode method"
+        if ( parts.length != mapper.persistentFieldNames().size() ) {
+            throw new RuntimeException( "The number of parts in produced by the explode method"
                     + "does not match the number of fields in the entity, please check you Entity.asPart() method"
-        );
+            );
+        }
 
         return parts;
     }

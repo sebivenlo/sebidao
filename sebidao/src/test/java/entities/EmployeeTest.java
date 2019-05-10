@@ -1,5 +1,6 @@
 package entities;
 
+import static java.time.LocalDate.now;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -12,7 +13,7 @@ public class EmployeeTest {
     @Test
     public void testFromParts() {
         Object[] parts = new Object[] {
-            1, "Puk", "Piet","piet@student.fontys.nl", 42, true
+            1, "Puk", "Piet","piet@student.fontys.nl", 42, true,now()
         };
 
         Employee employee = new Employee( parts );

@@ -57,10 +57,10 @@ public final class PGDAOFactory extends AbstractDAOFactory {
 
     final Map<String, Class<? extends PGobject>> pgTypeMap = new ConcurrentHashMap<>();
     //<T>static final Map<Class<T>, Function<Object,T>> marshallInMap = new ConcurrentHashMap<>();
-    static final Map<Class<?>, Function<?, ?>> marshallInMap = new ConcurrentHashMap<>();
-    static final Map<Class<?>, Function<?, ?>> marshallOutMap = new ConcurrentHashMap<>();
+    final Map<Class<?>, Function<?, ?>> marshallInMap = new ConcurrentHashMap<>();
+    final Map<Class<?>, Function<?, ?>> marshallOutMap = new ConcurrentHashMap<>();
 
-    static {
+    {
 //        Function<Date, LocalDate> f = (Date d) -> d.toLocalDate();
 //        Function<Object, Object> f2 = ( d ) -> ( (Date) d ).toLocalDate();
         marshallInMap.put( LocalDate.class, ( Date d ) -> d.toLocalDate() );
@@ -70,7 +70,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
 
     /**
      * Get a connection to be used by the DAOs created by the factory. Loads any
-     * maped types using null     {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class).
+     * maped types using null null null     {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class).
      *
      * @return a connection
      * @throws SQLException when connection cannot be retreived.
@@ -94,5 +94,14 @@ public final class PGDAOFactory extends AbstractDAOFactory {
      */
     public final void registerPGdataType( String name, Class<? extends PGobject> type ) {
         pgTypeMap.put( name, type );
+    }
+
+    <U> U marshallIn( Class<U> type, Object in ) {
+        Function<Object, U> get = (Function<Object, U>) marshallInMap.get( type );
+        if ( null == get ) {
+            return  (U)in ;
+        }
+        return type.cast( get.apply( in ) );
+
     }
 }

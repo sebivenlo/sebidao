@@ -137,7 +137,7 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         if ( tryAsPart() ) {
             return;
         }
-        
+
         tryFieldAndMethodReflection();
     }
 
@@ -187,7 +187,7 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                 };
                 return true;
             }
-        }catch ( NoSuchMethodException | SecurityException ex ) {
+        } catch ( NoSuchMethodException | SecurityException ex ) {
             Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
         }
         return false;
@@ -226,9 +226,10 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
      * @return the fresh entity instance.
      */
 //    @Override
-    public E implode( Object[] parts ) {
+    public E implode( Object... parts ) {
         if ( assembler != null ) {
-            return assembler.apply( parts );
+            Object[] checkedParts = check( parts );
+            return assembler.apply( checkedParts );
         } else {
             throw new DAOException(
                     "No assembler constructor found with signature "
@@ -271,7 +272,7 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         return null != genannotation || ( null != idannotation && idannotation.generated() );
     }
 
-        /**
+    /**
      * Read the persistent fields of the object as an array.
      *
      * @param e the object to read.
@@ -327,9 +328,37 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
     }
 
     /**
+     * Get a field type by position.
+     *
+     * @param i the field position (order) in the entity.
+     * @return the field.
+     */
+    public Class<?> getFieldType( int i ) {
+        return entityMetaData.getFieldType( i );
+    }
+
+    /**
+     * Get the numer for fields of the mapped entity.
+     *
+     * @return the fieldCount
+     */
+    public int getFieldCount() {
+        return entityMetaData.getFields().size();
+    }
+
+    /**
      * Get the id from the entity.
      *
      * @return a method to retrieve the id.
      */
     public abstract Function<E, K> keyExtractor();
+
+    private Object[] check( Object[] parts ) {
+
+        if ( parts.length >= getFieldCount() ) {
+            return parts;
+        }
+        return Arrays.copyOf( parts, getFieldCount() );
+
+    }
 }

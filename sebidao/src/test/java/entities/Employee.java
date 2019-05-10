@@ -24,18 +24,29 @@ public class Employee implements Entity2<Integer> {
     private Boolean available;
     private LocalDate dob;
 
-    public Employee( int employeeid, String lastname, String firstname,
-            String email,
-            int departmentid, Boolean available, LocalDate bornAt ) {
+//    public Employee( int employeeid, String lastname, String firstname,
+//            String email,
+//            int departmentid, Boolean available, LocalDate bornAt ) {
+//        this.employeeid = employeeid;
+//        this.lastname = lastname;
+//        this.firstname = firstname;
+//        this.email = email;
+//        this.departmentid = departmentid;
+//        this.available = available;
+//        this.dob=bornAt;
+//    }
+
+    public Employee( Integer employeeid, String lastname, String firstname, String email, int departmentid, Boolean available, LocalDate dob ) {
         this.employeeid = employeeid;
         this.lastname = lastname;
         this.firstname = firstname;
         this.email = email;
         this.departmentid = departmentid;
         this.available = available;
-        this.dob=bornAt;
+        this.dob = dob;
     }
 
+    
     public Employee( int employeeid, String lastname, String firstname,
             String email,
             int departmentid ) {
