@@ -13,10 +13,10 @@ public class CompanyMapper extends AbstractMapper<String, Company> {
         super( String.class, Company.class );
     }
 
-    @Override
-    public Object[] explode( Company e ) {
-        return e.asParts();
-    }
+//    @Override
+//    public Object[] explode( Company e ) {
+//        return e.asParts();
+//    }
 
 //    @Override
 //    public Company implode( Object[] parts ) {
