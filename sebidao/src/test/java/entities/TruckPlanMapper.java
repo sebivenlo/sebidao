@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.function.Function;
 import nl.fontys.sebivenlo.dao.AbstractMapper;
 import nl.fontys.sebivenlo.dao.pg.TsRange;
@@ -32,5 +34,6 @@ public class TruckPlanMapper extends AbstractMapper<Integer,TruckPlan> {
         TsRange ts = (TsRange) parts[2];
         return new TruckPlan( i1,i2,ts ); 
     }
+
     
 }

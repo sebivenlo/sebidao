@@ -40,6 +40,11 @@ public class DAOTest {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
 
+        @Override
+        public void delete( Serializable k ) {
+            throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+        }
+
     };
 
     TransactionToken ignoredToken = new TransactionToken() {
