@@ -9,8 +9,8 @@ import nl.fontys.sebivenlo.dao.AbstractMapper;
  */
 public class CompanyMapper extends AbstractMapper<String,Company> {
 
-    public CompanyMapper( Class<String> keyType, Class<Company> entityType ) {
-        super( keyType, entityType );
+    public CompanyMapper(  ) {
+        super( String.class,Company.class );
     }
 
     @Override

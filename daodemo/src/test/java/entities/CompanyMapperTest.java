@@ -19,7 +19,7 @@ public class CompanyMapperTest {
     @Before
     public void setup() {
 
-        mapper = new CompanyMapper( String.class, Company.class );
+        mapper = new CompanyMapper(  );
 
     }
 
