@@ -10,7 +10,8 @@ of the user-programmer.
 The only required helper class to an entity say student is any mapper, like StudentMapper,
 which knows enough of the student class to take a student instance apart in an array
 of objects and do the reverse, using a constructor that is assumed (we said opinionated) an all args constructor
-that take parameters in field declaration order.
+that takes it's parameters in field declaration order. This is the same as you would get with a `@Data` annotated pojo with
+`@AllArgsConstructor` using [lombok](https://projectlombok.org/).
 
 The Student class would probably be friendly and lend a helping hand to the Mapper by providing just such method and constructor, but only package private, mind you. That will do.
 
