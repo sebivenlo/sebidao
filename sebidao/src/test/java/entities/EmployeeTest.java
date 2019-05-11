@@ -1,6 +1,7 @@
 package entities;
 
 import static java.time.LocalDate.now;
+import static java.time.LocalDate.of;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -38,6 +39,8 @@ public class EmployeeTest {
         emp.setLastname( "Puk" );
         emp.setEmail("p.puk@outlook.com" );
         emp.setDepartmentid( 42 );
+        
+        emp.setDob( of(1953,9,15));
 
         Object[] part = emp.asParts();
         assertEquals( "id", 1, ( ( Integer ) part[ 0 ] ).intValue() );

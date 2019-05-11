@@ -6,6 +6,7 @@ import entities.DBTestHelpers;
 import entities.Department;
 import entities.DepartmentMapper;
 import entities.Employee;
+import entities.EmployeeMapper2;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 /**
  *
@@ -104,12 +106,16 @@ public class PGDAOTest extends DBTestHelpers {
         LocalDate d = LocalDate.of( 1999, 5, 6 );
         Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1, true, d );
         Employee kat = new Employee( 0, "Hansen", "Katrien", "j.hansen@fontys.nl", 1, false, d );
+        System.out.println( "jan = " + jan );
+        System.out.println( "kat = " + kat );
         DAO dao = daof.createDao( Employee.class );
         try (
                 TransactionToken tok = dao.startTransaction(); ) {
             Collection<Employee> saveAll = dao.saveAll( jan, kat );
             assertEquals( "should have 2 saved emps", 2, saveAll.size() );
-            //Assertions.assertThat( saveAll).containsExactlyInAnyOrder( kat, jan );
+            // Assertions.assertThat( saveAll ).containsExactlyInAnyOrder( kat, jan );
+            PGDAO pdao= (PGDAO) dao;
+            assertFalse(pdao.getConnection().isClosed());
             Employee e1 = saveAll.iterator().next();
             Employee e2 = saveAll.iterator().next();
             dao.deleteAll( e1, e2 );
@@ -138,7 +144,7 @@ public class PGDAOTest extends DBTestHelpers {
     }
 
     @Test
-    public void testDropGenerated() {
+    public void testDropGeneratedDept() {
         DepartmentMapper departmentMapper = new DepartmentMapper();
         daof.registerMapper( Department.class, departmentMapper );
 
@@ -151,7 +157,29 @@ public class PGDAOTest extends DBTestHelpers {
         Object[] nonGeneratedParts = ddao.dropGeneneratedParts( parts );
         assertEquals( "normal field count", 3, nonGeneratedParts.length );
 
-//        Assert.fail( "test testDropGenerated reached its end, you can remove me when you aggree." );
+//        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
     }
-    
+
+    @Test
+    public void testDropGeneratedEmp() {
+        EmployeeMapper2 mapper = new EmployeeMapper2();
+        LocalDate d = LocalDate.of( 1999, 5, 6 );
+        daof.registerMapper( Employee.class, mapper );
+
+        PGDAO<Integer, Employee> edao = daof.createDao( Employee.class );
+        Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1, true, d );
+
+        Object[] parts = mapper.explode( jan );
+        assertEquals( "part count", 7, parts.length );
+
+        Object[] nonGeneratedParts = edao.dropGeneneratedParts( parts );
+        assertEquals( "normal field count", 6, nonGeneratedParts.length );
+
+        Object o5 = nonGeneratedParts[ 5 ];
+        System.out.println( "5 field =" + o5.getClass().getSimpleName() + ":" + o5.toString() );
+        assertTrue( "last field is dob", o5 instanceof LocalDate );
+
+//        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
+    }
+
 }

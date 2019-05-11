@@ -21,13 +21,11 @@ public class TruckPlan implements Entity2<Integer> {
         this.plan = plan;
     }
 
-    
     public TruckPlan( Integer truckid, TsRange plan ) {
         this.truckid = truckid;
         this.plan = plan;
     }
-    
-    
+
     @Override
     public Integer getNaturalId() {
         return truckplanid;
@@ -39,7 +37,24 @@ public class TruckPlan implements Entity2<Integer> {
     }
 
     Object[] asParts() {
-        return new Object[]{this.truckplanid,this.truckid,this.plan};
+        return new Object[] { 
+            truckplanid, 
+            truckid, 
+            plan 
+        };
     }
+
+    public Integer getTruckplanid() {
+        return truckplanid;
+    }
+
+    public Integer getTruckid() {
+        return truckid;
+    }
+
+    public TsRange getPlan() {
+        return plan;
+    }
+
     
 }

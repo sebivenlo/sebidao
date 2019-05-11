@@ -24,18 +24,6 @@ public class Employee implements Entity2<Integer> {
     private Boolean available;
     private LocalDate dob;
 
-//    public Employee( int employeeid, String lastname, String firstname,
-//            String email,
-//            int departmentid, Boolean available, LocalDate bornAt ) {
-//        this.employeeid = employeeid;
-//        this.lastname = lastname;
-//        this.firstname = firstname;
-//        this.email = email;
-//        this.departmentid = departmentid;
-//        this.available = available;
-//        this.dob=bornAt;
-//    }
-
     public Employee( Integer employeeid, String lastname, String firstname, String email, int departmentid, Boolean available, LocalDate dob ) {
         this.employeeid = employeeid;
         this.lastname = lastname;
@@ -46,7 +34,6 @@ public class Employee implements Entity2<Integer> {
         this.dob = dob;
     }
 
-    
     public Employee( int employeeid, String lastname, String firstname,
             String email,
             int departmentid ) {
@@ -55,12 +42,11 @@ public class Employee implements Entity2<Integer> {
 
     Employee( Object[] parts ) {
         this( (int) parts[ 0 ], (String) parts[ 1 ],
-                (String) parts[ 2 ], (String) parts[ 3 ], (int) parts[ 4 ], (Boolean) parts[ 5 ], (LocalDate)parts[6] );
+                (String) parts[ 2 ], (String) parts[ 3 ], (int) parts[ 4 ], (Boolean) parts[ 5 ], (LocalDate) parts[ 6 ] );
     }
 
     Object[] asParts() {
-        return new Object[] { getEmployeeid(), getLastname(),
-            getFirstname(), getEmail(), getDepartmentid(), getAvailable(),getDob() };
+        return new Object[] { employeeid, lastname, firstname, email, departmentid, available, dob };
     }
 
     public Employee( Integer employeeid ) {
@@ -96,6 +82,7 @@ public class Employee implements Entity2<Integer> {
     public int hashCode() {
         return Objects.hash( this.employeeid );
     }
+    
 
     @Override
     public boolean equals( Object obj ) {
@@ -109,15 +96,28 @@ public class Employee implements Entity2<Integer> {
             return false;
         }
         final Employee other = (Employee) obj;
-        return this.employeeid == other.employeeid;
+        return ( this.employeeid == null && other.employeeid == null )
+                || this.employeeid.equals( other.employeeid );
     }
 
+//    @Override
+//    public String toString() {
+//        return "Employees{" + "employeeid=" + employeeid + ", lastname="
+//                + lastname + ", firstname=" + firstname
+//                + ", email=" + email
+//                + ", departmentid=" + departmentid + '}';
+//    }
     @Override
     public String toString() {
-        return "Employees{" + "employeeid=" + employeeid + ", lastname="
-                + lastname + ", firstname=" + firstname
+        return "Employee{"
+                + "employeeid=" + employeeid
+                + ", lastname=" + lastname
+                + ", firstname=" + firstname
                 + ", email=" + email
-                + ", departmentid=" + departmentid + '}';
+                + ", departmentid=" + departmentid
+                + ", available=" + available
+                + ", dob=" + dob 
+                + '}';
     }
 
     public int getEmployeeid() {
@@ -145,7 +145,7 @@ public class Employee implements Entity2<Integer> {
         return this.employeeid;
     }
 
-    private Boolean getAvailable() {
+    public Boolean getAvailable() {
         return available;
     }
 
@@ -155,6 +155,14 @@ public class Employee implements Entity2<Integer> {
 
     public void setDob( LocalDate dob ) {
         this.dob = dob;
+    }
+
+    public void setEmployeeid( Integer employeeid ) {
+        this.employeeid = employeeid;
+    }
+
+    public void setAvailable( Boolean available ) {
+        this.available = available;
     }
 
 }

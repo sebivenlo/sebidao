@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static java.util.Arrays.asList;
@@ -149,9 +150,13 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         for ( String fieldName : fieldNames ) {
             try {
                 String getterName = "get" + fieldName.substring( 0, 1 ).toUpperCase() + fieldName.substring( 1 );
+                Method m = entityType.getDeclaredMethod( getterName );
+                if ( Modifier.isPrivate( m.getModifiers() ) ) {
+                    Logger.getLogger( AbstractMapper.class.getName() ).log( Level.INFO, "method is private" + m );
+                }
                 getters[ g++ ] = entityType.getDeclaredMethod( getterName );
             } catch ( NoSuchMethodException | SecurityException ex ) {
-                Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+                Logger.getLogger( AbstractMapper.class.getName() ).log( Level.INFO, null, ex );
             }
         }
         if ( g == entityMetaData.typeMap.size() ) {
@@ -160,7 +165,10 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                 int i = 0;
                 for ( Method getter : getters ) {
                     try {
-                        result[ i++ ] = getter.invoke( e );
+                        if ( null != getter ) {
+                            result[ i ] = getter.invoke( e );
+                        }
+                        i++;
                     } catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex ) {
                         Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
                     }
@@ -174,6 +182,9 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         try {
             // first try asParts
             final Method asParts = entityType.getMethod( "asParts" );
+            if ( asParts == null ) {
+                return false;
+            }
             Class<?> returnType = asParts.getReturnType();
             if ( returnType.isArray() ) {
                 disAssembler = ( E e ) -> {

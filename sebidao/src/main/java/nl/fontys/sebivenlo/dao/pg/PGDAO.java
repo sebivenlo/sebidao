@@ -351,8 +351,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String sql
                 = saveQueryText();
         List<E> result = new ArrayList<>();
-        try (
-                PreparedStatement pst = c.prepareStatement( sql ); ) {
+        try ( PreparedStatement pst = c.prepareStatement( sql ); ) {
             for ( E t : elements ) {
 
                 populatePrepared( t, pst );
@@ -393,7 +392,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         int i = 0;
 
         for ( String pfn : mapper.persistentFieldNames() ) {
-            if ( notGen.test( pfn ) ) {
+            if ( notGen.test( pfn )  ) {
                 result.add( parts[ i ] );
             }
             i++;
@@ -436,7 +435,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             Object[] parts = createPartsArray( rs );
             while ( rs.next() ) {
                 // note columns start at 1
-                E e = recordToEntity( rs ); 
+                E e = recordToEntity( rs );
                 result.add( e );
             }
             return result;
