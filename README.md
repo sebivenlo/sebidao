@@ -13,7 +13,7 @@ of objects and do the reverse, using a constructor that is assumed (we said opin
 that takes it's parameters in field declaration order. This is the same as you would get with a `@Data` annotated pojo with
 `@AllArgsConstructor` using [lombok](https://projectlombok.org/).
 
-The Student class would probably be friendly and lend a helping hand to the Mapper by providing just such method and constructor, but only package private, mind you. That will do.
+The Student class would probably be friendly and lend a helping hand to the Mapper by providing just such method and constructor, but only package private, mind you. That will do. Using a squirt of lombok juice would make that both easy and just right.
 
 The javadoc can be found at the [Fontys Venlo Javabits website](https://javabits.fontysvenlo.org/) under
 [Sebi DAO javadoc](https://javabits.fontysvenlo.org/sebidao/apidocs/index.html)
@@ -52,5 +52,28 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
 }
 
 ```
+
+A minimal Mapper (since version 0.7.4) could look like this.
+
+```Java
+import java.util.function.Function;
+import nl.fontys.sebivenlo.dao.AbstractMapper;
+
+public class EmployeeMapper extends AbstractMapper<Integer, Employee> {
+
+    public EmployeeMapper() {
+        super( Integer.class, Employee.class );
+    }
+
+    @Override
+    public Function<Employee, Integer> keyExtractor() {
+        return Employee::getEmployeeid;
+    }
+}
+
+```
+
+Implementing the `Object[] asParts()` in the entity class (Employee in the above), can make the
+run time efficiency a bit better, by avoiding reflection in deconstructing the entity instance.
 
 The [Javadoc](https://javabits.fontysvenlo.org/sebidao/apidocs/index.html) of the development branch is hosted at [javabits.fontysvenlo.org](https://javabits.fontysvenlo.org/)
