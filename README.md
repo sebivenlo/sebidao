@@ -4,13 +4,15 @@ Opinionated and generic data access object implementation for postgreSQL databas
 It does not use postgreSQL features per se, but it is only tested with postgreSQL.
 
 This DAO is a work in progress.
-It supports the basic CRUD operations in a generic withn little help
+It supports the basic CRUD operations plus a few extras in a generic way, with a little help
 of the user-programmer.
 
 The only required helper class to an entity say student is any mapper, like StudentMapper,
 which knows enough of the student class to take a student instance apart in an array
-of objects and do the reverse.
-The Student class would probably be friendly and lend a helping hand to the Mapper by providing just such methods, but only package private, mind you. That will do the work.
+of objects and do the reverse, using a constructor that is assumed (we said opinionated) an all args constructor
+that take parameters in field declaration order.
+
+The Student class would probably be friendly and lend a helping hand to the Mapper by providing just such method and constructor, but only package private, mind you. That will do.
 
 The javadoc can be found at the [Fontys Venlo Javabits website](https://javabits.fontysvenlo.org/) under
 [Sebi DAO javadoc](https://javabits.fontysvenlo.org/sebidao/apidocs/index.html)
@@ -24,7 +26,7 @@ DAO is a pattern to reduce coupling. This implies that the application logic sho
 not know not care what the underlying persistence technology is. The better this objective
 is served, the more reuse can be achieved in the only valuable part of the software: the application logic it selves.
 
-The current implementation supports the following operations:
+The current postgreSQL jdbc based implementation supports the following operations:
 
 ```Java
 
