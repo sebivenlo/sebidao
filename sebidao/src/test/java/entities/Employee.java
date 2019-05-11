@@ -145,7 +145,7 @@ public class Employee implements Entity2<Integer> {
         return this.employeeid;
     }
 
-    public Boolean getAvailable() {
+    private Boolean getAvailable() {
         return available;
     }
 

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>daodemo</groupId>
     <artifactId>daodemo</artifactId>
-    <version>0.6</version>
+    <version>0.7</version>
     <packaging>jar</packaging>
     <name>sebidao :: Demo</name>
     <parent>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.7.1</version>
+            <version>0.7.5-SNAPSHOT</version>
         </dependency>
 	 <dependency>
             <groupId>org.postgresql</groupId>

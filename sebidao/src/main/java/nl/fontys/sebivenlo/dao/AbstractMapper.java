@@ -151,10 +151,12 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
             try {
                 String getterName = "get" + fieldName.substring( 0, 1 ).toUpperCase() + fieldName.substring( 1 );
                 Method m = entityType.getDeclaredMethod( getterName );
-                if ( Modifier.isPrivate( m.getModifiers() ) ) {
-                    Logger.getLogger( AbstractMapper.class.getName() ).log( Level.INFO, "method is private" + m );
+                if ( m.isAccessible() ) {
+                    Logger.getLogger( AbstractMapper.class.getName() ).log( Level.INFO, "method is not accessible" + m );
+                } else {
+                    getters[ g ] = entityType.getDeclaredMethod( getterName );
                 }
-                getters[ g++ ] = entityType.getDeclaredMethod( getterName );
+                g++;
             } catch ( NoSuchMethodException | SecurityException ex ) {
                 Logger.getLogger( AbstractMapper.class.getName() ).log( Level.INFO, null, ex );
             }
@@ -168,10 +170,10 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                         if ( null != getter ) {
                             result[ i ] = getter.invoke( e );
                         }
-                        i++;
                     } catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex ) {
                         Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
                     }
+                    i++;
                 }
                 return result;
             };
