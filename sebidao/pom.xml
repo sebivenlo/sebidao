@@ -4,7 +4,7 @@
     
     <groupId>nl.fontys.sebivenlo</groupId>
     <artifactId>sebidao</artifactId>
-    <version>0.7.5-SNAPSHOT</version>
+    <version>0.7.5</version>
     
     <name>sebidao :: DAO</name>
     <description>Simple DAO. Use a DAO to keep simple database stuff simple.
