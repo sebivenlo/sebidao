@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import java.util.HashMap;
 import java.util.Map;
+import nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -70,10 +71,10 @@ public class TypeFinderTest {
         String query = "insert into truckplans (truckid,plan) values(?,?) returning *";
         try ( Connection con = ds.getConnection(); ) {
             PGConnection pgcon = (PGConnection) con;
-            pgcon.addDataType( "tsrange", TsRange.class );
+            pgcon.addDataType( "tsrange", LocalDateTimeRange.class );
             try (
                     PreparedStatement pst = con.prepareStatement( query ); ) {
-                TsRange ts = new TsRange( LocalDateTime.parse( "2018-08-15T15:35" ), Duration.of( 30, MINUTES ) );
+                LocalDateTimeRange ts = new LocalDateTimeRange( LocalDateTime.parse( "2018-08-15T15:35" ), Duration.of( 30, MINUTES ) );
                 pst.setObject( 1, (Integer) 1 );
                 PgParameterMetaData parameterMetaData = (PgParameterMetaData) pst.getParameterMetaData();
                 String parameterClassName = parameterMetaData.getParameterClassName( 2 );

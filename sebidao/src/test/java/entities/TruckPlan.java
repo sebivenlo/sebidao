@@ -2,7 +2,7 @@ package entities;
 
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.ID;
-import nl.fontys.sebivenlo.dao.pg.TsRange;
+import nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange;
 
 /**
  *
@@ -13,15 +13,15 @@ public class TruckPlan implements Entity2<Integer> {
     @ID
     private Integer truckplanid;
     private Integer truckid;
-    private TsRange plan;
+    private LocalDateTimeRange plan;
 
-    public TruckPlan( Integer truckplanid, Integer truckid, TsRange plan ) {
+    public TruckPlan( Integer truckplanid, Integer truckid, LocalDateTimeRange plan ) {
         this.truckplanid = truckplanid;
         this.truckid = truckid;
         this.plan = plan;
     }
 
-    public TruckPlan( Integer truckid, TsRange plan ) {
+    public TruckPlan( Integer truckid, LocalDateTimeRange plan ) {
         this.truckid = truckid;
         this.plan = plan;
     }
@@ -52,7 +52,7 @@ public class TruckPlan implements Entity2<Integer> {
         return truckid;
     }
 
-    public TsRange getPlan() {
+    public LocalDateTimeRange getPlan() {
         return plan;
     }
 

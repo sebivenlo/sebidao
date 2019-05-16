@@ -11,7 +11,7 @@ import org.postgresql.util.PGobject;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class TimeStampRange extends PGobject {
+public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>{
 
     /**
      * Helper constructor.
@@ -21,11 +21,11 @@ public class TimeStampRange extends PGobject {
      * @return the time range
      * @throws IllegalArgumentException when start is past noLater
      */
-    public static TimeStampRange fromUntil( LocalDateTime start, LocalDateTime noLater ) {
+    public static LocalDateTimeRange fromUntil( LocalDateTime start, LocalDateTime noLater ) {
         if ( noLater.isBefore( start ) ) {
             throw new IllegalArgumentException( "start must preceed noLater" );
         }
-        return new TimeStampRange( start, noLater );
+        return new LocalDateTimeRange( start, noLater );
     }
     private LocalDateTime start;
     private LocalDateTime end;
@@ -34,7 +34,7 @@ public class TimeStampRange extends PGobject {
      * Default constructor to support postgresql jdbc API. This constructors
      * leaves the fields unset.
      */
-    public TimeStampRange() {
+    public LocalDateTimeRange() {
         super.setType( "tsrange" );
     }
 
@@ -45,7 +45,7 @@ public class TimeStampRange extends PGobject {
      * @param start of the range
      * @param length length of the range
      */
-    public TimeStampRange( LocalDateTime start, Duration length ) {
+    public LocalDateTimeRange( LocalDateTime start, Duration length ) {
         this();
         if ( length.isNegative() ) {
             this.end = start;
@@ -64,7 +64,7 @@ public class TimeStampRange extends PGobject {
      * @param end of range
      * @throws IllegalArgumentException when end precedes start.
      */
-    public TimeStampRange( LocalDateTime start, LocalDateTime end ) {
+    public LocalDateTimeRange( LocalDateTime start, LocalDateTime end ) {
         this();
         if ( end.isBefore( start ) ) {
             throw new IllegalArgumentException( "start should be before or at end" );
@@ -101,7 +101,7 @@ public class TimeStampRange extends PGobject {
         if ( getClass() != obj.getClass() ) {
             return false;
         }
-        final TimeStampRange other = (TimeStampRange) obj;
+        final LocalDateTimeRange other = (LocalDateTimeRange) obj;
         if ( !Objects.equals( this.start, other.start ) ) {
             return false;
         }
@@ -109,33 +109,6 @@ public class TimeStampRange extends PGobject {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Does this range overlap with another one. The overlap condition can also
-     * be tested in the database with a check constraint. See @see
-     * <a href='https://www.postgresql.org/docs/11/rangetypes.html#RANGETYPES-CONSTRAINT'>Range
-     * Type constraints</a>
-     *
-     * @param other to check
-     * @return true on overlap with other
-     */
-    public boolean overlaps( TimeStampRange other ) {
-        if ( this.end.isBefore( other.start ) ) {
-            return false;
-        }
-
-        if ( other.end.isBefore( this.start ) ) {
-            return false;
-        }
-
-        if ( start.isBefore( other.start ) && this.end.isAfter( other.start ) ) {
-            return true;
-        }
-        if ( other.start.isBefore( this.start ) && other.end.isAfter( this.start ) ) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -162,16 +135,26 @@ public class TimeStampRange extends PGobject {
     }
 
     /**
-     * Check if a range is before a time.
-     * If the range is build of times A and B, then the result is true for values >= B;
+     * Check if a range is before a time. If the range is built of times A and
+     * B, then the result is true for values of when &gt;= B;
+     *
      * @param when the time
-     * @return true when there is no overlap and when is after end of this range.
+     * @return true when there is no overlap and when is after end of this
+     * range.
      */
     public boolean isBefore( LocalDateTime when ) {
-        return this.end.compareTo( when ) <=0;
+        return this.end.compareTo( when ) <= 0;
     }
 
+    /**
+     * Check if a range is after time. If the range is built of times A and B,
+     * then the result is true for values of when &lt;= B;
+     *
+     * @param when the time
+     * @return true when there is no overlap and when is before start of this
+     * range.
+     */
     public boolean isAfter( LocalDateTime when ) {
-        return this.start.compareTo(when )>=0;
+        return this.start.compareTo( when ) >= 0;
     }
 }

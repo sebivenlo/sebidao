@@ -1,10 +1,7 @@
 package entities;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.function.Function;
 import nl.fontys.sebivenlo.dao.AbstractMapper;
-import nl.fontys.sebivenlo.dao.pg.TsRange;
 
 /**
  * Map trucks.

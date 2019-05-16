@@ -1,15 +1,7 @@
 package nl.fontys.sebivenlo.pgtypes;
 
-import java.sql.SQLException;
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import static java.time.LocalDateTime.now;
-import java.time.ZoneId;
-import static java.time.ZoneId.systemDefault;
-import static java.time.temporal.ChronoUnit.*;
-import static nl.fontys.sebivenlo.pgtypes.TimeStampRange.fromUntil;
-import org.junit.Assert;
+import static nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange.fromUntil;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
@@ -20,7 +12,7 @@ import org.junit.runners.Parameterized;
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 @RunWith( Parameterized.class )
-public class TimeStampRangeOverlapTest extends TimeStampTestBase {
+public class LocalDateTimeRangeOverlapTest extends LocalDateTimeRangeTestBase {
 
    
     LocalDateTime[] times = { A, B, C, D };
@@ -34,7 +26,7 @@ public class TimeStampRangeOverlapTest extends TimeStampTestBase {
     String label;
     boolean expected;
 
-    public TimeStampRangeOverlapTest( boolean expected, String label ) {
+    public LocalDateTimeRangeOverlapTest( boolean expected, String label ) {
         this.label = label;
         this.expected = expected;
     }
@@ -55,8 +47,8 @@ public class TimeStampRangeOverlapTest extends TimeStampTestBase {
         LocalDateTime t3 = times[ i2 ];
         LocalDateTime t4 = times[ i3 ];
 
-        TimeStampRange ts1 = fromUntil( t1, t2 );
-        TimeStampRange ts2 = fromUntil( t3, t4 );
+        LocalDateTimeRange ts1 = fromUntil( t1, t2 );
+        LocalDateTimeRange ts2 = fromUntil( t3, t4 );
         assertEquals( "overlaps" + expected + ts1 + "<>" + ts2, expected, ts1.overlaps( ts2 ) );
         assertEquals( "overlaps" + expected + ts2 + "<>" + ts1, expected, ts2.overlaps( ts1 ) );
 

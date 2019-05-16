@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.TransactionToken;
+import nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -37,7 +38,7 @@ public class NoDoublePlansTest extends DBTestHelpers {
     @BeforeClass
     public static void setupClass() {
         DBTestHelpers.setupClass();
-        daof.registerPGdataType( "tsrange", TsRange.class );
+        daof.registerPGdataType( "tsrange", LocalDateTimeRange.class );
         daof.registerMapper( Truck.class, new TruckMapper() );
         daof.registerMapper( TruckPlan.class, new TruckPlanMapper() );
         loadDatabase();
@@ -59,9 +60,9 @@ public class NoDoublePlansTest extends DBTestHelpers {
         LocalDateTime start1 = now().plus( 1, DAYS );
         LocalDateTime end1 = now().plus( 1, DAYS ).plus( 2, HOURS );
 
-        TsRange ts1 = new TsRange( start1, end1 );
-        TsRange ts2 = new TsRange( start1, end1.minus( 20, MINUTES ) );
-        TsRange ts3 = new TsRange( end1, end1.plus( 25, MINUTES ) );
+        LocalDateTimeRange ts1 = new LocalDateTimeRange( start1, end1 );
+        LocalDateTimeRange ts2 = new LocalDateTimeRange( start1, end1.minus( 20, MINUTES ) );
+        LocalDateTimeRange ts3 = new LocalDateTimeRange( end1, end1.plus( 25, MINUTES ) );
         TruckPlan plan1 = new TruckPlan( t1.getId(), ts1 );
         TruckPlan plan2 = new TruckPlan( t1.getId(), ts2 );
 
@@ -83,8 +84,8 @@ public class NoDoublePlansTest extends DBTestHelpers {
         LocalDateTime start1 = now().plus( 1, DAYS );
         LocalDateTime end1 = now().plus( 1, DAYS ).plus( 2, HOURS );
 
-        TsRange ts1 = new TsRange( start1, end1 );
-        TsRange ts2 = new TsRange( end1, end1.plus( 25, MINUTES ) );
+        LocalDateTimeRange ts1 = new LocalDateTimeRange( start1, end1 );
+        LocalDateTimeRange ts2 = new LocalDateTimeRange( end1, end1.plus( 25, MINUTES ) );
         TruckPlan plan1 = new TruckPlan( t1.getId(), ts1 );
         TruckPlan plan2 = new TruckPlan( t1.getId(), ts2 );
 

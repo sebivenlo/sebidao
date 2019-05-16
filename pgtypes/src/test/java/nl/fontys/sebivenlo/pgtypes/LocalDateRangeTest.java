@@ -1,7 +1,14 @@
 package nl.fontys.sebivenlo.pgtypes;
 
 import java.sql.SQLException;
+import java.time.Clock;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import static java.time.LocalDate.now;
+import java.time.Period;
+import java.time.ZoneId;
+import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,12 +19,35 @@ import org.junit.Ignore;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class TimeStampRangeTest extends TimeStampTestBase {
+public class LocalDateRangeTest {// extends LocalDateRangeTestBase {
 
+    static Clock clock = new Clock() {
+        @Override
+        public ZoneId getZone() {
+            return systemDefault();
+        }
+
+        @Override
+        public Clock withZone( ZoneId zone ) {
+
+            throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public Instant instant() {
+            return Instant.ofEpochSecond( 1557223200L );
+        }
+    };
+
+    static final LocalDate A = now( clock ).minus( 2, WEEKS );
+    static final LocalDate B = A.plus( 3, DAYS );
+    static final LocalDate C = B.plus( 10, DAYS );
+    static final LocalDate D = C.plus( 1, WEEKS );
 //    @Ignore( "Think TDD" )
+
     @Test
     public void testParse() throws SQLException {
-        TimeStampRange ts = new TimeStampRange();
+        LocalDateRange ts = new LocalDateRange();
         String value = String.format( "\"[%s,%s)\"", A, B );
         ts.setValue( value );
 
@@ -30,10 +60,10 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testEquals() {
-        TimeStampRange ts0 = TimeStampRange.fromUntil( A, B );
-        TimeStampRange ts1 = TimeStampRange.fromUntil( A, B );
-        TimeStampRange ts2 = TimeStampRange.fromUntil( A, C );
-        TimeStampRange ts3 = TimeStampRange.fromUntil( B, C );
+        LocalDateRange ts0 = LocalDateRange.fromUntil( A, B );
+        LocalDateRange ts1 = LocalDateRange.fromUntil( A, B );
+        LocalDateRange ts2 = LocalDateRange.fromUntil( A, C );
+        LocalDateRange ts3 = LocalDateRange.fromUntil( B, C );
 
         assertTrue( "same", ts0.equals( ts0 ) );
         assertTrue( "other", ts0.equals( ts1 ) );
@@ -50,8 +80,8 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testHashCode() {
-        int h0 = TimeStampRange.fromUntil( A, B ).hashCode();
-        int h1 = TimeStampRange.fromUntil( A, B ).hashCode();
+        int h0 = LocalDateRange.fromUntil( A, B ).hashCode();
+        int h1 = LocalDateRange.fromUntil( A, B ).hashCode();
 
         assertEquals( "hashes", h0, h1 );
 //        Assert.fail( "method testHashCode reached end. You know what to do." );
@@ -60,7 +90,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test( expected = IllegalArgumentException.class )
     public void testSwappedBounds() {
-        TimeStampRange.fromUntil( B, A ).hashCode();
+        LocalDateRange.fromUntil( B, A ).hashCode();
 
 //        Assert.fail( "method method reached end. You know what to do." );
     }
@@ -68,18 +98,18 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testUsingDuration() {
-        Duration min5 = Duration.of( 5, MINUTES );
-        TimeStampRange ts = new TimeStampRange( A, Duration.of( 5, MINUTES ) );
-        assertEquals( min5, ts.getLength() );
+        Period day5 = Period.ofDays( 5 );
+        LocalDateRange ts = new LocalDateRange( A, day5 );
+        assertEquals( day5, ts.getLength() );
 //        Assert.fail( "method testUsingDuration reached end. You know what to do." );
     }
 
 //    @Ignore( "Think TDD" )
     @Test
     public void testGetValue() throws SQLException {
-        TimeStampRange ts0 = TimeStampRange.fromUntil( A, B );
+        LocalDateRange ts0 = LocalDateRange.fromUntil( A, B );
         String s = ts0.getValue();
-        TimeStampRange ts1 = new TimeStampRange();
+        LocalDateRange ts1 = new LocalDateRange();
         ts1.setValue( s );
 
         assertEquals( "get value produces parsable value", ts0, ts1 );
@@ -90,7 +120,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test( expected = IllegalArgumentException.class )
     public void startBeforeEndoNotAccepted() {
-        TimeStampRange ts0 = new TimeStampRange( B, A );
+        LocalDateRange ts0 = new LocalDateRange( B, A );
 
 //        Assert.fail( "method startBeforeEndoNotAccepted reached end. You know what to do." );
     }
@@ -98,7 +128,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void negativeDurationStartEarlier() {
-        TimeStampRange ts0 = new TimeStampRange( B, Duration.of( -30, MINUTES ) );
+        LocalDateRange ts0 = new LocalDateRange( B, Period.ofDays( -3 ) );
 
         assertEquals( "should produce test value A", A, ts0.getStart() );
 //        Assert.fail( "method negativeDurationStartEarlier reached end. You know what to do." );
@@ -107,7 +137,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testBefore() {
-        TimeStampRange ts0 = new TimeStampRange( A, Duration.of( -30, MINUTES ) );
+        LocalDateRange ts0 = new LocalDateRange( A, Period.ofDays( -3 ) );
         System.out.println( "ts0 = " + ts0 );
         assertTrue( "should be before", ts0.isBefore( B ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
@@ -116,7 +146,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testAfter() {
-        TimeStampRange ts0 = new TimeStampRange( A, B );//Duration.of( -30, MINUTES ) );
+        LocalDateRange ts0 = new LocalDateRange( A, B );
         System.out.println( "ts0 = " + ts0 );
         assertTrue( "should be before", ts0.isAfter( A ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
