@@ -42,57 +42,83 @@ public class AbstractMapperTest {
 //    @Ignore( "Think TDD" )
     @Test
     public void testDisassemblerWithParts() {
-        MyMapper m = new MyMapper( );
+        MyMapper m = new MyMapper();
 
         Company c = new Company( "MARS", "Netherlands", "Veghel", "Spoorstraat", "MARS", "4523AH" );
 
         assertNotNull( "A dissambler should have been found", m.disAssembler );
 
         Object[] parts = m.explode( c );
-        assertNotNull("No real explosiion", parts);
-        assertEquals(m.persistentFieldNames().size(),parts.length);
+        assertNotNull( "No real explosion", parts );
+        assertEquals( m.persistentFieldNames().size(), parts.length );
 
 //        Assert.fail( "method method reached end. You know what to do." );
     }
 
     @Test
     public void testDisassemblerReflected() {
-        MyMapper2 m2 = new MyMapper2( );
+        MyMapper2 m2 = new MyMapper2();
 
         Company2 c = new Company2( "MARS", "Netherlands", "Veghel", "Spoorstraat", "MARS", "4523AH" );
 
         assertNotNull( "A dissambler should have been found", m2.disAssembler );
         //m2.disAssembler;
         Object[] parts = m2.explode( c );
-        assertNotNull("No real explosiion", parts);
-        assertEquals(m2.persistentFieldNames().size(),parts.length);
-        assertEquals("Veghel",parts[2]);
+        assertNotNull( "No real explosiion", parts );
+        assertEquals( m2.persistentFieldNames().size(), parts.length );
+        assertEquals( "Veghel", parts[ 2 ] );
 //        Assert.fail( "method method reached end. You know what to do." );
     }
 
-    static class MyMapper extends AbstractMapper<String,Company> {
+    /**
+     * Test if the exception message contains sufficient hints to have the user
+     * supply the proper array content.
+     */
+    //@Ignore( "Think TDD" )
+    @Test
+    public void wrongParameterException() {
 
-        public MyMapper(  ) {
+        // 8 parts, all strings should lead to exception
+        MyMapper2 m2 = new MyMapper2();
+        Object[] parts = new Object[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+        try {
+            Company2 comp = m2.assembler.apply( parts );
+        } catch ( Throwable t ) {
+            System.out.println( "================== look here ======================" );
+//            t.printStackTrace();
+            Throwable cause = t.getCause();
+            assertTrue("expected ",cause instanceof IllegalArgumentException);
+            String message = cause.getMessage();
+            assertTrue(message.contains( "argument type mismatch"));
+            String tMessage = t.getMessage();
+            System.out.println( "tMessage = " + tMessage );
+        }
+        Assert.fail( "method wrongParameterException reached end. You know what to do." );
+    }
+
+    static class MyMapper extends AbstractMapper<String, Company> {
+
+        public MyMapper() {
             super( String.class, Company.class );
         }
 
         @Override
-        public Function<Company,String> keyExtractor() {
+        public Function<Company, String> keyExtractor() {
             throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
         }
     }
 
-    static class MyMapper2 extends AbstractMapper< String,Company2> {
+    static class MyMapper2 extends AbstractMapper< String, Company2> {
 
-        public MyMapper2(  ) {
-            super( String.class,Company2.class);
+        public MyMapper2() {
+            super( String.class, Company2.class );
         }
 
         @Override
-        public Function<Company2,String> keyExtractor() {
+        public Function<Company2, String> keyExtractor() {
             throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
         }
 
     }
-    
+
 }

@@ -114,7 +114,8 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                             log( Level.SEVERE, null, ex );
                     throw new DAOException(
                             "could not invoke assembler constructor "
-                            + assemblerCtor, ex );
+                            + assemblerCtor
+                            + "\n" + parameters( a ), ex );
                 }
             };
         } catch ( NoSuchMethodException | SecurityException ex ) {
@@ -201,7 +202,7 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                 return true;
             }
         } catch ( NoSuchMethodException | SecurityException ex ) {
-            Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( AbstractMapper.class.getName() ).log( Level.FINE, null, ex );
         }
         return false;
     }
@@ -373,5 +374,20 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         }
         return Arrays.copyOf( parts, getFieldCount() );
 
+    }
+
+    static String parameters( Object[] a ) {
+        StringBuilder sb = new StringBuilder( "recieved parameters (type=value) {\n" );
+        for ( Object object : a ) {
+            sb
+                    .append( "\t(" )
+                    .append( object.getClass().toString() )
+                    .append( "=" )
+                    .append( object.toString() )
+                    .append( ')' )
+                    .append( System.lineSeparator() );
+        }
+        sb.append( "}");
+        return sb.toString();
     }
 }
