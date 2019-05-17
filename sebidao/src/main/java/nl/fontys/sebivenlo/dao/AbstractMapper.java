@@ -376,18 +376,17 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
 
     }
 
-    static String parameters( Object[] a ) {
-        StringBuilder sb = new StringBuilder( "recieved parameters (type=value) {\n" );
+    private static String parameters( Object[] a ) {
+        StringBuilder sb = new StringBuilder( "received parameters (type=value) {\n" );
         for ( Object object : a ) {
-            sb
-                    .append( "\t(" )
+            sb.append( "\t(" )
                     .append( object.getClass().toString() )
                     .append( "=" )
                     .append( object.toString() )
                     .append( ')' )
                     .append( System.lineSeparator() );
         }
-        sb.append( "}");
+        sb.append( "}" );
         return sb.toString();
     }
 }
