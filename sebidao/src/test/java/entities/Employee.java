@@ -46,7 +46,15 @@ public class Employee implements Entity2<Integer> {
     }
 
     Object[] asParts() {
-        return new Object[] { employeeid, lastname, firstname, email, departmentid, available, dob };
+        return new Object[] {
+            employeeid,
+            lastname,
+            firstname,
+            email,
+            departmentid,
+            available,
+            dob
+        };
     }
 
     public Employee( Integer employeeid ) {
@@ -82,7 +90,6 @@ public class Employee implements Entity2<Integer> {
     public int hashCode() {
         return Objects.hash( this.employeeid );
     }
-    
 
     @Override
     public boolean equals( Object obj ) {
@@ -116,7 +123,7 @@ public class Employee implements Entity2<Integer> {
                 + ", email=" + email
                 + ", departmentid=" + departmentid
                 + ", available=" + available
-                + ", dob=" + dob 
+                + ", dob=" + dob
                 + '}';
     }
 

@@ -93,7 +93,7 @@ public class AbstractMapperTest {
             String tMessage = t.getMessage();
             System.out.println( "tMessage = " + tMessage );
         }
-        Assert.fail( "method wrongParameterException reached end. You know what to do." );
+//        Assert.fail( "method wrongParameterException reached end. You know what to do." );
     }
 
     static class MyMapper extends AbstractMapper<String, Company> {

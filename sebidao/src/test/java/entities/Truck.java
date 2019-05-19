@@ -46,6 +46,9 @@ public class Truck implements Entity2<Integer>  {
     }
     
     Object[] asParts(){
-        return new Object[]{this.truckid,this.plate};
+        return new Object[]{
+            this.truckid,
+            this.plate
+        };
     }
 }

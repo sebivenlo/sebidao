@@ -118,8 +118,12 @@ public class Department implements Entity2<String> {
     }
 
     Object[] asParts() {
-        return new Object[]{ getName(), getDescription(),
-            getEmail(), getDepartmentid() };
+        return new Object[] {
+            name,
+            description,
+            email,
+            departmentid
+        };
     }
 
 }
