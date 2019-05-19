@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.fontys.sebivenlo</groupId>
     <artifactId>daorestclient</artifactId>
-    <version>0.3</version>
+    <version>0.7.5</version>
     <packaging>jar</packaging>
     <name>sebidao :: DAORestClient</name>
     <description>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.4</version>
+            <version>0.7.5</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

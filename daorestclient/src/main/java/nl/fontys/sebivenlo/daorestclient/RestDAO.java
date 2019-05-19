@@ -32,8 +32,9 @@ import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.Entity2;
 
 /**
- * A DAO that talks to a rest API that  provides GET, POST, PUT, and DELETE operations.
- * 
+ * A DAO that talks to a rest API that provides GET, POST, PUT, and DELETE
+ * operations.
+ *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key type
  * @param <E> entity
@@ -46,7 +47,9 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
     private final BiFunction<URL, String, HttpURLConnection> configurator;
 
     /**
-     * Create a DAO connection to url  for entity type and configured by a configurator.
+     * Create a DAO connection to url for entity type and configured by a
+     * configurator.
+     *
      * @param baseUrl to connect to
      * @param type to fetch or save
      * @param aConfigurator sets headers and a like.
@@ -211,12 +214,16 @@ public class RestDAO<K extends Serializable, E extends Entity2<K>> implements
 
     @Override
     public void delete( E e ) {
+        delete(e.getNaturalId());
+    }
+
+    @Override
+    public void delete( K key ) {
         try {
-            K key = e.getNaturalId();
             HttpURLConnection con = delete( baseUrl + key );
             int responseCode = con.getResponseCode();
             if ( responseCode != 200 ) {
-                throw new DAOException( "delete failed for entity " + e );
+                throw new DAOException( "delete failed for key " + key );
             }
         } catch ( Exception ex ) {
             Logger.getLogger( RestDAO.class.getName() ).log( Level.SEVERE, null,
