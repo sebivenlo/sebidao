@@ -80,7 +80,7 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
     }
 
     public Period getLength() {
-        Period length = Period.between( start, end );
+        Period length = Period.between(start, end );
         return length;
     }
 
