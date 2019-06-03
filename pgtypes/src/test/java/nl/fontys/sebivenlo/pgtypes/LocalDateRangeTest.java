@@ -155,13 +155,27 @@ public class LocalDateRangeTest {// extends LocalDateRangeTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testPointInRange() {
-        LocalDateRange ts0 = new LocalDateRange( A, B );
+        LocalDateRange range = new LocalDateRange( A, B );
+        LocalDate A1 = A.plusDays( A.until( B, DAYS )/2 );
+        assertTrue( range.contains( A1 ) );
 
-        assertTrue( ts0.contains( A ) );
-        LocalDate A1 = A.plusDays( 1 );
-        assertTrue( ts0.contains( A1 ) );
-
-        assertFalse( ts0.contains( B ) );
 //        Assert.fail( "method testPointInRange reached end. You know what to do." );
+    }
+//    @Ignore( "Think TDD" )
+    @Test
+    public void startPointInRange() {
+        LocalDateRange range = new LocalDateRange( A, B );
+
+        assertTrue( range.contains( A ) );
+//        Assert.fail( "method startPointInRange reached end. You know what to do." );
+    }
+    
+//    @Ignore( "Think TDD" )
+    @Test
+    public void endPointNotInRange() {
+        LocalDateRange range = new LocalDateRange( A, B );
+
+        assertFalse( range.contains( B ) );
+//        Assert.fail( "method endPointNotInRange reached end. You know what to do." );
     }
 }
