@@ -15,7 +15,7 @@ import java.util.Comparator;
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <T> the demarcation type. Type of start and end.
  */
-public interface Range<T extends Comparable<?>> {
+public interface Range<T extends Comparable<? super T>> {
 
     /**
      * Get the start demarcation of this range. Start is part of this range.
@@ -32,6 +32,11 @@ public interface Range<T extends Comparable<?>> {
      */
     T getEnd();
 
+    default boolean contains(T point){
+        return getStart().compareTo( point ) <=0 
+                && getEnd().compareTo( point ) >0;
+    }
+    
     /**
      * Does this range overlap with another one. The overlap condition can also
      * be tested in the database with a check constraint. See @see

@@ -152,4 +152,16 @@ public class LocalDateRangeTest {// extends LocalDateRangeTestBase {
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
     }
 
+//    @Ignore( "Think TDD" )
+    @Test
+    public void testPointInRange() {
+        LocalDateRange ts0 = new LocalDateRange( A, B );
+
+        assertTrue( ts0.contains( A ) );
+        LocalDate A1 = A.plusDays( 1 );
+        assertTrue( ts0.contains( A1 ) );
+
+        assertFalse( ts0.contains( B ) );
+//        Assert.fail( "method testPointInRange reached end. You know what to do." );
+    }
 }
