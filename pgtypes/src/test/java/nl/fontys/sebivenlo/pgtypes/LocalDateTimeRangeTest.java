@@ -109,7 +109,8 @@ public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
     public void testBefore() {
         LocalDateTimeRange ts0 = new LocalDateTimeRange( A, Duration.of( -30, MINUTES ) );
         System.out.println( "ts0 = " + ts0 );
-        assertTrue( "should be before", ts0.isBefore( B ) );
+        assertTrue( "should be before", ts0.isBefore( A ) );
+        assertFalse( "should not be before", ts0.isBefore( A.plusMinutes( -5) ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
     }
 
@@ -118,7 +119,8 @@ public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
     public void testAfter() {
         LocalDateTimeRange ts0 = new LocalDateTimeRange( A, B );//Duration.of( -30, MINUTES ) );
         System.out.println( "ts0 = " + ts0 );
-        assertTrue( "should be before", ts0.isAfter( A ) );
+        assertTrue( "should be after", ts0.isAfter( A ) );
+        assertFalse( "should not be after", ts0.isAfter( A.plusDays( 1) ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
     }
 
