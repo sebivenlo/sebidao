@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.Objects;
 import org.postgresql.util.PGobject;
 
@@ -79,9 +81,28 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
         return start;
     }
 
-    public Period getLength() {
-        Period length = Period.between(start, end );
-        return length;
+    /**
+     * The Period between start and end in years, months and days. {
+     *
+     * @see java.time.Period} Note that if you want the number of days in this
+     * Range use the method getDays().
+     * @return the Period
+     */
+    public long getLength( Object unit ) {
+        if ( unit instanceof ChronoUnit ) {
+            return start.until( end, (ChronoUnit) unit );
+        }
+        return 0L;
+    }
+
+    /**
+     * The number of days in this range. For a normal year the value is 365
+     * between this years Jan first and next year Jan first.
+     *
+     * @return the number of days.
+     */
+    public long getDays() {
+        return getLength( DAYS );
     }
 
     @Override
@@ -159,4 +180,24 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
     public boolean isAfter( LocalDate when ) {
         return this.start.compareTo( when ) >= 0;
     }
+
+//    @Override
+//    public long intersection( Range<? extends LocalDate> other, Object unit ) {
+//        LocalDate otherStart = other.getStart();
+//        LocalDate otherEnd = other.getEnd();
+//        if ( this.isBefore( otherStart ) || this.isAfter( otherEnd ) ) {
+//            return 0L;
+//        }
+//
+//        LocalDate latestStart = otherStart.compareTo( start ) > 0 ? otherStart : start;
+//        LocalDate earliestEnd = other.getEnd().compareTo( end ) > 0 ? end : otherEnd;
+//        return latestStart.until( earliestEnd, (ChronoUnit) unit);
+//    }
+
+    @Override
+    public MeasureBetween<LocalDate, Object> meter() {
+        return ( a,b, u) -> a.until( b, (ChronoUnit)u);
+    }
+
+    
 }

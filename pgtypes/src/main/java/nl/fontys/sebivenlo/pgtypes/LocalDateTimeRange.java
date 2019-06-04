@@ -3,6 +3,7 @@ package nl.fontys.sebivenlo.pgtypes;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import org.postgresql.util.PGobject;
 
@@ -11,7 +12,7 @@ import org.postgresql.util.PGobject;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>{
+public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime> {
 
     /**
      * Helper constructor.
@@ -157,4 +158,16 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
     public boolean isAfter( LocalDateTime when ) {
         return this.start.compareTo( when ) >= 0;
     }
+
+    @Override
+    public long getLength( Object unit ) {
+        ChronoUnit cu = ChronoUnit.class.cast( unit );
+        return start.until( end, cu );
+    }
+
+    @Override
+    public long intersection( Range<? extends LocalDateTime> other, Object unit ) {
+        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
