@@ -49,13 +49,14 @@ public interface Range<T extends Comparable<? super T>> {
     /**
      * Is a midpoint between a (inclusive) and b (exclusive).
      *
+     * @param <U>
      * @param a
      * @param b
      * @param inBetween
      * @return
      */
-    static <U extends Comparable<U>> boolean isBetween( U a, U b, U inBetween ) {
-        return a.compareTo( inBetween ) <= 0 && inBetween.compareTo( b ) < 0;
+    default boolean isBetween( T a, T b, T inBetween ) {
+        return a.compareTo( inBetween ) <= 0 && b.compareTo( inBetween ) > 0;
     }
 
     /**
@@ -67,8 +68,8 @@ public interface Range<T extends Comparable<? super T>> {
      * @param other to check
      * @return true on overlap with other
      */
-    default boolean overlaps( Range<? extends T> other ) {
-        re
+    default boolean overlaps( Range< T> other ) {
+        return overlaps( this, other );
 //
 //        Comparable a = this.getStart();
 //        Comparable b = this.getEnd(); // a <=b
@@ -86,21 +87,23 @@ public interface Range<T extends Comparable<? super T>> {
 //        return result;
     }
 
-    static <C extends Comparable<C>, R extends Range<C>> boolean overlaps( R r1, R r2 ) {
+    default boolean overlaps( Range<T> r1, Range<T> r2 ) {
 
-        C a = r1.getStart();
-        C b = r1.getEnd(); // a <=b
-        C c = r2.getStart();
-        C d = r2.getEnd(); // c<=d 
+        T a = r1.getStart();
+        T b = r1.getEnd(); // a <=b
+        T c = r2.getStart();
+        T d = r2.getEnd(); // c<=d 
 
         boolean abc = isBetween( a, b, c );
         boolean abd = isBetween( a, b, d );
         boolean cda = isBetween( c, d, a );
         boolean cdb = isBetween( c, d, b );
-        System.out.println( abc + "," + abd + "," + cda + "," + cdb );
+        System.out.println( "a=" + a + " b=" + b + " c=" + c + " d=" + d );
+        System.out.println( "abc      abd    , cda     ,cdb" );
+        System.out.println( abc + ",   " + abd + ",   " + cda + ",   " + cdb );
 
-        boolean result = ( abc && !abd )
-                || ( cda && !cdb );
+        boolean result = abc || abd
+                || cda || cdb;
         return result;
     }
 

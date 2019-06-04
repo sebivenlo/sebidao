@@ -42,7 +42,7 @@ public class RangeTest {
 //    @Ignore( "Think TDD" )
     @Test
     public void overlaps() {
-        int a = 10, b = 12, c = 15, d = 17;
+        int a = 10, b = 22, c = 35, d = 47;
         SimpleRange r1 = new SimpleRange( a, b );
         SimpleRange r2 = new SimpleRange( c, d );
         SimpleRange r3 = new SimpleRange( a, c );
@@ -51,8 +51,8 @@ public class RangeTest {
 
         assertFalse( r1.overlaps( r2 ) );
         assertFalse( r2.overlaps( r1 ) );
-        assertFalse( r3.overlaps( r2 ) );
         assertFalse( r2.overlaps( r3 ) );
+        assertFalse( r3.overlaps( r2 ) );
         assertTrue( r4.overlaps( r1 ) );
         assertTrue( r1.overlaps( r4 ) );
         assertTrue( r3.overlaps( r4 ) );
@@ -73,4 +73,17 @@ public class RangeTest {
 //        Assert.fail( "method methodMeasuresZero reached end. You know what to do." );
     }
 
+//    @Ignore( "Think TDD" )
+    @Test
+    public void isBetween() {
+        int a = 10, b = 22, c = 35, d = 47;
+        SimpleRange r1 = new SimpleRange( a, b );
+
+        assertFalse("abc", r1.isBetween( a, b, c ));
+        assertFalse("abc", r1.isBetween( a, b, d ));
+        assertFalse("abc", r1.isBetween( c, d, d ));
+        assertTrue("abc", r1.isBetween( a, c, b ));
+        assertTrue("abc", r1.isBetween( a, b, a ));
+//        Assert.fail( "method isBetween reached end. You know what to do." );
+    }
 }
