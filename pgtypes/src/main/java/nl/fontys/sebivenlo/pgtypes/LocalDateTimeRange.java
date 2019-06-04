@@ -68,10 +68,12 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
     public LocalDateTimeRange( LocalDateTime start, LocalDateTime end ) {
         this();
         if ( end.isBefore( start ) ) {
-            throw new IllegalArgumentException( "start should be before or at end" );
+            this.start = end;
+            this.end = start;
+        } else {
+            this.start = start;
+            this.end = end;
         }
-        this.start = start;
-        this.end = end;
     }
 
     public LocalDateTime getStart() {
@@ -161,13 +163,16 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
 
     @Override
     public long getLength( Object unit ) {
-        ChronoUnit cu = ChronoUnit.class.cast( unit );
-        return start.until( end, cu );
+        return start.until( end, (ChronoUnit) unit );
     }
 
+    /**
+     * Measure using a.until(b, ChronoUnit)
+     *
+     * @return the distance between a and b
+     */
     @Override
-    public long intersection( Range<? extends LocalDateTime> other, Object unit ) {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    public MeasureBetween<LocalDateTime, Object> meter() {
+        return ( a, b, u ) -> a.until( b, (ChronoUnit) u );
     }
-
 }

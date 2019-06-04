@@ -143,11 +143,10 @@ public class LocalDateRangeTest {// extends LocalDateRangeTestBase {
     }
 
 //    @Ignore( "Think TDD" )
-    @Test( expected = IllegalArgumentException.class )
-    public void startBeforeEndoNotAccepted() {
-        LocalDateRange ts0 = new LocalDateRange( B, A );
+    public void rangeIsNormalised() {
+        assertEquals( new LocalDateRange( A, B ), new LocalDateRange( B, A ) );
 
-//        Assert.fail( "method startBeforeEndoNotAccepted reached end. You know what to do." );
+//        Assert.fail( "method rangeIsNormalised reached end. You know what to do." );
     }
 
 //    @Ignore( "Think TDD" )
@@ -173,7 +172,8 @@ public class LocalDateRangeTest {// extends LocalDateRangeTestBase {
     public void testAfter() {
         LocalDateRange ts0 = new LocalDateRange( A, B );
         System.out.println( "ts0 = " + ts0 );
-        assertTrue( "should be before", ts0.isAfter( A ) );
+        assertTrue( "should be after", ts0.isAfter( A ) );
+        assertFalse( "should not be after", ts0.isAfter( B ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
     }
 
@@ -199,7 +199,7 @@ public class LocalDateRangeTest {// extends LocalDateRangeTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void getPeriod() {
-        LocalDateRange range = new LocalDateRange( A, B );
+        LocalDateRange range = new LocalDateRange( B, A ); // flipped to check normalize
         System.out.println( "A = " + A );
 
         System.out.println( "B = " + B );
@@ -228,13 +228,13 @@ public class LocalDateRangeTest {// extends LocalDateRangeTestBase {
     public void intersections() {
         LocalDateRange range1 = new LocalDateRange( A, B );
         LocalDateRange range2 = new LocalDateRange( C, D );
-        assertEquals( 0, range1.intersection( range2, DAYS ) );
+        assertEquals( 0, range1.overlap( range2, DAYS ) );
 
         LocalDateRange range3 = new LocalDateRange( A, D );
-        assertEquals( range1.getLength( DAYS ), range3.intersection( range1, DAYS ) );
+        assertEquals( range1.getLength( DAYS ), range3.overlap( range1, DAYS ) );
         LocalDateRange range4 = new LocalDateRange( B, C );
-        assertEquals( range4.getLength( DAYS ), range3.intersection( range4, DAYS ) );
-        assertEquals( range4.getLength( DAYS ), range4.intersection( range3, DAYS ) );
+        assertEquals( range4.getLength( DAYS ), range3.overlap( range4, DAYS ) );
+        assertEquals( range4.getLength( DAYS ), range4.overlap( range3, DAYS ) );
 //        Assert.fail( "method intersections reached end. You know what to do." );
     }
 }

@@ -16,6 +16,7 @@ import static java.time.temporal.ChronoUnit.WEEKS;
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class LocalDateRangeTestBase {
+    
     static Clock clock = new Clock() {
         @Override
         public ZoneId getZone() {

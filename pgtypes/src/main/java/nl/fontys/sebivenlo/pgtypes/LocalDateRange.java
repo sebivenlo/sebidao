@@ -70,29 +70,17 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
     public LocalDateRange( LocalDate start, LocalDate end ) {
         this();
         if ( end.isBefore( start ) ) {
-            throw new IllegalArgumentException( "start should be before or at end" );
+            this.end = start;
+            this.start = end;
+        } else {
+            this.start = start;
+            this.end = end;
         }
-        this.start = start;
-        this.end = end;
     }
 
     @Override
     public LocalDate getStart() {
         return start;
-    }
-
-    /**
-     * The Period between start and end in years, months and days. {
-     *
-     * @see java.time.Period} Note that if you want the number of days in this
-     * Range use the method getDays().
-     * @return the Period
-     */
-    public long getLength( Object unit ) {
-        if ( unit instanceof ChronoUnit ) {
-            return start.until( end, (ChronoUnit) unit );
-        }
-        return 0L;
     }
 
     /**
@@ -181,23 +169,13 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
         return this.start.compareTo( when ) >= 0;
     }
 
-//    @Override
-//    public long intersection( Range<? extends LocalDate> other, Object unit ) {
-//        LocalDate otherStart = other.getStart();
-//        LocalDate otherEnd = other.getEnd();
-//        if ( this.isBefore( otherStart ) || this.isAfter( otherEnd ) ) {
-//            return 0L;
-//        }
-//
-//        LocalDate latestStart = otherStart.compareTo( start ) > 0 ? otherStart : start;
-//        LocalDate earliestEnd = other.getEnd().compareTo( end ) > 0 ? end : otherEnd;
-//        return latestStart.until( earliestEnd, (ChronoUnit) unit);
-//    }
-
+    /**
+     * Measure using a.until(b, ChronoUnit)
+     * @return the distance between a and b
+     */
     @Override
     public MeasureBetween<LocalDate, Object> meter() {
-        return ( a,b, u) -> a.until( b, (ChronoUnit)u);
+        return ( a, b, u ) -> a.until( b, (ChronoUnit) u );
     }
 
-    
 }
