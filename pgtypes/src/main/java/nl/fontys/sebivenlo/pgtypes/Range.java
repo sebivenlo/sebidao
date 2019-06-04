@@ -68,11 +68,30 @@ public interface Range<T extends Comparable<? super T>> {
      * @return true on overlap with other
      */
     default boolean overlaps( Range<? extends T> other ) {
+        re
+//
+//        Comparable a = this.getStart();
+//        Comparable b = this.getEnd(); // a <=b
+//        Comparable c = other.getStart();
+//        Comparable d = other.getEnd(); // c<=d 
+//
+//        boolean abc = isBetween( a, b, c );
+//        boolean abd = isBetween( a, b, d );
+//        boolean cda = isBetween( c, d, a );
+//        boolean cdb = isBetween( c, d, b );
+//        System.out.println( abc + "," + abd + "," + cda + "," + cdb );
+//
+//        boolean result = ( abc && !abd )
+//                || ( cda && !cdb );
+//        return result;
+    }
 
-        Comparable a = this.getStart();
-        Comparable b = this.getEnd(); // a <=b
-        Comparable c = other.getStart();
-        Comparable d = other.getEnd(); // c<=d 
+    static <C extends Comparable<C>, R extends Range<C>> boolean overlaps( R r1, R r2 ) {
+
+        C a = r1.getStart();
+        C b = r1.getEnd(); // a <=b
+        C c = r2.getStart();
+        C d = r2.getEnd(); // c<=d 
 
         boolean abc = isBetween( a, b, c );
         boolean abd = isBetween( a, b, d );
