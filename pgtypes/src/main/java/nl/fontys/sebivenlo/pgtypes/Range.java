@@ -56,7 +56,12 @@ public interface Range<T extends Comparable<? super T>> {
      * @return
      */
     default boolean isBetween( T a, T b, T inBetween ) {
-        return a.compareTo( inBetween ) <= 0 && b.compareTo( inBetween ) > 0;
+        System.out.print( "a = " + a );
+        System.out.print( " b = " + b );
+        System.out.print( " inBetween = " + inBetween );
+        boolean result = a.compareTo( inBetween ) <= 0 && inBetween.compareTo( b ) < 0;
+        System.out.println( " result = " + result );
+        return result;
     }
 
     /**
