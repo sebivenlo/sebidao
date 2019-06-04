@@ -43,22 +43,22 @@ public class RangeTest {
     @Test
     public void overlaps() {
         int a = 10, b = 22, c = 35, d = 47;
-        SimpleRange r1 = new SimpleRange( a, b );
-        SimpleRange r2 = new SimpleRange( c, d );
-        SimpleRange r3 = new SimpleRange( a, c );
-        SimpleRange r4 = new SimpleRange( a, d );
-        SimpleRange r5 = new SimpleRange( b, d );
+        SimpleRange ab = new SimpleRange( a, b );
+        SimpleRange cd = new SimpleRange( c, d );
+        SimpleRange ac = new SimpleRange( a, c );
+        SimpleRange ad = new SimpleRange( a, d );
+        SimpleRange bd = new SimpleRange( b, d );
 
-        assertFalse( r1.overlaps( r2 ) );
-        assertFalse( r2.overlaps( r1 ) );
-        assertFalse( r2.overlaps( r3 ) );
-        assertFalse( r3.overlaps( r2 ) );
-        assertTrue( r4.overlaps( r1 ) );
-        assertTrue( r1.overlaps( r4 ) );
-        assertTrue( r3.overlaps( r4 ) );
-        assertTrue( r4.overlaps( r3 ) );
-        assertTrue( r5.overlaps( r3 ) );
-        assertTrue( r3.overlaps( r5 ) );
+        assertFalse( ab.overlaps( cd ) );
+        assertFalse( cd.overlaps( ab ) );
+        assertFalse( cd.overlaps( ac ) );
+        assertFalse( ac.overlaps( cd ) );
+        assertTrue( ad.overlaps( ab ) );
+        assertTrue( ab.overlaps( ad ) );
+        assertTrue( ac.overlaps( ad ) );
+        assertTrue( ad.overlaps( ac ) );
+        assertTrue( bd.overlaps( ac ) );
+        assertTrue( ac.overlaps( bd ) );
 
 //        Assert.fail( "method method reached end. You know what to do." );
     }
