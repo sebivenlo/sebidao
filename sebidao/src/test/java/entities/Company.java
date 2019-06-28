@@ -2,12 +2,14 @@ package entities;
 
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.ID;
+import nl.fontys.sebivenlo.dao.TableName;
 
 /**
  * Entity with non numeric primary key.
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
+@TableName("companies")
 public class Company implements Entity2<String> {
 
     private String name;

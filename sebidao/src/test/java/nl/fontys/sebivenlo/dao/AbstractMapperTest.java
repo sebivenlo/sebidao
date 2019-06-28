@@ -96,6 +96,14 @@ public class AbstractMapperTest {
 //        Assert.fail( "method wrongParameterException reached end. You know what to do." );
     }
 
+    
+    @Test
+    public void testTableNameAnnotation() {
+        
+        String tableName = mapper.tableName();
+        assertEquals("proper plural", "companies",tableName);
+    }
+    
     static class MyMapper extends AbstractMapper<String, Company> {
 
         public MyMapper() {

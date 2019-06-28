@@ -306,6 +306,10 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
      * @return the name of the table in the database
      */
     public String tableName() {
+        TableName annotation = this.entityType().getAnnotation( TableName.class);
+        if (annotation!= null){
+            return annotation.value();
+        }
         return entityType().getSimpleName().toLowerCase() + 's';
     }
 
