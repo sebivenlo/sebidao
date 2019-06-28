@@ -12,12 +12,12 @@ import org.junit.Ignore;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class TimeStampRangeTest extends TimeStampTestBase {
+public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
 
 //    @Ignore( "Think TDD" )
     @Test
     public void testParse() throws SQLException {
-        TimeStampRange ts = new TimeStampRange();
+        LocalDateTimeRange ts = new LocalDateTimeRange();
         String value = String.format( "\"[%s,%s)\"", A, B );
         ts.setValue( value );
 
@@ -30,10 +30,10 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testEquals() {
-        TimeStampRange ts0 = TimeStampRange.fromUntil( A, B );
-        TimeStampRange ts1 = TimeStampRange.fromUntil( A, B );
-        TimeStampRange ts2 = TimeStampRange.fromUntil( A, C );
-        TimeStampRange ts3 = TimeStampRange.fromUntil( B, C );
+        LocalDateTimeRange ts0 = LocalDateTimeRange.fromUntil( A, B );
+        LocalDateTimeRange ts1 = LocalDateTimeRange.fromUntil( A, B );
+        LocalDateTimeRange ts2 = LocalDateTimeRange.fromUntil( A, C );
+        LocalDateTimeRange ts3 = LocalDateTimeRange.fromUntil( B, C );
 
         assertTrue( "same", ts0.equals( ts0 ) );
         assertTrue( "other", ts0.equals( ts1 ) );
@@ -50,8 +50,8 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testHashCode() {
-        int h0 = TimeStampRange.fromUntil( A, B ).hashCode();
-        int h1 = TimeStampRange.fromUntil( A, B ).hashCode();
+        int h0 = LocalDateTimeRange.fromUntil( A, B ).hashCode();
+        int h1 = LocalDateTimeRange.fromUntil( A, B ).hashCode();
 
         assertEquals( "hashes", h0, h1 );
 //        Assert.fail( "method testHashCode reached end. You know what to do." );
@@ -60,7 +60,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test( expected = IllegalArgumentException.class )
     public void testSwappedBounds() {
-        TimeStampRange.fromUntil( B, A ).hashCode();
+        LocalDateTimeRange.fromUntil( B, A ).hashCode();
 
 //        Assert.fail( "method method reached end. You know what to do." );
     }
@@ -69,7 +69,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
     @Test
     public void testUsingDuration() {
         Duration min5 = Duration.of( 5, MINUTES );
-        TimeStampRange ts = new TimeStampRange( A, Duration.of( 5, MINUTES ) );
+        LocalDateTimeRange ts = new LocalDateTimeRange( A, Duration.of( 5, MINUTES ) );
         assertEquals( min5, ts.getLength() );
 //        Assert.fail( "method testUsingDuration reached end. You know what to do." );
     }
@@ -77,9 +77,9 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testGetValue() throws SQLException {
-        TimeStampRange ts0 = TimeStampRange.fromUntil( A, B );
+        LocalDateTimeRange ts0 = LocalDateTimeRange.fromUntil( A, B );
         String s = ts0.getValue();
-        TimeStampRange ts1 = new TimeStampRange();
+        LocalDateTimeRange ts1 = new LocalDateTimeRange();
         ts1.setValue( s );
 
         assertEquals( "get value produces parsable value", ts0, ts1 );
@@ -90,7 +90,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test( expected = IllegalArgumentException.class )
     public void startBeforeEndoNotAccepted() {
-        TimeStampRange ts0 = new TimeStampRange( B, A );
+        LocalDateTimeRange ts0 = new LocalDateTimeRange( B, A );
 
 //        Assert.fail( "method startBeforeEndoNotAccepted reached end. You know what to do." );
     }
@@ -98,7 +98,7 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void negativeDurationStartEarlier() {
-        TimeStampRange ts0 = new TimeStampRange( B, Duration.of( -30, MINUTES ) );
+        LocalDateTimeRange ts0 = new LocalDateTimeRange( B, Duration.of( -30, MINUTES ) );
 
         assertEquals( "should produce test value A", A, ts0.getStart() );
 //        Assert.fail( "method negativeDurationStartEarlier reached end. You know what to do." );
@@ -107,18 +107,20 @@ public class TimeStampRangeTest extends TimeStampTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testBefore() {
-        TimeStampRange ts0 = new TimeStampRange( A, Duration.of( -30, MINUTES ) );
+        LocalDateTimeRange ts0 = new LocalDateTimeRange( A, Duration.of( -30, MINUTES ) );
         System.out.println( "ts0 = " + ts0 );
-        assertTrue( "should be before", ts0.isBefore( B ) );
+        assertTrue( "should be before", ts0.isBefore( A ) );
+        assertFalse( "should not be before", ts0.isBefore( A.plusMinutes( -5) ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
     }
 
 //    @Ignore( "Think TDD" )
     @Test
     public void testAfter() {
-        TimeStampRange ts0 = new TimeStampRange( A, B );//Duration.of( -30, MINUTES ) );
+        LocalDateTimeRange ts0 = new LocalDateTimeRange( A, B );//Duration.of( -30, MINUTES ) );
         System.out.println( "ts0 = " + ts0 );
-        assertTrue( "should be before", ts0.isAfter( A ) );
+        assertTrue( "should be after", ts0.isAfter( A ) );
+        assertFalse( "should not be after", ts0.isAfter( A.plusDays( 1) ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
     }
 

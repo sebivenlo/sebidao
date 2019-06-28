@@ -32,7 +32,7 @@ public class PGDAOConnectionClosedExceptionTest extends PGDAOExceptionTestBase {
         return null;
     }
 
-    @Ignore
+    @Ignore("Ignored because in this case the exception is somehow swallowed")
     @Test( expected = DAOException.class )
     public void testDelete() {
         eDao.delete( gp );
