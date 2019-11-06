@@ -33,7 +33,7 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
      *
      * @param storageName on disk file name
      */
-    public InMemoryDAO( String storageName ) {
+    InMemoryDAO( String storageName ) {
         this.storageName = storageName;
         if ( Files.exists( Paths.get( this.storageName ) ) ) {
             System.out.println( "loaded " + storageName );
@@ -49,7 +49,7 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
      *
      * @param tclass managed by this DAO
      */
-    public InMemoryDAO( Class<E> tclass ) {
+    InMemoryDAO( Class<E> tclass ) {
         this( tclass.getCanonicalName() + ".ser" );
     }
 
@@ -137,6 +137,10 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
     @Override
     public int size() {
         return storage.size();
+    }
+
+    public void fail( String testSaveIbi_reached_its_and_You_will_know ) {
+        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

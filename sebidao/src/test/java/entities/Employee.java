@@ -1,9 +1,7 @@
 package entities;
 
 import java.time.LocalDate;
-import static java.time.LocalDateTime.now;
 import java.util.Objects;
-import java.util.function.ToIntFunction;
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.ID;
 
