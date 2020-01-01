@@ -4,7 +4,7 @@ import java.util.function.Function;
 import nl.fontys.sebivenlo.dao.AbstractMapper;
 
 /**
- * Map trucks.
+ * Map truck plans.
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class TruckPlanMapper extends AbstractMapper<Integer,TruckPlan> {

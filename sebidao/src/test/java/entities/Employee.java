@@ -105,13 +105,6 @@ public class Employee implements Entity2<Integer> {
                 || this.employeeid.equals( other.employeeid );
     }
 
-//    @Override
-//    public String toString() {
-//        return "Employees{" + "employeeid=" + employeeid + ", lastname="
-//                + lastname + ", firstname=" + firstname
-//                + ", email=" + email
-//                + ", departmentid=" + departmentid + '}';
-//    }
     @Override
     public String toString() {
         return "Employee{"
