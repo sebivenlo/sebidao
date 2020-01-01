@@ -35,7 +35,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     public PGDAOFactory( DataSource ds ) {
         this.ds = ds;
         queryStringCache = new ConcurrentHashMap<>();
-        this.pgTypeMap.put( "tsrange", TsRange.class );
+//        this.pgTypeMap.put( "tsrange", TsRange.class );
 //        this.pgTypeMap.put( "date", LocalDate.class );
     }
 

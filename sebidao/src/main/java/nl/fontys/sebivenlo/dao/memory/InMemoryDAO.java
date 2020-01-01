@@ -33,7 +33,7 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
      *
      * @param storageName on disk file name
      */
-    InMemoryDAO( String storageName ) {
+    public InMemoryDAO( String storageName ) {
         this.storageName = storageName;
         if ( Files.exists( Paths.get( this.storageName ) ) ) {
             System.out.println( "loaded " + storageName );
@@ -49,7 +49,7 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
      *
      * @param tclass managed by this DAO
      */
-    InMemoryDAO( Class<E> tclass ) {
+    public InMemoryDAO( Class<E> tclass ) {
         this( tclass.getCanonicalName() + ".ser" );
     }
 
