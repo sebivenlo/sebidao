@@ -37,6 +37,11 @@ public class RangeTest {
             return end;
         }
 
+        @Override
+        public MeasureBetween<Integer, Object> meter() {
+            return (a,b,u) -> (long) b-a;
+        }
+
     }
 
 //    @Ignore( "Think TDD" )
@@ -69,7 +74,7 @@ public class RangeTest {
         // just for coverage
         int a = 10, b = 12, c = 15, d = 17;
         SimpleRange r1 = new SimpleRange( a, b );
-        assertEquals( 0L, r1.meter().applyAsLong( 12, 15, null ) );
+        assertEquals( 0L, r1.meter().applyAsLong( 12, 12, null ) );
 //        Assert.fail( "method methodMeasuresZero reached end. You know what to do." );
     }
 

@@ -75,29 +75,27 @@ public interface Range<T extends Comparable<? super T>> {
      */
     default boolean overlaps( Range< T> other ) {
         return overlaps( this, other );
-//
-//        Comparable a = this.getStart();
-//        Comparable b = this.getEnd(); // a <=b
-//        Comparable c = other.getStart();
-//        Comparable d = other.getEnd(); // c<=d 
-//
-//        boolean abc = isBetween( a, b, c );
-//        boolean abd = isBetween( a, b, d );
-//        boolean cda = isBetween( c, d, a );
-//        boolean cdb = isBetween( c, d, b );
-//        System.out.println( abc + "," + abd + "," + cda + "," + cdb );
-//
-//        boolean result = ( abc && !abd )
-//                || ( cda && !cdb );
-//        return result;
     }
 
+    /**
+     * Do two ranges overlap. Overlap means the the ranges have a non-zero sub-range in common.
+     * @param r1 first range
+     * @param r2 second range
+     * @return true if there is a non zero overlap
+     */
     default boolean overlaps( Range<T> r1, Range<T> r2 ) {
-
-        T a = r1.getStart();
-        T b = r1.getEnd(); // a <=b
-        T c = r2.getStart();
-        T d = r2.getEnd(); // c<=d 
+        T a, b, c, d;
+        if ( r1.getStart().compareTo( r2.getStart() ) <= 0 ) {
+            a = r1.getStart();
+            b = r1.getEnd(); // a <=b
+            c = r2.getStart();
+            d = r2.getEnd(); // c<=d 
+        } else {
+            a = r2.getStart();
+            b = r2.getEnd(); // c<=d 
+            c = r1.getStart();
+            d = r1.getEnd(); // a <=b
+        }
 
         boolean abc = isBetween( a, b, c );
         boolean abd = isBetween( a, b, d );
@@ -107,8 +105,8 @@ public interface Range<T extends Comparable<? super T>> {
         System.out.println( "abc      abd    , cda     ,cdb" );
         System.out.println( abc + ",   " + abd + ",   " + cda + ",   " + cdb );
 
-        boolean result = abc || abd
-                || cda || cdb;
+        boolean result = ( b.compareTo( c ) != 0 ) && ( abc || abd || cda || cdb );
+
         return result;
     }
 
@@ -150,14 +148,8 @@ public interface Range<T extends Comparable<? super T>> {
     /**
      * Get the method to determine distances between points.
      *
-     * This method needs to be overwritten, because the default is just a
-     * placeholder.
-     *
      * @return the distance from a to b.
      */
-    default MeasureBetween<T, Object> meter() {
-
-        return ( a, b, c ) -> 0L;
-    }
+    MeasureBetween<T, Object> meter();
 
 }
