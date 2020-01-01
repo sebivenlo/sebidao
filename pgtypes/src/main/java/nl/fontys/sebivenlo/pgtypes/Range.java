@@ -49,11 +49,10 @@ public interface Range<T extends Comparable<? super T>> {
     /**
      * Is a midpoint between a (inclusive) and b (exclusive).
      *
-     * @param <U>
-     * @param a
-     * @param b
-     * @param inBetween
-     * @return
+     * @param a first point
+     * @param b second
+     * @param inBetween point
+     * @return true if inBetween is at or after a and before b
      */
     default boolean isBetween( T a, T b, T inBetween ) {
         System.out.print( "a = " + a );
