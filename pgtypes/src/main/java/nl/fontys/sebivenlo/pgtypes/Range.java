@@ -84,30 +84,18 @@ public interface Range<T extends Comparable<? super T>> {
      * @return true if there is a non zero overlap
      */
     default boolean overlaps( Range<T> r1, Range<T> r2 ) {
-        T a, b, c, d;
+        T a, b, c;
         if ( r1.getStart().compareTo( r2.getStart() ) <= 0 ) {
             a = r1.getStart();
             b = r1.getEnd(); // a <=b
             c = r2.getStart();
-            d = r2.getEnd(); // c<=d 
         } else {
             a = r2.getStart();
             b = r2.getEnd(); // c<=d 
             c = r1.getStart();
-            d = r1.getEnd(); // a <=b
         }
 
-        boolean abc = isBetween( a, b, c );
-        boolean abd = isBetween( a, b, d );
-        boolean cda = isBetween( c, d, a );
-        boolean cdb = isBetween( c, d, b );
-        System.out.println( "a=" + a + " b=" + b + " c=" + c + " d=" + d );
-        System.out.println( "abc      abd    , cda     ,cdb" );
-        System.out.println( abc + ",   " + abd + ",   " + cda + ",   " + cdb );
-
-        boolean result = ( b.compareTo( c ) != 0 ) && ( abc || abd || cda || cdb );
-
-        return result;
+        return a.compareTo( c) <= 0 && c.compareTo( b) < 0;
     }
 
     /**

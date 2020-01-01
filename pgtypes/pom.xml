@@ -5,7 +5,7 @@
     <artifactId>pgtypes</artifactId>
     <version>0.6</version>
     <packaging>jar</packaging>
-    <name>sebi :: pgtypes</name>
+    <name>sebidao :: pgtypes</name>
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
         <artifactId>sebipom</artifactId>
