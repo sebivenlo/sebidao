@@ -56,6 +56,7 @@
  * <h3>Entity with natural and generated (numeric) key</h3>
  * <p>Add {@code @ID} to the key field as in</p>
  * <pre class='brush:java'>
+ *  &#64;TableNme("employees")
  *  class Employee extends Entity2&lt;Integer&gt; {
  *    &#64;ID 
  *    private int employeeid;

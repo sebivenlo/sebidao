@@ -300,17 +300,26 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         return disAssembler.apply( e );
     }
 
+    private String tableName = null;
+
     /**
-     * Get the table name for the entity.
+     * Get the table name for the entity. Use annotation if available, use
+     * 'simple plural' otherwise.
      *
      * @return the name of the table in the database
      */
     public String tableName() {
-        TableName annotation = this.entityType().getAnnotation( TableName.class);
-        if (annotation!= null){
-            return annotation.value();
+        if ( tableName != null ) {
+            return tableName;
         }
-        return entityType().getSimpleName().toLowerCase() + 's';
+
+        TableName annotation = this.entityType().getAnnotation( TableName.class );
+        if ( annotation != null ) {
+            tableName = annotation.value();
+        } else {
+            tableName = entityType().getSimpleName().toLowerCase() + 's';
+        }
+        return tableName;
     }
 
     /**

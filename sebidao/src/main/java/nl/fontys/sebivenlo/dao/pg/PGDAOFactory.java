@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.TransactionToken;
+import nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange;
 import org.postgresql.PGConnection;
 import org.postgresql.util.PGobject;
 
@@ -35,7 +36,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     public PGDAOFactory( DataSource ds ) {
         this.ds = ds;
         queryStringCache = new ConcurrentHashMap<>();
-        this.pgTypeMap.put( "tsrange", TsRange.class );
+//        this.pgTypeMap.put( "tsrange", LocalDateTimeRange.class );
 //        this.pgTypeMap.put( "date", LocalDate.class );
     }
 
