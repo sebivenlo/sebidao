@@ -87,13 +87,6 @@ public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
 //        Assert.fail( "method testGetValue reached end. You know what to do." );
     }
 
-//    @Ignore( "Think TDD" )
-    @Test( expected = IllegalArgumentException.class )
-    public void startBeforeEndoNotAccepted() {
-        LocalDateTimeRange ts0 = new LocalDateTimeRange( B, A );
-
-//        Assert.fail( "method startBeforeEndoNotAccepted reached end. You know what to do." );
-    }
 
 //    @Ignore( "Think TDD" )
     @Test

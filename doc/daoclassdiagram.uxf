@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>120</x>
+      <y>120</y>
+      <w>440</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>template=K,E
+{interface}
+/DAO/
+--
++ delete( k:K ): void
++ delete( e:E ): void
++ deleteAll( e[]: Entities ): void
++ get( k: K ): Optional&lt;E&gt;
++ getAll(): Collection&lt;E&gt;
++ save( e: E ): E
++ update( e: E ): E
++ setTransactionToken(t: TransactionToken): DAO&lt;K,E&gt;
++ saveAll(E[] entities): Collection&lt;E&gt;
++ close(): void
+
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>120</x>
+      <y>650</y>
+      <w>500</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>pg</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>140</y>
+      <w>210</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>template=K,E
+{abstract}
+/AbstractMapper/
+--
+- keyType: Class&lt;K&gt;
+- entityType: Class&lt;E&gt;
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>610</x>
+      <y>380</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>DAOException</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>640</x>
+      <y>180</y>
+      <w>100</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>{interface}
+/Entity2/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>630</x>
+      <y>280</y>
+      <w>110</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>{Annotation}
+ID</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>630</x>
+      <y>230</y>
+      <w>110</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>{Annotation}
+Generated</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>630</x>
+      <y>330</y>
+      <w>110</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>{Annotation}
+TableName</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>260</x>
+      <y>490</y>
+      <w>150</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>{interface}
+/TransactionToken/
+--
++ commit(): void
++ rollback(): void
++ close(): void
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>170</y>
+      <w>130</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+manages &gt;</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>730</x>
+      <y>190</y>
+      <w>130</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>730</x>
+      <y>210</y>
+      <w>130</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;40.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>730</x>
+      <y>230</y>
+      <w>130</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;70.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>730</x>
+      <y>240</y>
+      <w>140</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;110.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>240</y>
+      <w>100</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>80.0;150.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>140</y>
+      <w>330</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+uses &gt;</panel_attributes>
+    <additional_attributes>310.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>350</y>
+      <w>60</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>40.0;160.0;10.0;160.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>490</y>
+      <w>460</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>{abstract}
+AbstractDAOFactory
+--
++ registerMapper(forClass: Class&lt;E&gt; m: AbstractMapper): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>380</x>
+      <y>350</y>
+      <w>130</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+knows &gt;</panel_attributes>
+    <additional_attributes>100.0;150.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>930</x>
+      <y>240</y>
+      <w>120</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+knows &gt;</panel_attributes>
+    <additional_attributes>40.0;10.0;40.0;260.0;10.0;260.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>70</x>
+      <y>70</y>
+      <w>1010</w>
+      <h>540</h>
+    </coordinates>
+    <panel_attributes>sebidao</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>150</x>
+      <y>680</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>PGDAO</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>440</x>
+      <y>730</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>PGDAOFactory</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>730</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>PGTransactionToken</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>150</x>
+      <y>350</y>
+      <w>30</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;330.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>320</x>
+      <y>580</y>
+      <w>30</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>550</x>
+      <y>560</y>
+      <w>30</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>640</x>
+      <y>650</y>
+      <w>500</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>memory</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>670</x>
+      <y>680</y>
+      <w>130</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>InMemoryDAO</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>960</x>
+      <y>730</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>PGDAOFactory</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>710</x>
+      <y>730</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>PGTransactionToken</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

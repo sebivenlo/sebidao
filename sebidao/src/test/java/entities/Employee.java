@@ -1,9 +1,7 @@
 package entities;
 
 import java.time.LocalDate;
-import static java.time.LocalDateTime.now;
 import java.util.Objects;
-import java.util.function.ToIntFunction;
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.ID;
 
@@ -107,13 +105,6 @@ public class Employee implements Entity2<Integer> {
                 || this.employeeid.equals( other.employeeid );
     }
 
-//    @Override
-//    public String toString() {
-//        return "Employees{" + "employeeid=" + employeeid + ", lastname="
-//                + lastname + ", firstname=" + firstname
-//                + ", email=" + email
-//                + ", departmentid=" + departmentid + '}';
-//    }
     @Override
     public String toString() {
         return "Employee{"

@@ -9,7 +9,8 @@
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
         <artifactId>sebipom</artifactId>
-        <version>1.4.6</version>
+        <version>1.4.8</version>
+        <relativePath/>
     </parent>
     <description>The TAO of a DAO in a Demo</description>
     <properties>
@@ -22,12 +23,18 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.7.5-SNAPSHOT</version>
+            <version>0.7.6</version>
         </dependency>
 	 <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
+            <version>42.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.14.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

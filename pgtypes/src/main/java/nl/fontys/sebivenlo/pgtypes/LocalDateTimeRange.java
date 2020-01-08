@@ -3,6 +3,7 @@ package nl.fontys.sebivenlo.pgtypes;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import org.postgresql.util.PGobject;
 
@@ -11,7 +12,7 @@ import org.postgresql.util.PGobject;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>{
+public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime> {
 
     /**
      * Helper constructor.
@@ -67,10 +68,12 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
     public LocalDateTimeRange( LocalDateTime start, LocalDateTime end ) {
         this();
         if ( end.isBefore( start ) ) {
-            throw new IllegalArgumentException( "start should be before or at end" );
+            this.start = end;
+            this.end = start;
+        } else {
+            this.start = start;
+            this.end = end;
         }
-        this.start = start;
-        this.end = end;
     }
 
     public LocalDateTime getStart() {
@@ -156,5 +159,20 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
      */
     public boolean isAfter( LocalDateTime when ) {
         return this.start.compareTo( when ) >= 0;
+    }
+
+    @Override
+    public long getLength( Object unit ) {
+        return start.until( end, (ChronoUnit) unit );
+    }
+
+    /**
+     * Measure using a.until(b, ChronoUnit)
+     *
+     * @return the distance between a and b
+     */
+    @Override
+    public MeasureBetween<LocalDateTime, Object> meter() {
+        return ( a, b, u ) -> a.until( b, (ChronoUnit) u );
     }
 }

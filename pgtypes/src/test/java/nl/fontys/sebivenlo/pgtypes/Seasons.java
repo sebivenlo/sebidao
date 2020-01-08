@@ -105,7 +105,7 @@ public class Seasons {
             Integer dayPrice1 = seasonPrices.get( beginSeason.getValue() );
             Integer dayPrice2 = seasonPrices.get( endSeason.getValue() );
             if ( beginSeasonInfo.get().getKey() == endSeasonInfo.get().getKey() ) {
-                return crocus.getLength().getDays() * dayPrice1;
+                return crocus.getLength(DAYS) * dayPrice1;
             } else {
                 long firstPartDays = DAYS.between( crocus.getStart(), beginSeasonInfo.get().getKey().getEnd() ) * dayPrice1;
                 long midPart = 0L;
@@ -113,8 +113,8 @@ public class Seasons {
                     // there are season(s) in between
                     midPart = seasonsBetween( start, end )
                             .stream()
-                            .peek(e ->{ System.out.println( "e="+e+ " l ="+e.getKey().getLength().getDays() );})
-                            .mapToLong( e -> e.getKey().getLength().getDays() * getDayPrice( e.getValue() ))
+                            .peek(e ->{ System.out.println( "e="+e+ " l ="+e.getKey().getDays() );})
+                            .mapToLong( e -> e.getKey().getDays() * getDayPrice( e.getValue() ))
                             .sum();
                 }
                 long lastDayPrice = DAYS.between( endSeason.getKey().getStart(), crocus.getEnd() ) * dayPrice2;

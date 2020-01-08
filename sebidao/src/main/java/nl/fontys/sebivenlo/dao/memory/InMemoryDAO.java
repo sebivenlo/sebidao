@@ -139,4 +139,8 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
         return storage.size();
     }
 
+    public void fail( String testSaveIbi_reached_its_and_You_will_know ) {
+        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

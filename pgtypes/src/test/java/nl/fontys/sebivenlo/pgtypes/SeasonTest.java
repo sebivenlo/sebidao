@@ -63,16 +63,16 @@ public class SeasonTest {
         long e1
                 = DAYS.between( start, of( THIS_YEAR, MARCH, 1 ) ) * ses.getDayPrice( MID );
         System.out.println( "e1 = " + e1 );
-        long e2 = DAYS.between( of( THIS_YEAR, MARCH, 1 ), of( THIS_YEAR, MAY, 1 ) ) * ses.getDayPrice( LOW ); // march april
+        long e2 = of( THIS_YEAR, MARCH, 1 ).until( of( THIS_YEAR, MAY, 1 ), DAYS ) * ses.getDayPrice( LOW ); // march april
         System.out.println( "e2 = " + e2 );
-        long e3 = DAYS.between( of( THIS_YEAR, MAY, 1 ), of( THIS_YEAR, MAY, 15 ) ) * ses.getDayPrice( MID ); // may
+        long e3 = of( THIS_YEAR, MAY, 1 ).until(of( THIS_YEAR, MAY, 15 ),DAYS ) * ses.getDayPrice( MID ); // may
         System.out.println( "e3 = " + e3 );
-        long e4 = DAYS.between( of( THIS_YEAR, MAY, 15 ), of( THIS_YEAR, JUNE, 8 ) ) * ses.getDayPrice( HIGH ); // 1/2 may-1/2 jun
+        long e4 = of( THIS_YEAR, MAY, 15 ).until( of( THIS_YEAR, JUNE, 8 ),DAYS ) * ses.getDayPrice( HIGH ); // 1/2 may-1/2 jun
         System.out.println( "e4 = " + e4 );
         long price = ses.getPrice( longHoliday );
         System.out.println( "price = " + price );
         assertEquals( "hefty", e1 + e2 + e3 + e4, price );
-        Assert.fail( "method reallyLongHolidayCostsPlenty reached end. You know what to do." );
+//        Assert.fail( "method reallyLongHolidayCostsPlenty reached end. You know what to do." );
     }
 
 //    @Ignore( "Think TDD" )

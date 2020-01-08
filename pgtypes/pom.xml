@@ -5,11 +5,11 @@
     <artifactId>pgtypes</artifactId>
     <version>0.6</version>
     <packaging>jar</packaging>
-    <name>sebi :: pgtypes</name>
+    <name>sebidao :: pgtypes</name>
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
         <artifactId>sebipom</artifactId>
-        <version>1.4.6</version>
+        <version>1.4.8</version>
     </parent>
     <description>Use Defined types and more for jdbc/postgresql</description>
     <properties>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
+            <version>42.2.9</version>
         </dependency>
     </dependencies>
 </project>

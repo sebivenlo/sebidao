@@ -1,0 +1,58 @@
+with js as (
+     select cast('{
+ "name":"PRC2",
+ "exam_date":"2018-09-23",
+ "teachers": [     "hom",     "hvd",     "sob" ],
+ "results": [{"snummer":3640497,"grade":2.5},
+     {"snummer":3640447,"grade":6.6},
+     {"snummer":3640446,"grade":7.5},
+     {"snummer":3690803,"grade":1.0},
+     {"snummer":3640444,"grade":3.2},
+     {"snummer":3640443,"grade":7.1},
+     {"snummer":3640442,"grade":2.4},
+     {"snummer":3640441,"grade":3.4},
+     {"snummer":3640487,"grade":7.8},
+     {"snummer":3690794,"grade":8.5},
+     {"snummer":3640485,"grade":9.9},
+     {"snummer":3690795,"grade":8.1},
+     {"snummer":3640483,"grade":5.0},
+     {"snummer":3640481,"grade":9.9},
+     {"snummer":3640494,"grade":1.0},
+     {"snummer":3640491,"grade":7.9},
+     {"snummer":3640490,"grade":3.7},
+     {"snummer":3640488,"grade":6.0},
+     {"snummer":3640470,"grade":7.2},
+     {"snummer":3640468,"grade":1.0},
+     {"snummer":3640465,"grade":2.5},
+     {"snummer":3640464,"grade":1.0},
+     {"snummer":3640478,"grade":4.7},
+     {"snummer":3640477,"grade":3.6},
+     {"snummer":3640475,"grade":8.9},
+     {"snummer":3640474,"grade":1.9},
+     {"snummer":3640473,"grade":9.9},
+     {"snummer":3640472,"grade":7.8},
+     {"snummer":3640453,"grade":3.6},
+     {"snummer":3640451,"grade":6.2},
+     {"snummer":3640449,"grade":10.0},
+     {"snummer":3640448,"grade":6.3},
+     {"snummer":3640463,"grade":9.6},
+     {"snummer":3640462,"grade":7.3},
+     {"snummer":3640461,"grade":1.8},
+     {"snummer":3640460,"grade":8.3},
+     {"snummer":3640459,"grade":1.0},
+     {"snummer":3640458,"grade":8.6},
+     {"snummer":3640456,"grade":3.6}
+ ]
+}' as jsonb)  j ),
+ teach as (select array_agg(t) tt from (select jsonb_array_elements_text(j->'teachers' ) t from js) t),
+ meta as (insert into exam_event (name,event_date,teachers) select j->>'name' as exam_name,
+      cast(j->>'exam_date' as date) as exam_date, tt as teachers from js cross join teach returning *),
+ res1 as ( select  snummer,grade from js,meta,jsonb_populate_recordset(null::sresult, js.j->'results') ),
+ res2 as (
+     insert into exam_results (exam_event_id,snummer,grade)
+     select exam_event_id,
+     res1.snummer, res1.grade
+     from res1,meta returning * )
+select snummer,lastname,firstname,tussenvoegsel,email,student_class,
+       name as exam_name, event_date as exam_date,teachers, grade
+       from students join res2 using(snummer) join meta using(exam_event_id);

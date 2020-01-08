@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.Objects;
 import org.postgresql.util.PGobject;
 
@@ -68,10 +70,12 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
     public LocalDateRange( LocalDate start, LocalDate end ) {
         this();
         if ( end.isBefore( start ) ) {
-            throw new IllegalArgumentException( "start should be before or at end" );
+            this.end = start;
+            this.start = end;
+        } else {
+            this.start = start;
+            this.end = end;
         }
-        this.start = start;
-        this.end = end;
     }
 
     @Override
@@ -79,9 +83,14 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
         return start;
     }
 
-    public Period getLength() {
-        Period length = Period.between(start, end );
-        return length;
+    /**
+     * The number of days in this range. For a normal year the value is 365
+     * between this years Jan first and next year Jan first.
+     *
+     * @return the number of days.
+     */
+    public long getDays() {
+        return getLength( DAYS );
     }
 
     @Override
@@ -159,4 +168,14 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
     public boolean isAfter( LocalDate when ) {
         return this.start.compareTo( when ) >= 0;
     }
+
+    /**
+     * Measure using a.until(b, ChronoUnit)
+     * @return the distance between a and b
+     */
+    @Override
+    public MeasureBetween<LocalDate, Object> meter() {
+        return ( a, b, u ) -> a.until( b, (ChronoUnit) u );
+    }
+
 }
