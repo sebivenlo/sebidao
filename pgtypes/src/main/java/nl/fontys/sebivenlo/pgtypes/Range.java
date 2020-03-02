@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.function.ToLongBiFunction;
 
 /**
- * A range reason of existence is testing for overlaps.
+ * The range's reason of existence is testing for overlaps.
  *
  * The range should comply to the invariant that the start is less or equal it's
  * end. Depending on the type, this can mean start is (left of, before, lower)

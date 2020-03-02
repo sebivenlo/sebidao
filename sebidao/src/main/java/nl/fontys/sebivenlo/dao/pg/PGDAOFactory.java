@@ -3,6 +3,7 @@ package nl.fontys.sebivenlo.dao.pg;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLData;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
@@ -61,16 +62,15 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     final Map<Class<?>, Function<?, ?>> marshallOutMap = new ConcurrentHashMap<>();
 
     {
-//        Function<Date, LocalDate> f = (Date d) -> d.toLocalDate();
-//        Function<Object, Object> f2 = ( d ) -> ( (Date) d ).toLocalDate();
         marshallInMap.put( LocalDate.class, ( Date d ) -> d.toLocalDate() );
-        marshallOutMap.put( LocalDate.class, ( LocalDate l ) -> java.sql.Date.valueOf( l ) );
-//        marshallInMap.put( LocalDate.class, (Date d) -> d.toLocalDate() );
+        marshallOutMap.put( LocalDate.class, ( LocalDate l ) -> java.sql.Date
+                .valueOf( l ) );
     }
 
     /**
      * Get a connection to be used by the DAOs created by the factory. Loads any
-     * maped types using null null null     {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class).
+     * maped types using null null null
+     * {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class)}.
      *
      * @return a connection
      * @throws SQLException when connection cannot be retreived.
@@ -79,9 +79,15 @@ public final class PGDAOFactory extends AbstractDAOFactory {
         Connection con = ds.getConnection();
         if ( con instanceof PGConnection && !pgTypeMap.isEmpty() ) {
             final PGConnection pgcon = (PGConnection) con;
-            for ( Map.Entry<String, Class<? extends PGobject>> entry : pgTypeMap.entrySet() ) {
+            for ( Map.Entry<String, Class<? extends PGobject>> entry : pgTypeMap
+                    .entrySet() ) {
                 pgcon.addDataType( entry.getKey(), entry.getValue() );
             }
+        }
+        if ( sqlTypeMap != null ) {
+            Map<String, Class<?>> typeMap = con.getTypeMap();
+            typeMap.putAll( sqlTypeMap );
+            con.setTypeMap( typeMap );
         }
         return con;
     }
@@ -96,12 +102,27 @@ public final class PGDAOFactory extends AbstractDAOFactory {
         pgTypeMap.put( name, type );
     }
 
+    private Map<String, Class<?>> sqlTypeMap;
+
+    /**
+     * Register a marshaller based on the SQLData mapping. See {@link https://docs.oracle.com/javase/tutorial/jdbc/basics/sqlcustommapping.html sqlcustommapping}
+     * @param dbTypeName
+     * @param type 
+     */
+    public final void registerSQLDataType( String dbTypeName, Class<? extends SQLData> type ) {
+        if ( sqlTypeMap == null ) {
+            sqlTypeMap = new ConcurrentHashMap<>();
+        }
+        sqlTypeMap.put( dbTypeName, type );
+    }
+
+    
     <U> U marshallIn( Class<U> type, Object in ) {
-        Function<Object, U> get = (Function<Object, U>) marshallInMap.get( type );
+        Function<Object, U> get = (Function<Object, U>) marshallInMap
+                .get( type );
         if ( null == get ) {
-            return  (U)in ;
+            return (U) in;
         }
         return type.cast( get.apply( in ) );
-
     }
 }

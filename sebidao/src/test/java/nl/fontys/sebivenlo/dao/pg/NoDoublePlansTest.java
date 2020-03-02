@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.TransactionToken;
 import nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange;
+import nl.fontys.sebivenlo.pgtypes.TSRange;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -38,7 +39,7 @@ public class NoDoublePlansTest extends DBTestHelpers {
     @BeforeClass
     public static void setupClass() {
         DBTestHelpers.setupClass();
-        daof.registerPGdataType( "tsrange", LocalDateTimeRange.class );
+        daof.registerSQLDataType(  "tsrange", TSRange.class );
         daof.registerMapper( Truck.class, new TruckMapper() );
         daof.registerMapper( TruckPlan.class, new TruckPlanMapper() );
         loadDatabase();

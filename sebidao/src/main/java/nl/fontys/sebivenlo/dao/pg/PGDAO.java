@@ -47,6 +47,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     /**
      * Create a DAO for a data source and a mapper.
      *
+     * @param fac factory for this type of daos.
      * @param ds injected through this ctor.
      * @param mapper injected through this ctor.
      * @param queryTextCache cache to save work

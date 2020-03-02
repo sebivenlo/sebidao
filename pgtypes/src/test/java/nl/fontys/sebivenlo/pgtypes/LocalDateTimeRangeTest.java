@@ -17,9 +17,9 @@ public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testParse() throws SQLException {
-        LocalDateTimeRange ts = new LocalDateTimeRange();
+        TSRange ts = new TSRange();
         String value = String.format( "\"[%s,%s)\"", A, B );
-        ts.setValue( value );
+        ts.setBeginEnd( A, B );
 
         assertEquals( A, ts.getStart() );
         assertEquals( B, ts.getEnd() );
@@ -69,7 +69,8 @@ public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
     @Test
     public void testUsingDuration() {
         Duration min5 = Duration.of( 5, MINUTES );
-        LocalDateTimeRange ts = new LocalDateTimeRange( A, Duration.of( 5, MINUTES ) );
+        LocalDateTimeRange ts = new LocalDateTimeRange( A, Duration
+                                                        .of( 5, MINUTES ) );
         assertEquals( min5, ts.getLength() );
 //        Assert.fail( "method testUsingDuration reached end. You know what to do." );
     }
@@ -78,20 +79,20 @@ public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
     @Test
     public void testGetValue() throws SQLException {
         LocalDateTimeRange ts0 = LocalDateTimeRange.fromUntil( A, B );
-        String s = ts0.getValue();
+        String s = ts0.toString();
         LocalDateTimeRange ts1 = new LocalDateTimeRange();
-        ts1.setValue( s );
+        ts1 = ts1.setFromString( s );
 
         assertEquals( "get value produces parsable value", ts0, ts1 );
 
 //        Assert.fail( "method testGetValue reached end. You know what to do." );
     }
 
-
 //    @Ignore( "Think TDD" )
     @Test
     public void negativeDurationStartEarlier() {
-        LocalDateTimeRange ts0 = new LocalDateTimeRange( B, Duration.of( -30, MINUTES ) );
+        LocalDateTimeRange ts0 = new LocalDateTimeRange( B, Duration
+                                                         .of( -30, MINUTES ) );
 
         assertEquals( "should produce test value A", A, ts0.getStart() );
 //        Assert.fail( "method negativeDurationStartEarlier reached end. You know what to do." );
@@ -100,10 +101,11 @@ public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
 //    @Ignore( "Think TDD" )
     @Test
     public void testBefore() {
-        LocalDateTimeRange ts0 = new LocalDateTimeRange( A, Duration.of( -30, MINUTES ) );
+        LocalDateTimeRange ts0 = new LocalDateTimeRange( A, Duration
+                                                         .of( -30, MINUTES ) );
         System.out.println( "ts0 = " + ts0 );
         assertTrue( "should be before", ts0.isBefore( A ) );
-        assertFalse( "should not be before", ts0.isBefore( A.plusMinutes( -5) ) );
+        assertFalse( "should not be before", ts0.isBefore( A.plusMinutes( -5 ) ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
     }
 
@@ -113,7 +115,7 @@ public class LocalDateTimeRangeTest extends LocalDateTimeRangeTestBase {
         LocalDateTimeRange ts0 = new LocalDateTimeRange( A, B );//Duration.of( -30, MINUTES ) );
         System.out.println( "ts0 = " + ts0 );
         assertTrue( "should be after", ts0.isAfter( A ) );
-        assertFalse( "should not be after", ts0.isAfter( A.plusDays( 1) ) );
+        assertFalse( "should not be after", ts0.isAfter( A.plusDays( 1 ) ) );
 //        Assert.fail( "method testIsAfter reached end. You know what to do." );
     }
 

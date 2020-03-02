@@ -49,12 +49,15 @@ public class TypeFinderTest {
                     String columnName = metaData.getColumnName( i );
                     System.out.println( "columnName = " + columnName );
 
-                    String columnTypeName = metaData.getColumnTypeName( columnCount );
+                    String columnTypeName = metaData
+                            .getColumnTypeName( columnCount );
 
-                    System.out.println( "columnClassName = " + columnClassName + ", catalog name= " + columnName + ", columnTypeName = " + columnTypeName );
+                    System.out
+                            .println( "columnClassName = " + columnClassName + ", catalog name= " + columnName + ", columnTypeName = " + columnTypeName );
                     Object object = rs.getObject( i );
                     System.out.println( "value  = " + object.toString() );
-                    PGConnection pgConnection = (PGConnection) con.unwrap( Connection.class );
+                    PGConnection pgConnection = (PGConnection) con
+                            .unwrap( Connection.class );
                     String name = pgConnection.getClass().getName();
                     System.out.println( "unwrap name = " + name );
                 }
@@ -71,15 +74,20 @@ public class TypeFinderTest {
         String query = "insert into truckplans (truckid,plan) values(?,?) returning *";
         try ( Connection con = ds.getConnection(); ) {
             PGConnection pgcon = (PGConnection) con;
-            pgcon.addDataType( "tsrange", LocalDateTimeRange.class );
+//            pgcon.addDataType( "tsrange", LocalDateTimeRange.class );
             try (
                     PreparedStatement pst = con.prepareStatement( query ); ) {
-                LocalDateTimeRange ts = new LocalDateTimeRange( LocalDateTime.parse( "2018-08-15T15:35" ), Duration.of( 30, MINUTES ) );
+
+                LocalDateTimeRange ts = new LocalDateTimeRange( LocalDateTime
+                        .parse( "2018-08-15T15:35" ), Duration.of( 30, MINUTES ) );
                 pst.setObject( 1, (Integer) 1 );
-                PgParameterMetaData parameterMetaData = (PgParameterMetaData) pst.getParameterMetaData();
-                String parameterClassName = parameterMetaData.getParameterClassName( 2 );
+                PgParameterMetaData parameterMetaData = (PgParameterMetaData) pst
+                        .getParameterMetaData();
+                String parameterClassName = parameterMetaData
+                        .getParameterClassName( 2 );
                 System.out.println( "parameterMetaData = " + parameterMetaData );
-                System.out.println( "parameterClassName = " + parameterClassName );
+                System.out
+                        .println( "parameterClassName = " + parameterClassName );
                 System.out.println( "ts = " + ts );
                 System.out.println( "pst 1 = " + pst );
                 pst.setObject( 2, ts );
@@ -90,12 +98,16 @@ public class TypeFinderTest {
                         ResultSetMetaData metaData = rs.getMetaData();
                         int columnCount = metaData.getColumnCount();
                         for ( int i = 1; i <= columnCount; i++ ) {
-                            String columnClassName = metaData.getColumnClassName( i );
+                            String columnClassName = metaData
+                                    .getColumnClassName( i );
                             String columnName = metaData.getColumnName( i );
-                            System.out.println( "columnClassName = " + columnClassName + ", catalog name= " + columnName );
+                            System.out
+                                    .println( "columnClassName = " + columnClassName + ", catalog name= " + columnName );
                             Object object = rs.getObject( i );
-                            System.out.println( "value  = " + object.toString() );
-                            PGConnection pgConnection = (PGConnection) con.unwrap( Connection.class );
+                            System.out
+                                    .println( "value  = " + object.toString() );
+                            PGConnection pgConnection = (PGConnection) con
+                                    .unwrap( Connection.class );
                             String name = pgConnection.getClass().getName();
                             System.out.println( "unwrap name = " + name );
                         }

@@ -8,11 +8,12 @@ import java.util.Objects;
 import org.postgresql.util.PGobject;
 
 /**
- * Postgres time stamp range (tsrange).
+ * PostgreSQL time stamp range (tsrange). This version only supports half open ranges,
+ * i.e. '[)' meaning start is included, but end is not.
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime> {
+public class LocalDateTimeRange implements Range<LocalDateTime> {
 
     /**
      * Helper constructor.
@@ -28,15 +29,17 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
         }
         return new LocalDateTimeRange( start, noLater );
     }
-    private LocalDateTime start;
-    private LocalDateTime end;
+    
+    protected LocalDateTime start;
+    protected LocalDateTime end;
 
     /**
-     * Default constructor to support postgresql jdbc API. This constructors
-     * leaves the fields unset.
+     * Default constructor to support postgresql jdbc API. This constructor
+     * sets start to now() and end to infinity (LocalDateTime.MAX).
      */
     public LocalDateTimeRange() {
-        super.setType( "tsrange" );
+        start = LocalDateTime.now();
+        end= LocalDateTime.MAX;
     }
 
     /**
@@ -47,7 +50,7 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
      * @param length length of the range
      */
     public LocalDateTimeRange( LocalDateTime start, Duration length ) {
-        this();
+//        this();
         if ( length.isNegative() ) {
             this.end = start;
             this.start = end.plus( length );
@@ -66,7 +69,7 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
      * @throws IllegalArgumentException when end precedes start.
      */
     public LocalDateTimeRange( LocalDateTime start, LocalDateTime end ) {
-        this();
+//        this();
         if ( end.isBefore( start ) ) {
             this.start = end;
             this.end = start;
@@ -119,20 +122,6 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
         return "[" + start.toString() + "," + end.toString() + ")";
     }
 
-    @Override
-    public String getValue() {
-        return this.toString();
-    }
-
-    @Override
-    public void setValue( String value ) throws SQLException {
-        setType( "tsrange" );
-        super.setValue( value );
-        String[] part = value.replace( "\"", "" ).replace( "[", "" ).replace( ")", "" ).split( "," );
-        this.start = LocalDateTime.parse( part[ 0 ].replace( " ", "T" ) );
-        this.end = LocalDateTime.parse( part[ 1 ].replace( " ", "T" ) );
-    }
-
     public LocalDateTime getEnd() {
         return end;
     }
@@ -174,5 +163,18 @@ public class LocalDateTimeRange extends PGobject implements Range<LocalDateTime>
     @Override
     public MeasureBetween<LocalDateTime, Object> meter() {
         return ( a, b, u ) -> a.until( b, (ChronoUnit) u );
+    }
+
+    LocalDateTimeRange setFromString( String value ) { 
+        
+        String[] part = value.replace( "\"", "" ).replace( "[", "" ).replace( ")", "" ).split( "," );
+        this.start = LocalDateTime.parse( part[ 0 ].replace( " ", "T" ) );
+        this.end = LocalDateTime.parse( part[ 1 ].replace( " ", "T" ) );
+        return this;
+    }
+
+    void setBeginEnd( LocalDateTime aStart, LocalDateTime anEnd ) {
+        this.start = aStart;
+        this.end = anEnd;
     }
 }

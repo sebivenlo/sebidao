@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class IntegerRangeTest  extends RangeTestBase<Integer, Range<Integer>>{
+public class IntegerRangeTest extends RangeTestBase<Integer, Range<Integer>> {
 
     public IntegerRangeTest( boolean expected, String label ) {
         super( expected, label );
@@ -40,13 +40,12 @@ public class IntegerRangeTest  extends RangeTestBase<Integer, Range<Integer>>{
 
     @Override
     Range<Integer> createRange( Integer start, Integer end ) {
-        return new IntegerRange(start,end);
+        return new IntegerRange( start, end );
     }
 
     @Override
     Object measurementUnit() {
         return null;
     }
-    
-    
+
 }

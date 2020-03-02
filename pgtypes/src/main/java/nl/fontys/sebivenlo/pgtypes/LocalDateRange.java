@@ -1,7 +1,6 @@
 package nl.fontys.sebivenlo.pgtypes;
 
 import java.sql.SQLException;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -10,7 +9,7 @@ import java.util.Objects;
 import org.postgresql.util.PGobject;
 
 /**
- * Postgres time stamp range (daterange).
+ * PostgresSQL time stamp range (daterange).
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
@@ -30,8 +29,8 @@ public class LocalDateRange extends PGobject implements Range<LocalDate> {
         }
         return new LocalDateRange( start, noLater );
     }
-    private LocalDate start;
-    private LocalDate end;
+    protected LocalDate start;
+    protected LocalDate end;
 
     /**
      * Default constructor to support postgresql jdbc API. This constructors

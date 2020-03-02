@@ -93,7 +93,6 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
      * The programmer of the entity class is kindly advised to create the
      * desired constructor.
      *
-     * @param entityType1
      */
     final void deriveAssemblerFunction() {
         Collection<Class<?>> fieldTypes = entityMetaData.typeMap.values();

@@ -48,7 +48,7 @@ class EntityMetaData<E> {
     /**
      * Do the work to register a class.
      *
-     * @param clz
+     * @param clz of entity
      */
     final void register( Class<E> clz ) {
         Field[] declaredFields = clz.getDeclaredFields();
