@@ -34,6 +34,7 @@ class PGDAOConnectionClosedExceptionTest extends PGDAOExceptionTestBase {
 
 //    @Disabled( "Ignored because in this case the exception is somehow swallowed" )
     @Test//( expected = DAOException.class )
+    @Override
     void delete() {
         Assertions.assertThatCode( () -> {
             eDao.delete( gp );

@@ -1,21 +1,25 @@
 package demo;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Assert;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 
 /**
  *
- * @author Pieter van den Hombergh (879417) {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class TransactionMainTest {
 
-    //@Ignore
+//    @Disabled
     @Test
     public void testMain() {
+        try{
         TransactionMain.main( new String[0]);
+        } catch(Throwable t){
+            Logger.getLogger( "main").log( Level.INFO, t.getMessage() );
+        }
     }
 
 }

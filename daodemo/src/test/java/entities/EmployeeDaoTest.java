@@ -48,17 +48,17 @@ public class EmployeeDaoTest {
     }
 
     @Test
-    public void test00Size() {
+    public void t00Size() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
 
         int size = edao.size();
-        assertEquals( "tests start out with one element", 1, size );
+        assertEquals( "ts start out with one element", 1, size );
 
-//        fail( "test method test00Size reached its end, you ca remove this line when you aggree." );
+//        fail( "t method t00Size reached its end, you ca remove this line when you aggree." );
     }
 
     @Test
-    public void test01Get() {
+    public void t01Get() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         int lastId = edao.lastId();
         System.out.println( "lastId = " + lastId );
@@ -66,38 +66,36 @@ public class EmployeeDaoTest {
 
         assertTrue( "got an employee", e.isPresent() );
         assertEquals( "It's Piet", "Piet", e.get().getFirstname() );
-        // fail( "testGet not yet implemented. Review the code and comment or delete this line" );
+        // fail( "tGet not yet implemented. Review the code and comment or delete this line" );
     }
 
     @Test
-    public void test02GetAll() {
+    public void t02GetAll() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Collection<Employee> el = edao.getAll();
         System.out.println( "el=" + el );
         assertEquals( 1, el.size() );
-        assertEquals( "Marvel: it is Piet again", "Piet", el.iterator().next().
-                      getFirstname() );
         assertThat( el ) // <4>
-                .as( "no Jan?" ) // <5>
+                .as( "no Piet?" ) // <5>
                 .hasSize( 1 ) // <6>
-                .contains( JAN ); // <7>
-        //fail( "testGetAll not yet implemented. Review the code and comment or delete this line" );
+                .extracting( Employee::getEmail).contains( "p.puk@vanderheiden.nl" ); // <7>
+        //fail( "tGetAll not yet implemented. Review the code and comment or delete this line" );
     }
 
     @Test
-    public void test03Delete() {
+    public void t03Delete() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee dummy = new Employee( 1 );
         edao.delete( dummy ); // will drop piet
         System.out.println();
         Optional<Employee> e = edao.get( 1 );
-        assertFalse( "sorry piet", e.isPresent() );
+        assertThat( e ).isEmpty();
 
-        // fail( "testDelete not yet implemented. Review the code and comment or delete this line" );
+        // fail( "tDelete not yet implemented. Review the code and comment or delete this line" );
     }
 
     @Test
-    public void test04Create() {
+    public void t04Create() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Collection<Employee> el = edao.getAll();
         int preSize = el.size();
@@ -107,25 +105,25 @@ public class EmployeeDaoTest {
         int postSize = edao.getAll().size();
         assertEquals( "no Jan?", 1 + preSize, postSize );
 
-        // fail( "testCreate not yet implemented. Review the code and comment or delete this line" );
+        // fail( "tCreate not yet implemented. Review the code and comment or delete this line" );
     }
     private static final Employee JAN = new Employee( 0, "Klaassen", "Jan",
                                                       "jan@example.com", "sales" );
 
 //    @Ignore
     @Test
-    public void test05Update() {
+    public void t05Update() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee savedJan = edao.save( JAN );
         assertNotNull( "should have a jan", savedJan );
         assertTrue( "proper id", savedJan.getId() != 0 );
 
-        //fail( "test05Update not yet implemented. Review the code and comment or delete this line" );
+        //fail( "t05Update not yet implemented. Review the code and comment or delete this line" );
     }
 
 //    @Ignore
     @Test
-    public void testUpdateEmail() {
+    public void tUpdateEmail() {
         DAO<Integer, Employee> eDao = daof.createDao( Employee.class );
         Employee savedJan = eDao.save( JAN ); // <1>
         String nemail = "janklaassen@outlook.com";
@@ -137,7 +135,7 @@ public class EmployeeDaoTest {
         assertThat( savedJan ).as( "see if email update worked" ) // <5>
                 .extracting( j -> j.getEmail() )
                 .isEqualTo( nemail );
-//        Assert.fail( "testMethod reached it's and. You will know what to do." );
+//        Assert.fail( "tMethod reached it's and. You will know what to do." );
     }
 
     private static void loadDatabase() throws IOException, SQLException {
