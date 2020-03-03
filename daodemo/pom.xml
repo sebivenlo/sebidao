@@ -28,5 +28,11 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.10</version>
         </dependency>
+        <dependency>
+            <groupId>nl.fontys.sebivenlo</groupId>
+            <artifactId>pgtypes</artifactId>
+            <version>0.8</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

@@ -103,7 +103,7 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         }
         try {
             Constructor<E> assemblerCtor = entityType.getConstructor( types );
-            System.out.println( "found assemblerCtor = " + assemblerCtor );
+//            System.out.println( "found assemblerCtor = " + assemblerCtor );
             assembler = ( Object[] a ) -> {
                 try {
                     return assemblerCtor.newInstance( a );
