@@ -3,7 +3,7 @@ package entities;
 import static java.time.LocalDate.now;
 import static java.time.LocalDate.of;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  *
@@ -13,8 +13,8 @@ public class EmployeeTest {
 
     @Test
     public void testFromParts() {
-        Object[] parts = new Object[] {
-            1, "Puk", "Piet","piet@student.fontys.nl", 42, true,now()
+        Object[] parts = new Object[]{
+            1, "Puk", "Piet", "piet@student.fontys.nl", 42, true, now()
         };
 
         Employee employee = new Employee( parts );
@@ -23,10 +23,10 @@ public class EmployeeTest {
         String lastname = employee.getLastname();
         String firstname = employee.getFirstname();
         int dept = employee.getDepartmentid();
-        assertEquals( "id", 1, id.intValue() );
-        assertEquals( "last", "Puk", lastname );
-        assertEquals( "first", "Piet", firstname );
-        assertEquals( "first", 42, dept );
+        assertThat( id.intValue() ).isEqualTo( 1 );
+        assertThat( lastname ).isEqualTo( "Puk" );
+        assertThat( firstname ).isEqualTo( "Piet" );
+        assertThat( dept ).isEqualTo( 42 );
 
         // fail( "testFromParts not yet implemented. Review the code and comment or delete this line" );
     }
@@ -37,17 +37,19 @@ public class EmployeeTest {
         emp.setEmployeeid( 1 );
         emp.setFirstname( "Piet" );
         emp.setLastname( "Puk" );
-        emp.setEmail("p.puk@outlook.com" );
+        emp.setEmail( "p.puk@outlook.com" );
         emp.setDepartmentid( 42 );
-        
-        emp.setDob( of(1953,9,15));
+
+        emp.setDob( of( 1953, 9, 15 ) );
 
         Object[] part = emp.asParts();
-        assertEquals( "id", 1, ( ( Integer ) part[ 0 ] ).intValue() );
-        assertEquals( "last", "Puk", part[ 1 ] );
-        assertEquals( "first", "Piet", part[ 2 ] );
-        assertEquals( "email", "p.puk@outlook.com", part[ 3 ] );
-        assertEquals( "dept", 42, ( ( Integer ) part[ 4 ] ).intValue() );
+        assertThat( ( (Integer) part[ 0 ] ).intValue() ).as( "id" )
+                .isEqualTo( 1 );
+        assertThat( part[ 1 ] ).as( "last" ).isEqualTo( "Puk" );
+        assertThat( part[ 2 ] ).as( "first" ).isEqualTo( "Piet" );
+        assertThat( part[ 3 ] ).as( "email" ).isEqualTo( "p.puk@outlook.com" );
+        assertThat( ( (Integer) part[ 4 ] ).intValue() ).as( "dept" )
+                .isEqualTo( 42 );
 
         //fail( "testToParts not yet implemented. Review the code and comment or delete this line" );
     }
@@ -60,11 +62,11 @@ public class EmployeeTest {
 
         emp2.setFirstname( "Jan" );
 
-        assertEquals( "equals by id", emp1, emp2 );
+        assertThat( emp2 ).isEqualTo( emp1 );
 
-        assertTrue( "Proper name in toString", emp2.toString().contains( "Jan" ) );
-        assertEquals( "hashCode should be equal", emp1.hashCode(), emp2.
-                hashCode() );
+        assertThat( emp2.toString() ).contains( "Jan" );
+        assertThat( emp1.hashCode() ).as( "hashCode should be equal" )
+                .isEqualTo( emp2.hashCode() );
         //fail( "testCoverageLeftOvers not yet implemented. Review the code and comment or delete this line" );
     }
 
@@ -73,13 +75,13 @@ public class EmployeeTest {
         Employee emp = new Employee( 56 );
         emp.setLastname( "Henk" );
 
-        assertEquals( "self", emp, emp );
-        assertFalse( emp.equals( null ) );
-        assertFalse( emp.equals( "Hank" ) );
+        assertThat( emp ).isEqualTo( emp );
+        assertThat( emp.equals( null ) ).isFalse();
+        assertThat( emp.equals( "Hank" ) ).isFalse();
 
         Employee emp2 = new Employee( 57 );
-        assertNotEquals( emp2, emp );
-        
+        assertThat( emp2.equals( emp )).isFalse();
+
         //fail( "testCoverEquals not yet implemented. Review the code and comment or delete this line" );
     }
 }

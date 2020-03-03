@@ -11,7 +11,7 @@ import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
 import org.junit.After;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -29,7 +29,7 @@ public class EmployeeDaoTest {
     public static void setupClass() {
         loadDatabase();
         daof = new PGDAOFactory( ds );
-        daof.registerMapper( Employee.class, new EmployeeMapper2( ) );
+        daof.registerMapper( Employee.class, new EmployeeMapper2() );
     }
     //DAO<Integer, Employee> edao;
 
@@ -46,7 +46,8 @@ public class EmployeeDaoTest {
     public void test00Size() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         int size = edao.size();
-        assertEquals( "tests start out with one element", 1, size );
+        assertThat( size ).as( "tests start out with one element" )
+                .isEqualTo( 1 );
 
         // fail( "test method test00Size reached its end, you ca remove this line when you aggree." );
     }
@@ -57,8 +58,9 @@ public class EmployeeDaoTest {
         int lastId = edao.lastId();
         Optional<Employee> e = edao.get( lastId );
 
-        assertTrue( "got an employee", e.isPresent() );
-        assertEquals( "It's Piet", "Piet", e.get().getFirstname() );
+        assertThat( e.isPresent() ).as( "got an employee" ).isTrue();
+        assertThat( e.get().getFirstname() ).as( "It's Piet" )
+                .isEqualTo( "Piet" );
         // fail( "testGet not yet implemented. Review the code and comment or delete this line" );
     }
 
@@ -66,9 +68,8 @@ public class EmployeeDaoTest {
     public void test02GetAll() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Collection<Employee> el = edao.getAll();
-        assertEquals( 1, el.size() );
-        assertEquals( "Marvel: it is Piet again", "Piet", el.iterator().next().
-                getFirstname() );
+        assertThat( el.size() ).isEqualTo( 1 );
+        assertThat( el.iterator().next().getFirstname() ).isEqualTo( "Piet" );
         //fail( "testGetAll not yet implemented. Review the code and comment or delete this line" );
     }
 
@@ -77,8 +78,8 @@ public class EmployeeDaoTest {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee dummy = new Employee( 1 );
         edao.delete( dummy ); // will drop piet
-        Optional<Employee> e = edao.get( 1 );
-        assertFalse( "sorry piet", e.isPresent() );
+        Optional<Employee> oe = edao.get( 1 );
+        assertThat( oe ).isEmpty();
 
         // fail( "testDelete not yet implemented. Review the code and comment or delete this line" );
     }
@@ -90,27 +91,26 @@ public class EmployeeDaoTest {
         int preSize = el.size();
         Employee savedJan = edao.save( JAN );
         int postSize = edao.getAll().size();
-        assertEquals( "no Jan?", 1 + preSize, postSize );
+        assertThat( postSize ).isEqualTo( 1 + preSize );
         edao.delete( savedJan );
         // fail( "testCreate not yet implemented. Review the code and comment or delete this line" );
     }
     private static final Employee JAN = new Employee( 0, "Klaassen", "Jan",
-            "jan@example.com", 1 );
+                                                      "jan@example.com", 1 );
 
     @Test
     public void test05Update() {
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee savedJan = edao.save( JAN );
-        assertNotNull( "should have a jan", savedJan );
-        assertTrue( "proper id", savedJan.getId() != 0 );
+        assertThat( savedJan ).isNotNull();
+        assertThat( savedJan.getId() ).isNotEqualTo( 0 );
         System.out.println( "savedJan = " + savedJan );
         savedJan.setEmail( "janklaassen@outlook.com" );
         edao.update( savedJan ); // ignore result for now
         Employee updatedJan = edao.get( savedJan.getEmployeeid() ).get();
 
-        assertEquals( "see if email update worked", savedJan.getEmail(),
-                updatedJan.
-                        getEmail() );
+        assertThat( savedJan.getEmail() )
+                .isEqualTo( updatedJan.getEmail() );
         // fail( "test05Update not yet implemented. Review the code and comment or delete this line" );
     }
 
@@ -120,10 +120,10 @@ public class EmployeeDaoTest {
         // should get default piet.
         Employee savedJan = edao.save( JAN );
         Collection<Employee> col = edao.getByColumnValues( "email", JAN.
-                getEmail() );
-        assertFalse( col.isEmpty() );
+                                                           getEmail() );
+        assertThat( col.isEmpty() ).isFalse();
         Employee firstEmployee = col.iterator().next();
-        assertEquals( "Hi Piet", "Jan", firstEmployee.getFirstname() );
+        assertThat( firstEmployee.getFirstname() ).isEqualTo(  "Jan" );
         edao.delete( savedJan );
 
         //fail( "test method testGetByKeyValues reached its end, you can remove this line when you aggree." );
@@ -132,7 +132,7 @@ public class EmployeeDaoTest {
     @Test( expected = DAOException.class )
     public void testSaveUniqueViolation() {
         Employee jean = new Employee( 0, "Klaassen", "Jean",
-                "jan@example.com", 1 );
+                                      "jan@example.com", 1 );
         DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         // should get default piet.
         Employee savedJean = edao.save( JAN );

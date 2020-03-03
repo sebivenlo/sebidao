@@ -7,7 +7,7 @@ import java.util.Collection;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.Entity2;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -30,13 +30,13 @@ public class PGDAOStringKeyTest extends DBTestHelpers {
     }
 
     Company intel = new Company( "INTC", "Intel", "USA", "Santa Clara",
-            "2200 Mission College Blvd", "CA 95052" );
+                                 "2200 Mission College Blvd", "CA 95052" );
     Company amd = new Company( "AMD", "Advanced Micro Devices", "USA",
-            "Santa Clara",
-            "2485 Augustine Drive", "CA 95054" );
+                               "Santa Clara",
+                               "2485 Augustine Drive", "CA 95054" );
 
     Company fontys = new Company( "FNTS", "Fontys Hogescholen", "Netherlands",
-            "Venlo", "Tegelseweg 255", "5912 BG" );
+                                  "Venlo", "Tegelseweg 255", "5912 BG" );
 
     @Test
     public void testSave() {
@@ -45,8 +45,8 @@ public class PGDAOStringKeyTest extends DBTestHelpers {
         Company savedC = cDao.save( intel );
         int size2 = cDao.size();
 
-        assertEquals( "added", size + 1, size2 );
-        assertEquals( intel.getName(), savedC.getName() );
+        assertThat( size2 ).as( "added" ).isEqualTo( size + 1 );
+        assertThat( savedC.getName() ).isEqualTo( intel.getName() );
 //        fail( "testSave not yet implemented. Review the code and comment or delete this line" );
     }
 
@@ -58,7 +58,7 @@ public class PGDAOStringKeyTest extends DBTestHelpers {
         cDao.delete( savedC );
         int size3 = cDao.size();
 
-        assertTrue( "in and gone", size + 1 == size2 && size == size3 );
+        assertThat(  size + 1 == size2 && size == size3 ).as("in and gone").isTrue();
 
         //fail( "testDelete not yet implemented. Review the code and comment or delete this line" );
     }
@@ -74,17 +74,17 @@ public class PGDAOStringKeyTest extends DBTestHelpers {
 
         Company dFontys = cDao.get( sFontys.getNaturalId() ).get();
 
-        assertEquals( sFontys.getPostcode(), dFontys.getPostcode() );
+        assertThat( dFontys.getPostcode() ).isEqualTo( sFontys.getPostcode() );
         Collection<Company> all = cDao.getAll();
-        assertFalse( all.isEmpty() );
+        assertThat( all.isEmpty() ).isFalse();
         // fail( "testUpdate not yet implemented. Review the code and comment or delete this line" );
     }
 
     @Test
     public void testSanityAnCoverage() {
 
-        assertFalse( cDao.toString().isEmpty() );
-        assertEquals( 0, cDao.size() );
+        assertThat( cDao.toString().isEmpty() ).isFalse();
+        assertThat( cDao.size() ).isEqualTo( 0 );
         //fail( "testSanityAnCoverage not yet implemented. Review the code and comment or delete this line" );
     }
 }

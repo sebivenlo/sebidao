@@ -1,7 +1,7 @@
 package nl.fontys.sebivenlo.dao;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Coverage. 

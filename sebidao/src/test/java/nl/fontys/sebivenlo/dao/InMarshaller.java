@@ -12,9 +12,10 @@ public interface InMarshaller<T> {
 
     /**
      * Parse the string into a value of T.
-     * @param input
-     * @return 
+     * @param input to be read
+     * @param sqlName the sql type of the column
+     * @return the value 
      */
-    T read( String input );
+    T read( String input, String sqlName );
 
 }

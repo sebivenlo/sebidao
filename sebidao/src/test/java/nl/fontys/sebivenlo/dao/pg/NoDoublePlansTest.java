@@ -1,30 +1,23 @@
 package nl.fontys.sebivenlo.dao.pg;
 
 import entities.DBTestHelpers;
-import entities.Employee;
 import entities.Truck;
 import entities.TruckMapper;
 import entities.TruckPlan;
 import entities.TruckPlanMapper;
-import java.sql.SQLException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.TransactionToken;
-import nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange;
 import nl.fontys.sebivenlo.pgtypes.TSRange;
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
+import nl.fontys.sebivenlo.pgtypes.TSRange;
+import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Make sure pg tsrange checks against double bookings.
@@ -36,45 +29,53 @@ public class NoDoublePlansTest extends DBTestHelpers {
     PGDAO<Integer, Truck> tDao;
     PGDAO<Integer, TruckPlan> pDao;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         DBTestHelpers.setupClass();
-        daof.registerSQLDataType(  "tsrange", TSRange.class );
+        daof.registerSQLDataType( "tsrange", TSRange.class );
         daof.registerMapper( Truck.class, new TruckMapper() );
         daof.registerMapper( TruckPlan.class, new TruckPlanMapper() );
         loadDatabase();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Throwable {
-        assertNotNull( daof );
+        assertThat( daof ).isNotNull();
         tDao = daof.createDao( Truck.class );
+        assertThat( tDao ).isNotNull();
         pDao = daof.createDao( TruckPlan.class );
     }
 
 //    @Ignore( "Think TDD" )
-    @Test( expected = DAOException.class )
+    @Test
     public void noOverlaps() throws Exception {
 
         Truck t1 = new Truck( 0, "Big Benz" );
-        t1 = tDao.save( t1 );
+        assertThat( tDao ).isNotNull();
+        try {
+            t1 = tDao.save( t1 );
+        } catch ( Throwable t ) {
+            t.printStackTrace();
+            fail( t.getMessage() );
+        }
         LocalDateTime start1 = now().plus( 1, DAYS );
         LocalDateTime end1 = now().plus( 1, DAYS ).plus( 2, HOURS );
 
-        LocalDateTimeRange ts1 = new LocalDateTimeRange( start1, end1 );
-        LocalDateTimeRange ts2 = new LocalDateTimeRange( start1, end1.minus( 20, MINUTES ) );
-        LocalDateTimeRange ts3 = new LocalDateTimeRange( end1, end1.plus( 25, MINUTES ) );
+        TSRange ts1 = new TSRange( start1, end1 );
+        TSRange ts2 = new TSRange( start1, end1.minus( 20, MINUTES ) );
+        TSRange ts3 = new TSRange( end1, end1.plus( 25, MINUTES ) );
         TruckPlan plan1 = new TruckPlan( t1.getId(), ts1 );
         TruckPlan plan2 = new TruckPlan( t1.getId(), ts2 );
 
         try ( TransactionToken tok = pDao.startTransaction() ) {
 
             pDao.save( plan1 );
-            pDao.save( plan2 );
-            fail( "should not be reached" );
-        } 
+            assertThatThrownBy( () -> {
+                pDao.save( plan2 );
+            } ).isExactlyInstanceOf( DAOException.class );
+        }
 
-        Assert.fail( "method method reached end. You know what to do." );
+//        fail( "method method reached end. You know what to do." );
     }
 
     @Test
@@ -85,8 +86,9 @@ public class NoDoublePlansTest extends DBTestHelpers {
         LocalDateTime start1 = now().plus( 1, DAYS );
         LocalDateTime end1 = now().plus( 1, DAYS ).plus( 2, HOURS );
 
-        LocalDateTimeRange ts1 = new LocalDateTimeRange( start1, end1 );
-        LocalDateTimeRange ts2 = new LocalDateTimeRange( end1, end1.plus( 25, MINUTES ) );
+        TSRange ts1 = new TSRange( start1, end1 );
+        TSRange ts2 = new TSRange( end1, end1
+                                   .plus( 25, MINUTES ) );
         TruckPlan plan1 = new TruckPlan( t1.getId(), ts1 );
         TruckPlan plan2 = new TruckPlan( t1.getId(), ts2 );
 

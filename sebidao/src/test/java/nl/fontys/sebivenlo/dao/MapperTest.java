@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Function;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  *
@@ -27,7 +27,7 @@ public class MapperTest {
     @Test
     public void testTableName() {
         String simpleName = mapper.tableName();
-        assertEquals("expect simple plural of entity type","students",simpleName);
+        assertThat(simpleName).as("expect simple plural of entity type").isEqualTo("students");
         //fail( "testTableName not yet implemented. Review the code and comment or delete this line" );
     }
 
@@ -35,7 +35,7 @@ public class MapperTest {
     @Test
     public void testNaturalKeyName() {
         String naturalKeyName = mapper.naturalKeyName();
-        assertEquals("naturla key name","studentid", naturalKeyName);
+        assertThat(naturalKeyName).as("naturla key name").isEqualTo("studentid");
         //fail( "test method testNaturalKeyName reached its end, you can remove this line when you aggree." );
     }
     

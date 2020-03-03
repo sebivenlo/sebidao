@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,7 +54,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @param queryTextCache cache to save work
      */
     PGDAO( PGDAOFactory fac, DataSource ds, AbstractMapper<K, E> mapper,
-            Map<String, String> queryTextCache ) {
+           Map<String, String> queryTextCache ) {
         this.factory = fac;
         this.mapper = mapper;
         this.queryTextCache = queryTextCache;
@@ -61,7 +62,9 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private String allColumns() {
         return this.queryTextCache.computeIfAbsent( "allColumns",
-                x -> String.join( ",", mapper.persistentFieldNames() ) );
+                                                    x -> String
+                                                            .join( ",", mapper
+                                                                   .persistentFieldNames() ) );
     }
 
     /**
@@ -71,7 +74,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      */
     protected String tableName() {
         return this.queryTextCache.computeIfAbsent( "tableName",
-                x -> mapper.tableName() );
+                                                    x -> mapper.tableName() );
     }
 
     /**
@@ -81,7 +84,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      */
     protected String idName() {
         return this.queryTextCache.computeIfAbsent( "idName",
-                x -> mapper.idName() );
+                                                    x -> mapper.idName() );
     }
 
     /**
@@ -100,7 +103,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return get( con, id );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -127,16 +130,17 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             }
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
 
     private String getQueryText() {
         String sql = queryTextCache.computeIfAbsent( "selectsingle", ( x )
-                -> String.format( "select %s from %s where %s=?", allColumns(),
-                        tableName(),
-                        idName() ) );
+                                                     -> String
+                        .format( "select %s from %s where %s=?", allColumns(),
+                                 tableName(),
+                                 idName() ) );
         return sql;
     }
 
@@ -186,7 +190,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String[] questionMarks = new String[ keys.size() ];
         Arrays.fill( questionMarks, "?" );
         String marks = String.join( ",", questionMarks );
-        String sql = String.format( "delete from %s where %s in (%s)", mapper.tableName(), mapper.idName(), marks );
+        String sql = String.format( "delete from %s where %s in (%s)", mapper
+                                    .tableName(), mapper.idName(), marks );
         try ( PreparedStatement pst = con.prepareStatement( sql ); ) {
             int col = 1;
             for ( K key : keys ) {
@@ -194,7 +199,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             }
             boolean ignored = pst.execute();
         } catch ( SQLException ex ) {
-            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( PGDAO.class.getName() )
+                    .log( Level.SEVERE, null, ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -207,7 +213,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             boolean ignored = pst.execute();
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -215,8 +221,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     private String deleteQueryText() {
 
         String sql = queryTextCache.computeIfAbsent( "delete",
-                x -> format( "delete from %s where %s=?", tableName(), mapper.
-                        idName() ) );
+                                                     x -> format( "delete from %s where %s=?", tableName(), mapper
+                                                                  .idName() ) );
         return sql;
     }
 
@@ -229,7 +235,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return update( con, t );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -258,24 +264,29 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             }
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
 
     private String updateQueryText() {
         String sql = queryTextCache.computeIfAbsent( "update", x -> {
-            List<String> columnNames
-                    = mapper.persistentFieldNames().stream().collect( toList() );
-            String columns = String.join( ",", columnNames );
-            String placeholders = makePlaceHolders( columnNames );
-            String sqlt = format( "update %s set (%s)=(%s) where (%s)=(?)"
-                    + " returning * ",
-                    tableName(), columns,
-                    placeholders,
-                    mapper.idName() );
-            return sqlt;
-        } );
+                                                 List<String> columnNames
+                                                         = mapper
+                                                                 .persistentFieldNames()
+                                                                 .stream()
+                                                                 .collect( toList() );
+                                                 String columns = String
+                                                         .join( ",", columnNames );
+                                                 String placeholders = makePlaceHolders( columnNames );
+                                                 String sqlt = format( "update %s set (%s)=(%s) where (%s)=(?)"
+                                                         + " returning * ",
+                                                                       tableName(), columns,
+                                                                       placeholders,
+                                                                       mapper
+                                                                               .idName() );
+                                                 return sqlt;
+                                             } );
         return sql;
     }
 
@@ -289,7 +300,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return save( c, t );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -304,7 +315,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return saveAll( c, entity );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -327,24 +338,25 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             }
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
 
     private String saveQueryText() {
         String sql = queryTextCache.computeIfAbsent( "save", x -> {
-            final List<String> columnNames
-                    = getFilteredColumnNames();
-            String columns = String.join( ",", columnNames );
-            String placeholders = makePlaceHolders( columnNames );
-            String sqlt
-                    = format( "insert into %s (%s) %n"
-                            + "values(%s) %n"
-                            + "returning *", tableName(),
-                            columns, placeholders );
-            return sqlt;
-        } );
+                                                 final List<String> columnNames
+                                                         = getFilteredColumnNames();
+                                                 String columns = String
+                                                         .join( ",", columnNames );
+                                                 String placeholders = makePlaceHolders( columnNames );
+                                                 String sqlt
+                                                         = format( "insert into %s (%s) %n"
+                                                                 + "values(%s) %n"
+                                                                 + "returning *", tableName(),
+                                                                   columns, placeholders );
+                                                 return sqlt;
+                                             } );
         return sql;
     }
 
@@ -366,7 +378,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return result;
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -376,7 +388,12 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         Object[] parts = dropGeneneratedParts( check( mapper.explode( t ) ) );
         int j = 1;
         for ( Object part : parts ) {
-            pst.setObject( j++, part );
+            if ( part instanceof SQLType ) {
+                pst.setObject( j++, part, ( (SQLType) part )
+                               .getVendorTypeNumber() );
+            } else {
+                pst.setObject( j++, part );
+            }
         }
     }
 
@@ -393,7 +410,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         int i = 0;
 
         for ( String pfn : mapper.persistentFieldNames() ) {
-            if ( notGen.test( pfn )  ) {
+            if ( notGen.test( pfn ) ) {
                 result.add( parts[ i ] );
             }
             i++;
@@ -421,7 +438,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return getAll( c );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -442,14 +459,14 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return result;
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
 
     private String allQuery() {
         String sql = queryTextCache.computeIfAbsent( "all", x
-                -> format( "select %s from %s ", allColumns(), tableName() ) );
+                                                     -> format( "select %s from %s ", allColumns(), tableName() ) );
         return sql;
     }
 
@@ -457,13 +474,13 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     public Collection<E> getByColumnValues( Object... keyValues ) {
         if ( null != transactionToken ) {
             return getByColumnValues( transactionToken.getConnection(),
-                    keyValues );
+                                      keyValues );
         }
         try ( Connection con = this.getConnection(); ) {
             return getByColumnValues( con, keyValues );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
 
@@ -482,8 +499,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
         String sql
                 = format( "select %s from %s where (%s) =(%s)",
-                        allColumns(), tableName(),
-                        columns, placeholders );
+                          allColumns(), tableName(),
+                          columns, placeholders );
         try (
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
             int j = 1;
@@ -502,7 +519,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             }
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -510,7 +527,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     @Override
     public int lastId() {
         String sql = format( "select max(%s)  as lastid from %s", idName(),
-                tableName() );
+                             tableName() );
         return executeIntQuery( sql );
     }
 
@@ -528,7 +545,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return executeIntQuery( c, sql );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -545,7 +562,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             }
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -565,7 +582,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return executeIntQuery( c, sql, k );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -583,7 +600,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             }
         } catch ( SQLException ex ) {
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+                                                           ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -653,7 +670,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      */
     public int getIdForKey( K k ) {
         String sql = format( "select %s from %s where %s=?", mapper.
-                idName(), mapper.tableName(), mapper.naturalKeyName() );
+                             idName(), mapper.tableName(), mapper
+                             .naturalKeyName() );
         return executeIntQuery( sql, k );
 
     }

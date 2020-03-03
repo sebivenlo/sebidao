@@ -7,12 +7,10 @@ package nl.fontys.sebivenlo.dao.pg;
 
 import entities.DBTestHelpers;
 import entities.Employee;
-import entities.EmployeeMapper2;
 import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Assert;
-import static org.junit.Assert.*;
+
+import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -24,7 +22,7 @@ public class PGDAOFactoryQueryCacheTest extends DBTestHelpers {
     public void testCreatesCache() {
         PGDAO<Integer, Employee> edao = daof.createDao( Employee.class );
         int size = daof.queryStringCache.size();
-        assertEquals( "has one elements", 1, size );
+        assertThat( size ).as( "has one elements" ).isEqualTo( 1 );
     }
 
     @Test
@@ -32,8 +30,8 @@ public class PGDAOFactoryQueryCacheTest extends DBTestHelpers {
         PGDAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Optional<Employee> get = edao.get( 1 );
         int size = edao.queryTextCache.size();
-        assertTrue( "must have a mapping", 1<= size );
+        assertThat( 1 <= size ).as( "the proper id type is Integer" ).isTrue();
 //        Assert.fail( "test method testComputeSelect reached its end, you can remove this line when you aggree." );
     }
-    
+
 }

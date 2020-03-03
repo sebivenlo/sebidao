@@ -2,7 +2,7 @@ package nl.fontys.sebivenlo.dao.pg;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -13,9 +13,10 @@ import static org.mockito.Mockito.mock;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-//@Ignore
+@Disabled
 public class PGDAOExceptionTest extends PGDAOExceptionTestBase {
 
+    
     @Override
     Connection getConnection() {
         Connection conn = mock( Connection.class, anything -> {

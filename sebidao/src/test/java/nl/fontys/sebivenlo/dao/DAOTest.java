@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Coverage.
@@ -58,11 +58,11 @@ public class DAOTest {
     @Test
     public void testAllCovered() throws Exception {
 
-        assertNull( "no transaction", dao.startTransaction() );
+        assertThat( dao.startTransaction() ).isNull();
         dao.setTransactionToken( ignoredToken );
-        assertNull( "no transaction", dao.getTransactionToken() );
-        assertEquals( "empty to start with", 0, dao.size() );
-        assertEquals( "last id", 0, dao.lastId() );
+        assertThat( dao.getTransactionToken() ).isNull();
+        assertThat( dao.size() ).isEqualTo( 0 );
+        assertThat( dao.lastId() ).isEqualTo( 0 );
         try {
             dao.close();
         } catch ( Exception e ) {

@@ -4,19 +4,19 @@ import entities.Department;
 import entities.Employee;
 import org.junit.Test;
 import org.junit.Assert;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 /**
  *
- * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class EntityMetaDataTest {
 
     @Test
     public void testMappedNames() {
 
-        String[] names = { "employeeid", "lastname", "firstname", "email", "departmentid","available","dob" };
+        String[] names = { "employeeid", "lastname", "firstname", "email", "departmentid", "available", "dob" };
 
         EntityMetaData<Employee> emd = new EntityMetaData<>( Employee.class );
 
@@ -29,7 +29,7 @@ public class EntityMetaDataTest {
     public void testGetIDAnnotation() {
         EntityMetaData<Employee> emd = new EntityMetaData<>( Employee.class );
 
-        assertEquals( "employeeid", emd.getIdName() );
+        assertThat( emd.getIdName() ).isEqualTo( "employeeid" );
         // Assert.fail( "test method testGetIDAnnotation reached its end, you can remove this line when you aggree." );
     }
 
@@ -37,14 +37,15 @@ public class EntityMetaDataTest {
     public void testGetIDType() {
         EntityMetaData<Employee> emd = new EntityMetaData<>( Employee.class );
 
-        assertEquals( "the proper id type is Integer", Integer.class, emd.getIdType() );
+        assertThat( emd.getIdType() ).as( "the proper id type is Integer" )
+                .isEqualTo( Integer.class );
         // Assert.fail( "test method testGetIDAnnotation reached its end, you can remove this line when you aggree." );
     }
 
     @Test
     public void testIdGeneratedTrue() {
         EntityMetaData<Employee> emd = new EntityMetaData<>( Employee.class );
-        assertTrue( emd.isIDGenerated() );
+        assertThat( emd.isIDGenerated() ).isTrue();
 
         //Assert.fail( "test method testIdGenerated reached its end, you can remove this line when you aggree." );
     }
@@ -52,7 +53,7 @@ public class EntityMetaDataTest {
     @Test
     public void testIdGeneratedFalse() {
         EntityMetaData<Department> emd = new EntityMetaData<>( Department.class );
-        assertFalse( emd.isIDGenerated() );
+        assertThat( emd.isIDGenerated() ).isFalse();
 
         //Assert.fail( "test method testIdGenerated reached its end, you can remove this line when you aggree." );
     }
@@ -60,7 +61,7 @@ public class EntityMetaDataTest {
     @Test
     public void testGeneratedFieldFalse() {
         EntityMetaData<Department> emd = new EntityMetaData<>( Department.class );
-        assertFalse( emd.isGenerated( "name" ) );
+        assertThat( emd.isGenerated( "name" ) ).isFalse();
 
         //Assert.fail( "test method testIdGenerated reached its end, you can remove this line when you aggree." );
     }
@@ -68,7 +69,7 @@ public class EntityMetaDataTest {
     @Test
     public void testGeneratedFieldTrue() {
         EntityMetaData<Department> emd = new EntityMetaData<>( Department.class );
-        assertTrue( emd.isGenerated( "departmentid" ) );
+        assertThat( emd.isGenerated( "departmentid" ) ).isTrue();
 
         //Assert.fail( "test method testIdGenerated reached its end, you can remove this line when you aggree." );
     }

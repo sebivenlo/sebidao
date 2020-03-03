@@ -6,7 +6,7 @@ import entities.CompanyMapper;
 import java.util.function.Function;
 import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Ignore;
 
@@ -27,15 +27,15 @@ public class AbstractMapperTest {
 
     @Test
     public void testCreateMapper() {
-        assertNotNull( "got assembler", mapper.assembler );
+        assertThat( mapper.assembler ).isNotNull();
     }
 
     @Test
     public void testCreateCompany() {
-        Object[] a = new Object[] { "Pieters", "Belgium", "Waterschei",
+        Object[] a = new Object[]{ "Pieters", "Belgium", "Waterschei",
             "Molenstraat 20", "PITRS", "B46587", 0, null };
         Company comp = mapper.assembler.apply( a );
-        assertNotNull( "Got a product", comp );
+        assertThat( comp ).as( "Got a product" ).isNotNull();
         System.out.println( "comp = " + comp );
     }
 
@@ -46,11 +46,12 @@ public class AbstractMapperTest {
 
         Company c = new Company( "MARS", "Netherlands", "Veghel", "Spoorstraat", "MARS", "4523AH" );
 
-        assertNotNull( "A dissambler should have been found", m.disAssembler );
+        assertThat( m.disAssembler ).as( "A dissambler should have been found" )
+                .isNotNull();
 
         Object[] parts = m.explode( c );
-        assertNotNull( "No real explosion", parts );
-        assertEquals( m.persistentFieldNames().size(), parts.length );
+        assertThat( parts ).isNotNull();
+        assertThat( parts.length ).isEqualTo( m.persistentFieldNames().size() );
 
 //        Assert.fail( "method method reached end. You know what to do." );
     }
@@ -61,12 +62,12 @@ public class AbstractMapperTest {
 
         Company2 c = new Company2( "MARS", "Netherlands", "Veghel", "Spoorstraat", "MARS", "4523AH" );
 
-        assertNotNull( "A dissambler should have been found", m2.disAssembler );
+        assertThat( m2.disAssembler ).isNotNull();
         //m2.disAssembler;
         Object[] parts = m2.explode( c );
-        assertNotNull( "No real explosiion", parts );
-        assertEquals( m2.persistentFieldNames().size(), parts.length );
-        assertEquals( "Veghel", parts[ 2 ] );
+        assertThat( parts ).isNotNull();
+        assertThat( parts.length ).isEqualTo( m2.persistentFieldNames().size() );
+        assertThat( parts[ 2 ] ).isEqualTo( "Veghel" );
 //        Assert.fail( "method method reached end. You know what to do." );
     }
 
@@ -80,30 +81,31 @@ public class AbstractMapperTest {
 
         // 8 parts, all strings should lead to exception
         MyMapper2 m2 = new MyMapper2();
-        Object[] parts = new Object[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+        Object[] parts = new Object[]{ "A", "B", "C", "D", "E", "F", "G", "H" };
         try {
             Company2 comp = m2.assembler.apply( parts );
         } catch ( Throwable t ) {
-            System.out.println( "================== look here ======================" );
+            System.out
+                    .println( "================== look here ======================" );
 //            t.printStackTrace();
             Throwable cause = t.getCause();
-            assertTrue("expected ",cause instanceof IllegalArgumentException);
+            assertThat( cause instanceof IllegalArgumentException )
+                    .as( "expected " ).isTrue();
             String message = cause.getMessage();
-            assertTrue(message.contains( "argument type mismatch"));
+            assertThat( message.contains( "argument type mismatch" ) ).isTrue();
             String tMessage = t.getMessage();
             System.out.println( "tMessage = " + tMessage );
         }
 //        Assert.fail( "method wrongParameterException reached end. You know what to do." );
     }
 
-    
     @Test
     public void testTableNameAnnotation() {
-        
+
         String tableName = mapper.tableName();
-        assertEquals("proper plural", "companies",tableName);
+        assertThat( tableName ).as( "proper plural" ).isEqualTo( "companies" );
     }
-    
+
     static class MyMapper extends AbstractMapper<String, Company> {
 
         public MyMapper() {

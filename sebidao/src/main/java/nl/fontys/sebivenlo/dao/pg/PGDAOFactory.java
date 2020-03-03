@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.SQLData;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -13,6 +14,7 @@ import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.TransactionToken;
+import nl.fontys.sebivenlo.pgtypes.TSRange;
 import org.postgresql.PGConnection;
 import org.postgresql.util.PGobject;
 
@@ -63,6 +65,8 @@ public final class PGDAOFactory extends AbstractDAOFactory {
 
     {
         marshallInMap.put( LocalDate.class, ( Date d ) -> d.toLocalDate() );
+        marshallInMap.put( TSRange.class, ( PGobject d )
+                -> new TSRange( d ) );
         marshallOutMap.put( LocalDate.class, ( LocalDate l ) -> java.sql.Date
                 .valueOf( l ) );
     }
@@ -86,8 +90,11 @@ public final class PGDAOFactory extends AbstractDAOFactory {
         }
         if ( sqlTypeMap != null ) {
             Map<String, Class<?>> typeMap = con.getTypeMap();
+            if ( typeMap == null ) {
+                typeMap = new HashMap<>();
+            }
             typeMap.putAll( sqlTypeMap );
-            con.setTypeMap( typeMap );
+//            con.setTypeMap( typeMap );
         }
         return con;
     }
@@ -105,9 +112,11 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     private Map<String, Class<?>> sqlTypeMap;
 
     /**
-     * Register a marshaller based on the SQLData mapping. See {@link https://docs.oracle.com/javase/tutorial/jdbc/basics/sqlcustommapping.html sqlcustommapping}
+     * Register a marshaller based on the SQLData mapping. See
+     * {@link https://docs.oracle.com/javase/tutorial/jdbc/basics/sqlcustommapping.html sqlcustommapping}
+     *
      * @param dbTypeName
-     * @param type 
+     * @param type
      */
     public final void registerSQLDataType( String dbTypeName, Class<? extends SQLData> type ) {
         if ( sqlTypeMap == null ) {
@@ -116,7 +125,6 @@ public final class PGDAOFactory extends AbstractDAOFactory {
         sqlTypeMap.put( dbTypeName, type );
     }
 
-    
     <U> U marshallIn( Class<U> type, Object in ) {
         Function<Object, U> get = (Function<Object, U>) marshallInMap
                 .get( type );

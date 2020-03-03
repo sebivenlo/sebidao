@@ -3,7 +3,7 @@ package nl.fontys.sebivenlo.dao.pg;
 import java.sql.Date;
 import java.time.LocalDate;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  *
@@ -21,7 +21,7 @@ public class PGDAOFactoryTest {
         
         Date d2 = java.sql.Date.valueOf( ld );
         
-        assertEquals("date match", d,d2);
+        assertThat(d2).as("date match").isEqualTo(d);
     }
 
 }

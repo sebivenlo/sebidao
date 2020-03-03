@@ -6,8 +6,9 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import static java.util.logging.Logger.*;
 import nl.fontys.sebivenlo.dao.DAOException;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test if all sql exceptions are properly translated (as in wrapped in) into
@@ -17,8 +18,7 @@ import org.junit.Test;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-//@Ignore
-public class PGDAOConnectionClosedExceptionTest extends PGDAOExceptionTestBase {
+class PGDAOConnectionClosedExceptionTest extends PGDAOExceptionTestBase {
 
     @Override
     Connection getConnection() {
@@ -32,9 +32,11 @@ public class PGDAOConnectionClosedExceptionTest extends PGDAOExceptionTestBase {
         return null;
     }
 
-    @Ignore("Ignored because in this case the exception is somehow swallowed")
-    @Test( expected = DAOException.class )
-    public void testDelete() {
-        eDao.delete( gp );
+//    @Disabled( "Ignored because in this case the exception is somehow swallowed" )
+    @Test//( expected = DAOException.class )
+    void delete() {
+        Assertions.assertThatCode( () -> {
+            eDao.delete( gp );
+        } ).doesNotThrowAnyException();
     }
 }
