@@ -82,8 +82,8 @@ public interface Range<T extends Comparable<? super T>> {
      * @param r2 second range
      * @return true if there is a non zero overlap
      */
-    default boolean overlaps( Range<T> r1, Range<T> r2 ) {
-        T a, b, c;
+    static <Q extends Comparable<? super Q>> boolean overlaps( Range<Q> r1, Range<Q> r2 ) {
+        Q a, b, c;
         if ( r1.getStart().compareTo( r2.getStart() ) <= 0 ) {
             a = r1.getStart();
             b = r1.getEnd(); // a <=b
