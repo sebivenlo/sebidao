@@ -32,7 +32,6 @@ public class NoDoublePlansTest extends DBTestHelpers {
     @BeforeAll
     public static void setupClass() {
         DBTestHelpers.setupClass();
-        daof.registerSQLDataType( "tsrange", TSRange.class );
         daof.registerMapper( Truck.class, new TruckMapper() );
         daof.registerMapper( TruckPlan.class, new TruckPlanMapper() );
         loadDatabase();

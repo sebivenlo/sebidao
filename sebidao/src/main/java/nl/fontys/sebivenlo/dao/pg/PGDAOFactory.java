@@ -38,8 +38,6 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     public PGDAOFactory( DataSource ds ) {
         this.ds = ds;
         queryStringCache = new ConcurrentHashMap<>();
-//        this.pgTypeMap.put( "tsrange", TsRange.class );
-//        this.pgTypeMap.put( "date", LocalDate.class );
     }
 
     @Override
@@ -59,25 +57,24 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     final Map<Class<?>, Map<String, String>> queryStringCache;
 
     final Map<String, Class<? extends PGobject>> pgTypeMap = new ConcurrentHashMap<>();
-    //<T>static final Map<Class<T>, Function<Object,T>> marshallInMap = new ConcurrentHashMap<>();
     final Map<Class<?>, Function<?, ?>> marshallInMap = new ConcurrentHashMap<>();
     final Map<Class<?>, Function<?, ?>> marshallOutMap = new ConcurrentHashMap<>();
 
     {
         marshallInMap.put( LocalDate.class, ( Date d ) -> d.toLocalDate() );
         marshallInMap.put( TSRange.class, ( PGobject d )
-                -> new TSRange( d ) );
+                           -> new TSRange( d ) );
         marshallOutMap.put( LocalDate.class, ( LocalDate l ) -> java.sql.Date
                 .valueOf( l ) );
     }
 
     /**
      * Get a connection to be used by the DAOs created by the factory. Loads any
-     * maped types using null null null
+     * mapped types using null null null
      * {@link PGDAOFactory#registerPGdataType(java.lang.String, java.lang.Class)}.
      *
      * @return a connection
-     * @throws SQLException when connection cannot be retreived.
+     * @throws SQLException when connection cannot be retrieved.
      */
     final Connection getConnection() throws SQLException {
         Connection con = ds.getConnection();
@@ -94,7 +91,6 @@ public final class PGDAOFactory extends AbstractDAOFactory {
                 typeMap = new HashMap<>();
             }
             typeMap.putAll( sqlTypeMap );
-//            con.setTypeMap( typeMap );
         }
         return con;
     }
@@ -110,20 +106,6 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     }
 
     private Map<String, Class<?>> sqlTypeMap;
-
-    /**
-     * Register a marshaller based on the SQLData mapping. See
-     * {@link https://docs.oracle.com/javase/tutorial/jdbc/basics/sqlcustommapping.html sqlcustommapping}
-     *
-     * @param dbTypeName
-     * @param type
-     */
-    public final void registerSQLDataType( String dbTypeName, Class<? extends SQLData> type ) {
-        if ( sqlTypeMap == null ) {
-            sqlTypeMap = new ConcurrentHashMap<>();
-        }
-        sqlTypeMap.put( dbTypeName, type );
-    }
 
     <U> U marshallIn( Class<U> type, Object in ) {
         Function<Object, U> get = (Function<Object, U>) marshallInMap

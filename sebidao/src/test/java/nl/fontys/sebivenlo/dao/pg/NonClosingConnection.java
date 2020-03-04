@@ -75,7 +75,7 @@ class NonClosingConnection implements Connection {
     /**
      * The reason for this connection type.
      *
-     * @throws SQLException
+     * @throws SQLException will be thrown
      */
     @Override
     public void close() throws SQLException {
