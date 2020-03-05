@@ -77,7 +77,8 @@ public interface Range<T extends Comparable<? super T>> {
     }
 
     /**
-     * Do two ranges overlap. Overlap means the the ranges have a non-zero sub-range in common.
+     * Do two ranges overlap.Overlap means the the ranges have a non-zero sub-range in common.
+     * @param <Q> type of endpoints
      * @param r1 first range
      * @param r2 second range
      * @return true if there is a non zero overlap
