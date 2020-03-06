@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
-            <artifactId>pgtypes</artifactId>
+            <artifactId>pgranges</artifactId>
             <version>0.8</version>
         </dependency>
     </dependencies>

@@ -3,16 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
-import java.time.LocalDateTime;
-import static nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange.fromUntil;
-import static nl.fontys.sebivenlo.pgtypes.LocalDateTimeRangeTestBase.A;
-import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

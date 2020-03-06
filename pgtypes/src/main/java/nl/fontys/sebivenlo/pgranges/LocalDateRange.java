@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
 import java.sql.SQLException;
 import java.time.LocalDate;

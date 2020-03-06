@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
 /**
  * Measure the distance between extremes (including start, excluding end).

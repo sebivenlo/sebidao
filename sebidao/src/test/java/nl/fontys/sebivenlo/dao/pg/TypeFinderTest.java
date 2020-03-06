@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import java.util.HashMap;
 import java.util.Map;
-import nl.fontys.sebivenlo.pgtypes.TSRange;
+import nl.fontys.sebivenlo.pgranges.TSRange;
 import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.assertThatCode;

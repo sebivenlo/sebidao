@@ -1,7 +1,0 @@
-
-module nl.fontys.sebivenlo.ranges {
-    requires org.postgresql.jdbc;
-    requires transitive java.sql;
-    requires java.base;
-    exports nl.fontys.sebivenlo.pgtypes;
-}

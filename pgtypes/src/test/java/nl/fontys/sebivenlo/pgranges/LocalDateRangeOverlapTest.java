@@ -1,14 +1,14 @@
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import static nl.fontys.sebivenlo.pgtypes.LocalDateTimeRange.fromUntil;
-import static nl.fontys.sebivenlo.pgtypes.LocalDateRangeTestBase.A;
-import static nl.fontys.sebivenlo.pgtypes.LocalDateRangeTestBase.B;
-import static nl.fontys.sebivenlo.pgtypes.LocalDateRangeTestBase.C;
-import static nl.fontys.sebivenlo.pgtypes.LocalDateRangeTestBase.D;
+import static nl.fontys.sebivenlo.pgranges.LocalDateTimeRange.fromUntil;
+import static nl.fontys.sebivenlo.pgranges.LocalDateRangeTestBase.A;
+import static nl.fontys.sebivenlo.pgranges.LocalDateRangeTestBase.B;
+import static nl.fontys.sebivenlo.pgranges.LocalDateRangeTestBase.C;
+import static nl.fontys.sebivenlo.pgranges.LocalDateRangeTestBase.D;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;

@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.TransactionToken;
-import nl.fontys.sebivenlo.pgtypes.TSRange;
+import nl.fontys.sebivenlo.pgranges.TSRange;
 import org.postgresql.PGConnection;
 import org.postgresql.util.PGobject;
 
@@ -63,7 +63,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     {
         marshallInMap.put( LocalDate.class, ( Date d ) -> d.toLocalDate() );
         marshallInMap.put( TSRange.class, ( PGobject d )
-                           -> new TSRange( d ) );
+                -> new TSRange( d ) );
         marshallOutMap.put( LocalDate.class, ( LocalDate l ) -> java.sql.Date
                 .valueOf( l ) );
     }
@@ -108,11 +108,7 @@ public final class PGDAOFactory extends AbstractDAOFactory {
     private Map<String, Class<?>> sqlTypeMap;
 
     <U> U marshallIn( Class<U> type, Object in ) {
-        Function<Object, U> get = (Function<Object, U>) marshallInMap
-                .get( type );
-        if ( null == get ) {
-            return (U) in;
-        }
-        return type.cast( get.apply( in ) );
+        return ( (Function<Object, U>) marshallInMap
+                .getOrDefault( type, ( x ) -> x ) ).apply( in );
     }
 }

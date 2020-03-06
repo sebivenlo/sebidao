@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
+import java.io.Serializable;
 import java.sql.SQLData;
 import java.sql.SQLException;
 import java.sql.SQLInput;
@@ -18,7 +19,7 @@ import org.postgresql.util.PGobject;
  *
  * @author Pieter van den Hombergh {@code p.vandehombergh@fontysvenlo.org}
  */
-public class TSRange extends LocalDateTimeRange implements SQLData, SQLType {
+public class TSRange extends LocalDateTimeRange implements SQLData, SQLType,Serializable {
 
     public TSRange( LocalDateTime start, Duration length ) {
         super( start, length );

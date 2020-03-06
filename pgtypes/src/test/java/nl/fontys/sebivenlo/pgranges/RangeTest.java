@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
 import org.junit.Assert;
 import org.junit.Test;

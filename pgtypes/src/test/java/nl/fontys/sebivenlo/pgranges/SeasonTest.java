@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
 import java.time.LocalDate;
 import static java.time.LocalDate.of;
@@ -7,12 +7,12 @@ import static java.time.Month.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.List;
 import java.util.Map;
-import static nl.fontys.sebivenlo.pgtypes.Seasons.PriceClass.*;
+import static nl.fontys.sebivenlo.pgranges.Seasons.PriceClass.*;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
-import static nl.fontys.sebivenlo.pgtypes.Seasons.THIS_YEAR;
+import static nl.fontys.sebivenlo.pgranges.Seasons.THIS_YEAR;
 
 /**
  *

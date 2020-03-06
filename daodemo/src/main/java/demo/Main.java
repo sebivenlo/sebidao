@@ -1,10 +1,8 @@
 package demo;
 
-import entities.Department;
 import entities.Employee;
 import entities.EmployeeMapper;
 import java.util.Collection;
-import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.memory.MemoryDAOFactory;
 import nl.fontys.sebivenlo.dao.memory.InMemoryDAO;
 

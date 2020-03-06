@@ -1,7 +1,7 @@
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
-import nl.fontys.sebivenlo.pgtypes.MeasureBetween;
-import nl.fontys.sebivenlo.pgtypes.Range;
+import nl.fontys.sebivenlo.pgranges.MeasureBetween;
+import nl.fontys.sebivenlo.pgranges.Range;
 
 /**
  *

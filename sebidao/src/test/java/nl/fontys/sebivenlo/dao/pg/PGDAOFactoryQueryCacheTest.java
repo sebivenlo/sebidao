@@ -31,7 +31,7 @@ public class PGDAOFactoryQueryCacheTest extends DBTestHelpers {
         Optional<Employee> get = edao.get( 1 );
         int size = edao.queryTextCache.size();
         assertThat( 1 <= size ).as( "the proper id type is Integer" ).isTrue();
-//        Assert.fail( "test method testComputeSelect reached its end, you can remove this line when you aggree." );
+        //Assert.fail( "test method testComputeSelect reached its end, you can remove this line when you aggree." );
     }
 
 }

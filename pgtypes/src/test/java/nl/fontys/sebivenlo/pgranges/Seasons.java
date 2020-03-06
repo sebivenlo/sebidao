@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.pgtypes;
+package nl.fontys.sebivenlo.pgranges;
 
 import java.time.LocalDate;
 import static java.time.LocalDate.now;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import static java.util.stream.Collectors.toList;
-import static nl.fontys.sebivenlo.pgtypes.Seasons.PriceClass.*;
+import static nl.fontys.sebivenlo.pgranges.Seasons.PriceClass.*;
 
 /**
  *

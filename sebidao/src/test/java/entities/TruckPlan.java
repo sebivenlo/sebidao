@@ -2,8 +2,8 @@ package entities;
 
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.ID;
-import nl.fontys.sebivenlo.pgtypes.TSRange;
-import nl.fontys.sebivenlo.pgtypes.TSRange;
+import nl.fontys.sebivenlo.pgranges.TSRange;
+import nl.fontys.sebivenlo.pgranges.TSRange;
 
 /**
  *
