@@ -24,7 +24,7 @@ A DAO should be simple to use. Adding complexity that serves a niche use case bu
 increases complexity for the simple use cases is contrary to the [TAO](https://en.wikipedia.org/wiki/Tao) of DAO.
 
 DAO is a pattern to reduce coupling. This implies that the application logic should
-not know not care what the underlying persistence technology is. The better this objective
+not know nor care what the underlying persistence technology is. The better this objective
 is served, the more reuse can be achieved in the only valuable part of the software: the application logic it selves.
 
 The current postgreSQL jdbc based implementation supports the following operations:
