@@ -1,4 +1,4 @@
-package nl.fontys.sebivenlo.dao.pg;
+package findtypes;
 
 import entities.DBTestHelpers;
 import entities.PGDataSource;
@@ -10,10 +10,8 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import static java.time.temporal.ChronoUnit.MINUTES;
-import java.util.HashMap;
-import java.util.Map;
-import nl.fontys.sebivenlo.pgranges.TSRange;
-import org.assertj.core.api.Assert;
+import nl.fontys.sebivenlo.pgtypes.TSRange;
+//import nl.fontys.sebivenlo.pgranges.TSRange;
 import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;

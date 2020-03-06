@@ -24,10 +24,5 @@
             <version>42.2.10</version>
             <scope>provided</scope> 
         </dependency>
-        <dependency>
-            <groupId>nl.fontys.sebivenlo</groupId>
-            <artifactId>pgranges</artifactId>
-            <version>0.8</version>
-        </dependency>
     </dependencies>
 </project>

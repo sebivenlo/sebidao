@@ -5,7 +5,6 @@ import static entities.DBTestHelpers.ds;
 import static entities.DBTestHelpers.loadDatabase;
 import java.util.Collection;
 import java.util.Optional;
-import net.bytebuddy.agent.builder.AgentBuilder;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
