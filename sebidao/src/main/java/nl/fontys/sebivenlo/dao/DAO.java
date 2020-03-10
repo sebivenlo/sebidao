@@ -208,4 +208,16 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
     default void deleteAll( E... entities ) {
         deleteAll( Arrays.asList( entities ) );
     }
+    
+    /**
+     * Execute a query with some query text for a prepared statement.
+     * Usecase: in a RDBMS (postgres) somtimes you want to call a function in a query, which is not directly supported by the
+     * DAO. This implementation returns an empty list. Usefull work is left to the implementing class.
+     * @param queryText sql with positional parameters
+     * @param params the values for the position parameters
+     * @return a list of E.
+     */
+    default List<E> anyQuery( String queryText, Object... params ) {
+        return List.of();
+    }
 }

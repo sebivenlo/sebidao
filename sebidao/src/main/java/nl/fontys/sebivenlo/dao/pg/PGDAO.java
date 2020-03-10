@@ -698,4 +698,53 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         return parts;
     }
 
+    /**
+     * Execute a query that produces a List of E.
+     *
+     * @param queryText sql text
+     * @param params positional parameters in the query
+     * @return list of e, produced by the query.
+     */
+    private List<E> anyQuery( Connection con, String queryText, Object... params ) {
+        try (
+                 PreparedStatement pst = con.prepareStatement( queryText ); ) {
+            int j = 1;
+            for ( Object param : params ) {
+                pst.setObject( j++, param );
+            }
+            try (  ResultSet rs = pst.executeQuery(); ) {
+                List<E> result = new ArrayList<>();
+                while ( rs.next() ) {
+                    // note columns start at 1
+                    E e = recordToEntity( rs );
+                    result.add( e );
+                }
+                return result;
+            }
+        } catch ( SQLException ex ) {
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+            throw new DAOException( ex.getMessage(), ex );
+        }
+    }
+
+    /**
+     * Execute a query producing a list. Use case: a function is part of the query, and the query
+     * may in fact produce an update on the underlying database
+     * @param queryText sql of prepared statement
+     * @param params positional parameters to the prepared statement
+     * @return 
+     */
+    public List<E> anyQuery( String queryText, Object... params ) {
+        if ( transactionToken != null ) {
+            return anyQuery( transactionToken.getConnection(), queryText, params );
+        }
+        try (  Connection con = this.getConnection(); ) {
+            return anyQuery( con, queryText, params );
+        } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
+            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
+                    ex );
+            throw new DAOException( ex.getMessage(), ex );
+        }
+    }
 }

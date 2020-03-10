@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.fontys.sebivenlo.dao.DAO;
@@ -30,21 +31,21 @@ import org.junit.Ignore;
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class PGDAOTest extends DBTestHelpers {
-    
+
     PGDAO<Integer, Employee> eDao;
-    
+
     @BeforeClass
     public static void setupClass() {
         DBTestHelpers.setupClass();
         loadDatabase();
     }
-    
+
     @Before
     public void setUp() throws Throwable {
         assertThat( daof ).isNotNull();
         eDao = daof.createDao( Employee.class );
     }
-    
+
     @Test
     public void testExecuteInt0() {
         int id = eDao.executeIntQuery(
@@ -52,20 +53,20 @@ public class PGDAOTest extends DBTestHelpers {
         assertThat( id ).isEqualTo( 0 );
         //fail( "test method testExceuteInt0 reached its end, you can remove this line when you aggree." );
     }
-    
+
     @Test
     public void testSize() {
         int id = eDao.size();
         assertThat( id ).as( "there should be a piet" ).isEqualTo( 1 );
         //fail( "test method testExceuteInt0 reached its end, you can remove this line when you aggree." );
     }
-    
+
     @Test( expected = DAOException.class )
     public void testGetByColumnKeyValues() {
         eDao.getByColumnValues( "batcar", "black" ); // column not in database should cause sql exception
         //fail( "test method testGetByColumnKeyValues reached its end, you can remove this line when you aggree." );
     }
-    
+
     @Test
     public void testExecuteIntQueryInt1() {
         int id = eDao.executeIntQuery(
@@ -73,7 +74,7 @@ public class PGDAOTest extends DBTestHelpers {
         assertThat( id ).as( "piet is in dept 1" ).isEqualTo( 1 );
         // fail( "testExecuteIntQueryInt1 not yet implemented. Review the code and comment or delete this line" );
     }
-    
+
     @Test
     public void testGetIdForKey() {
         int id = eDao.getIdForKey( 1 );
@@ -81,14 +82,14 @@ public class PGDAOTest extends DBTestHelpers {
 
         //fail( "testGetIdForKey not yet implemented. Review the code and comment or delete this line" );
     }
-    
+
     @Test
     public void testGetConnection() {
         Connection connection = eDao.getConnection();
         assertThat( connection ).as( "having my connection" ).isNotNull();
         // fail( "testGetConnection not yet implemented. Review the code and comment or delete this line" );
     }
-    
+
     @Test
     public void testUsingTransactionConnection() throws SQLException {
         PGTransactionToken tok = new PGTransactionToken( ds.getConnection() );
@@ -101,7 +102,7 @@ public class PGDAOTest extends DBTestHelpers {
 
         //fail( "testUsingTransactionConnection not yet implemented. Review the code and comment or delete this line" );
     }
-    
+
     @Test
     public void testSaveAll() throws SQLException, Exception {
         LocalDate d = LocalDate.of( 1999, 5, 6 );
@@ -111,7 +112,7 @@ public class PGDAOTest extends DBTestHelpers {
         System.out.println( "kat = " + kat );
         DAO dao = daof.createDao( Employee.class );
         try (
-                TransactionToken tok = dao.startTransaction(); ) {
+                 TransactionToken tok = dao.startTransaction(); ) {
             Collection<Employee> saveAll = dao.saveAll( jan, kat );
             assertThat( saveAll.size() )
                     .as( "using one and the same connection" )
@@ -127,59 +128,59 @@ public class PGDAOTest extends DBTestHelpers {
 
         //Assert.fail( "test method testSaveAll reached its end, you can remove this line when you aggree." );
     }
-    
+
     @Test
     public void testNullableFields() {
         String tick = "BAS";
         Company c = new Company( null, null, null, null, tick, null );
         daof.registerMapper( Company.class, new CompanyMapper() );
         DAO<String, Company> cdao = daof.createDao( Company.class );
-        
+
         Company sC = cdao.save( c );
-        
+
         assertThat( sC.getTicker() ).isEqualTo( tick );
-        
+
         assertThat( sC.getName() ).as( "name is null" ).isNull();
         assertThat( sC.getSomeInt() ).as( "someint" ).isEqualTo( 0 );
         assertThat( sC.getSomeInteger() ).as( "someinteger" ).isEqualTo( null );
 
         //Assert.fail( "test method testNullableFields reached its end, you can remove this line when you aggree." );
     }
-    
+
     @Test
     public void testDropGeneratedDept() {
         DepartmentMapper departmentMapper = new DepartmentMapper();
         daof.registerMapper( Department.class, departmentMapper );
-        
+
         PGDAO<String, Department> ddao = daof.createDao( Department.class );
         Department e = new Department( "engineering", "The geniusses", "engineering@example.com,", null );
-        
+
         Object[] parts = departmentMapper.explode( e );
         assertThat( parts.length ).as( "part count" ).isEqualTo( 4 );
-        
+
         Object[] nonGeneratedParts = ddao.dropGeneneratedParts( parts );
         assertThat( nonGeneratedParts.length ).as( "normal field count" )
                 .isEqualTo( 3 );
 
 //        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
     }
-    
+
     @Test
     public void testDropGeneratedEmp() {
         EmployeeMapper2 mapper = new EmployeeMapper2();
         LocalDate d = LocalDate.of( 1999, 5, 6 );
         daof.registerMapper( Employee.class, mapper );
-        
+
         PGDAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1, true, d );
-        
+
         Object[] parts = mapper.explode( jan );
         assertThat( parts.length ).as( "part count" ).isEqualTo( 7 );
-        
+
         Object[] nonGeneratedParts = edao.dropGeneneratedParts( parts );
         assertThat( nonGeneratedParts.length ).as( "part count" )
                 .isEqualTo( 6 );
-        
+
         Object o5 = nonGeneratedParts[ 5 ];
         System.out
                 .println( "5 field =" + o5.getClass().getSimpleName() + ":" + o5
@@ -188,5 +189,17 @@ public class PGDAOTest extends DBTestHelpers {
 
 //        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
     }
-    
+
+    @Test
+    public void anyQuery() {
+        EmployeeMapper2 mapper = new EmployeeMapper2();
+        PGDAO<Integer, Employee> eDaoa = daof.createDao( Employee.class );
+        String sql = "select * from employees where employeeid = ?";
+        List<Employee> list = eDaoa.anyQuery( sql, 1 );
+        for ( Employee employee : list ) {
+            System.out.println( "employee = " + employee );
+        }
+        Assert.assertEquals("size", 1, list.size());
+        //fail( "method method reached end. You know what to do." );
+    }
 }
