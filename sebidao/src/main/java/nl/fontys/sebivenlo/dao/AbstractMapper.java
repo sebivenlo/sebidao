@@ -331,7 +331,7 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
      * @return the name.
      */
     public String idName() {
-        return entityType().getSimpleName().toLowerCase() + "id";
+        return entityType().getSimpleName().toLowerCase() + "_id";
     }
 
     /**
@@ -355,7 +355,7 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
     }
 
     /**
-     * Get the numer for fields of the mapped entity.
+     * Get the number for fields of the mapped entity.
      *
      * @return the fieldCount
      */
