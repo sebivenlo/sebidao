@@ -3,6 +3,7 @@ package nl.fontys.sebivenlo.dao;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
@@ -45,9 +46,9 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
     /**
      * Get all entities.
      *
-     * @return all entities available through this dao
+     * @return all entities available through this dao.
      */
-    Collection<E> getAll();
+    List<E> getAll();
 
     /**
      * Get by column keyvalues pairs. Convenience method to get a entities by
@@ -57,7 +58,7 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
      * ("departmentid",1,"firstname", "Piet").
      * @return the collection of enities matching key value pairs.
      */
-    default Collection<E> getByColumnValues( Object... keyValues ) {
+    default List<E> getByColumnValues( Object... keyValues ) {
         throw new UnsupportedOperationException( "Not yet available" );
     }
 
@@ -168,7 +169,7 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
      * @return the saved entities
      * @since 0.4
      */
-    default Collection<? extends E> saveAll( Iterable<E> entities ) {
+    default List<? extends E> saveAll( Iterable<E> entities ) {
         return StreamSupport.stream( entities.spliterator(), false )
                 .map( e -> this.save( e ) ).collect( toList() );
     }
@@ -183,7 +184,7 @@ public interface DAO<K extends Serializable, E extends Entity2<K>> extends AutoC
      * @return the saved versions of the entities in a list.
      * @since 0.4
      */
-    default Collection<? extends E> saveAll( E... entities ) {
+    default List<? extends E> saveAll( E... entities ) {
 
         return saveAll( Arrays.asList( entities ) );
     }

@@ -11,15 +11,15 @@ CREATE TABLE departments (
        name text,
        description text,
        email text not null unique,
-       department_id serial primary key
+       departmentid serial primary key
 ) WITHOUT oids;
 
 CREATE TABLE employees (
-       employee_id serial primary key,
+       employeeid serial primary key,
        lastname text,
        firstname text,
        email text unique not null,
-       department_id integer references departments,
+       departmentid integer references departments,
        available boolean,
        dob date not null default now()
 
@@ -37,15 +37,15 @@ CREATE TABLE companies (
 ) WITHOUT oids;
 
 create table trucks (
-       truck_id serial primary key,
+       truckid serial primary key,
        plate text
 );
 
 create table truckplans(
-       truckplan_id serial primary key,
-       truck_id integer references trucks,
+       truckplanid serial primary key,
+       truckid integer references trucks,
        plan tsrange,
-       exclude using gist ( truck_id with =, plan with &&)
+       exclude using gist ( truckid with =, plan with &&)
 );
 
 

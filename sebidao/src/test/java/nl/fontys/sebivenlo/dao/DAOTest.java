@@ -1,7 +1,7 @@
 package nl.fontys.sebivenlo.dao;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
@@ -21,7 +21,7 @@ public class DAOTest {
         }
 
         @Override
-        public Collection getAll() {
+        public List getAll() {
             throw new UnsupportedOperationException( "Not supported yet." );
         }
 
@@ -73,7 +73,7 @@ public class DAOTest {
 
     @Test( expected = UnsupportedOperationException.class )
     public void testNotImplemented() {
-        Collection notexepected = dao.getByColumnValues( "key", "value" );
+        List notexepected = dao.getByColumnValues( "key", "value" );
         // fail( "test method testNotImplemented reached its end, you can remove this line when you aggree." );
     }
 

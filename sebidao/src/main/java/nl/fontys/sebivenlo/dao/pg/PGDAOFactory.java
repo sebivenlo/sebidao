@@ -13,8 +13,6 @@ import javax.sql.DataSource;
 import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.TransactionToken;
-import org.postgresql.PGConnection;
-import org.postgresql.util.PGobject;
 
 /**
  * DAO Factory for postgresql database.

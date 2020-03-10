@@ -14,12 +14,12 @@ truncate trucks restart identity cascade;
 insert into departments (name,description,email)
        values('sales','loud mouths','info@example.com');
 
-insert into employees (lastname,firstname,email,department_id)
+insert into employees (lastname,firstname,email,departmentid)
 values ('Puk','Piet','p.puk@vanderheiden.nl',1);
 
 insert into trucks (plate) values( 'Vroooom');
 
-insert into truckplans(truck_id,plan) values(1,'[2019-05-05T19:30,2019-05-06T8:30)');
+insert into truckplans(truckid,plan) values(1,'[2019-05-05T19:30,2019-05-06T8:30)');
 
 commit;
 

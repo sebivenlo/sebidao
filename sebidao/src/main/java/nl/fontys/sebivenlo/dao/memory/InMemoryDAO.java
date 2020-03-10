@@ -11,7 +11,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -63,8 +64,10 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
     }
 
     @Override
-    public Collection<E> getAll() {
-        return storage.values();
+    public List<E> getAll() {
+        var a = new ArrayList<E>();
+        a.addAll( storage.values() );
+        return a;
     }
 
     @Override
@@ -95,7 +98,7 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
             return; // nothing to do
         }
         try (
-                ObjectOutputStream out = new ObjectOutputStream(
+                 ObjectOutputStream out = new ObjectOutputStream(
                         new FileOutputStream( getStorageName() ) ); ) {
             out.writeObject( this.storage );
         } catch ( FileNotFoundException ex ) {
@@ -108,7 +111,7 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
     }
 
     private void load( String aStorageName ) {
-        try ( ObjectInputStream in = new ObjectInputStream(
+        try (  ObjectInputStream in = new ObjectInputStream(
                 new FileInputStream( aStorageName ) ) ) {
             this.storage.clear();
             Map<K, E> readMap = (Map<K, E>) in.readObject();
