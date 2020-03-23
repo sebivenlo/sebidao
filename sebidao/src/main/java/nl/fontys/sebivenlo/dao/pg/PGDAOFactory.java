@@ -145,25 +145,34 @@ public final class PGDAOFactory extends AbstractDAOFactory {
      *
      * <pre class='brush:java'>
      *
-     * pgdaofactory.registerInMarshaller( LocalDateTimeRange.class, pgo {@literal ->} LocalDateTimeRange.of(pgo));
+     * pgdaofactory.registerInMarshaller( LocalDateTimeRange.class, pgo
+     * {@literal ->} LocalDateTimeRange.of(pgo));
      *
      * </pre>
      *
      *
      * @param <T> incoming type
-     * @param <U> user type
+     * @param <R> user type
      * @param targetType type token for output
      * @param inMarshaller the mapper function, typically a lambda.
      * @return this factory.
      */
-    public final <T extends Serializable, U> PGDAOFactory registerInMarshaller( Class<U> targetType, Function<T, U> inMarshaller ) {
+    public final <T extends Serializable, R> PGDAOFactory registerInMarshaller( Class<R> targetType, Function<T, R> inMarshaller ) {
         this.marshallInMap.put( targetType, inMarshaller );
         return this;
     }
 
-    public final <T extends Serializable,U extends PGobject> PGDAOFactory registerOutMarshaller( Class<T> targetType, Function<T, U> mapper ) {
-        this.marshallOutMap.put( targetType, mapper );
-        System.out.println( "register out targetType = " + targetType);
+    public final <T extends Serializable, P extends PGobject> PGDAOFactory registerOutMarshaller( Class<T> targetType, Function<T, P> outMarshaller ) {
+        this.marshallOutMap.put( targetType, outMarshaller );
+        System.out.println( "register out targetType = " + targetType );
+        return this;
+    }
+
+    public final <T extends Serializable, R, P extends PGobject> PGDAOFactory registerPGMashallers(Class<R> targetType, Function<T, R> inMarshaller,
+             Function<R, P> outMarshaller ) {
+        this.marshallInMap.put( targetType, inMarshaller );
+        this.marshallOutMap.put( targetType, outMarshaller );
+             
         return this;
     }
 

@@ -253,7 +253,16 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
             // all fields
             for ( Object part : parts ) {
-                pst.setObject( j++, part );
+                if ( part == null ) {
+                    pst.setObject( j++, part );
+                    continue;
+                }
+                Object po = factory.marshallOut( part );
+                if ( po instanceof PGobject ) {
+                    pst.setObject( j++, part, java.sql.Types.OTHER );
+                } else {
+                    pst.setObject( j++, part );
+                }
             }
             pst.setObject( j, key );
             try ( ResultSet rs = pst.executeQuery(); ) {
@@ -394,7 +403,6 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 continue;
             }
             Object po = factory.marshallOut( part );
-            System.out.println( "po = " + po + " po class " + po.getClass() );
             if ( po instanceof PGobject ) {
                 pst.setObject( j++, part, java.sql.Types.OTHER );
             } else {
@@ -510,7 +518,19 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 PreparedStatement pst = c.prepareStatement( sql ); ) {
             int j = 1;
             for ( int i = 0; i < values.size(); i++ ) {
-                pst.setObject( j++, values.get( i ) );
+//                pst.setObject( j++, values.get( i ) );
+                Object part = values.get( i );
+                if ( part == null ) {
+                    pst.setObject( j++, part );
+                    continue;
+                }
+                Object po = factory.marshallOut( part );
+                if ( po instanceof PGobject ) {
+                    pst.setObject( j++, part, java.sql.Types.OTHER );
+                } else {
+                    pst.setObject( j++, part );
+                }
+
             }
             try ( ResultSet rs = pst.executeQuery(); ) {
                 List<E> result = new ArrayList<>();

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Pieter van den Hombergh (879417) {@code p.vandenhombergh@fontys.nl}
  */
-public class PGDAOFactoryQueryCacheTest extends DBTestHelpers {
+public class PGDAOFactoryQueryCacheTest extends PGDAOTestBase {
 
     @Test
     public void testCreatesCache() {

@@ -38,7 +38,8 @@ public class EmployeeTest {
         emp.setEmployeeid( 1 );
         emp.setFirstname( "Piet" );
         emp.setLastname( "Puk" );
-        emp.setEmail( email("p.puk@outlook.com") );
+        String es="p.puk@outlook.com";
+        emp.setEmail( email(es) );
         emp.setDepartmentid( 42 );
 
         emp.setDob( of( 1953, 9, 15 ) );
@@ -48,7 +49,7 @@ public class EmployeeTest {
                 .isEqualTo( 1 );
         assertThat( part[ 1 ] ).as( "last" ).isEqualTo( "Puk" );
         assertThat( part[ 2 ] ).as( "first" ).isEqualTo( "Piet" );
-        assertThat( part[ 3 ] ).as( "email" ).isEqualTo( email("p.puk@outlook.com") );
+        assertThat( part[ 3 ] ).as( "email" ).extracting( x -> x.toString()).isEqualTo(es );
         assertThat( ( (Integer) part[ 4 ] ).intValue() ).as( "dept" )
                 .isEqualTo( 42 );
 

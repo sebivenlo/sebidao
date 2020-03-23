@@ -1,5 +1,6 @@
 package entities;
 
+import static entities.DBTestHelpers.daof;
 import static entities.Email.email;
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,10 +13,10 @@ import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.TransactionToken;
 import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
 import nl.fontys.sebivenlo.dao.pg.PGTransactionToken;
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -26,18 +27,20 @@ public class TransactionTest {
     static PGDataSource ds = PGDataSource.DATA_SOURCE;
     static PGDAOFactory daof;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() throws IOException, SQLException {
         DBTestHelpers.loadDatabase();
         daof = new PGDAOFactory( ds );
         daof.registerMapper( Employee.class, new EmployeeMapper2() );
         daof.registerMapper( Department.class, new DepartmentMapper() );
+        daof.registerPGMashallers( Email.class, Email::new, x -> PGDAOFactory.pgobject( "citext", x ) );
+
     }
 
     DAO<Integer, Employee> checkEmpDao;
     DAO<String, Department> checkDepDao;
 
-    @Before
+    @BeforeEach
     public void setup() {
         DBTestHelpers.loadDatabase();
         checkEmpDao = daof.createDao( Employee.class );
@@ -48,7 +51,7 @@ public class TransactionTest {
     public void testRollback() {
         // first dao is consumed by transaction
         Employee henk = new Employee( 0, "Heijmans", "Henk",
-                                      email("henk@someclub.org"), 1 );
+                email( "henk@someclub.org" ), 1 );
 
         int beforeSize = checkEmpDao.size();
         try (
@@ -74,9 +77,9 @@ public class TransactionTest {
     @Test
     public void testAddDeptWithBossRollBack() {
         Department engineering = new Department( "Engineering",
-                                                 "Where value creation happens", "dilbert@example.com", 0 );
+                "Where value creation happens", "dilbert@example.com", 0 );
         Employee dilbert = new Employee( 0, "O'Hana", "Dilbert",
-                                         "dilbert@example.com", 1 );
+                "dilbert@example.com", 1 );
         int deptSize = checkDepDao.size();
         int empSize = checkEmpDao.size();
 
@@ -111,9 +114,9 @@ public class TransactionTest {
     @Test
     public void testAddDeptWithBossCommit() {
         Department engineering = new Department( "Engineering",
-                                                 "Where value creation happens", "dilbert@example.com", null );
+                "Where value creation happens", "dilbert@example.com", null );
         Employee dilbert = new Employee( 0, "O'Hana", "Dilbert",
-                                         "dilbert@example.com", 1 );
+                "dilbert@example.com", 1 );
         int deptSize = checkDepDao.size();
         int empSize = checkEmpDao.size();
         Department savedDept = null;
@@ -205,7 +208,7 @@ public class TransactionTest {
         try ( DAO<Integer, Employee> edao = daof.createDao( Employee.class );
                 TransactionToken tok = edao.startTransaction(); ) {
             Employee johnny = new Employee( 0, "Cash", "Johnny",
-                                            "sue@nashville.town", 1 );
+                    "sue@nashville.town", 1 );
             Employee savedJohnny = edao.save( johnny );
             System.out.println( "Short appearance of Johnny: " + savedJohnny );
             edao.delete( savedJohnny );
@@ -223,7 +226,7 @@ public class TransactionTest {
     public void testUpdate() throws SQLException {
         //DAO<Integer, Employee> edao = daof.createDao( Employee.class );
         Employee johnny = new Employee( 0, "Cash", "Johnny",
-                                        "sue@nashville.town", 1 );
+                "sue@nashville.town", 1 );
         Employee j = checkEmpDao.save( johnny );
         Integer sid = j.getEmployeeid();
         try ( DAO<Integer, Employee> edao = daof.createDao( Employee.class );
@@ -238,7 +241,7 @@ public class TransactionTest {
                     .as( "connection still open?" )
                     .isFalse();
             System.out.println( "newJohn = " + sue );
-            assertThat( sue.getFirstname() ).as("last field is dob").isEqualTo( "Sue" );
+            assertThat( sue.getFirstname() ).as( "last field is dob" ).isEqualTo( "Sue" );
             tok.commit();
         } catch ( Exception ex ) {
             fail( "unexpected exception " + ex );

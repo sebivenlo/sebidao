@@ -28,9 +28,11 @@ public class EmployeeDaoTest {
     @BeforeClass
     public static void setupClass() {
         loadDatabase();
-        daof = new PGDAOFactory( ds ).registerInMarshaller( Email.class , Email::new);
-        
+//        daof = new PGDAOFactory( ds ).registerInMarshaller( Email.class, Email::new );
+
         daof.registerMapper( Employee.class, new EmployeeMapper2() );
+        daof.registerPGMashallers( Email.class, Email::new, x -> PGDAOFactory.pgobject( "citext", x ) );
+
     }
     //DAO<Integer, Employee> edao;
 
@@ -110,8 +112,8 @@ public class EmployeeDaoTest {
         edao.update( savedJan ); // ignore result for now
         Employee updatedJan = edao.get( savedJan.getEmployeeid() ).get();
 
-        assertThat( savedJan.getEmail() )
-                .isEqualTo( updatedJan.getEmail() );
+        assertThat( savedJan.getEmail() ).extracting( e->e.toString() )
+                .isEqualTo( "janklaassen@outlook.com" );
         // fail( "test05Update not yet implemented. Review the code and comment or delete this line" );
     }
 

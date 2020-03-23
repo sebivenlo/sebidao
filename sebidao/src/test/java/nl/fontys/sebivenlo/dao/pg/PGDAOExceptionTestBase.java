@@ -3,21 +3,17 @@ package nl.fontys.sebivenlo.dao.pg;
 import entities.DBTestHelpers;
 import entities.Employee;
 import entities.EmployeeMapper2;
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
-import nl.fontys.sebivenlo.dao.AbstractDAOFactory;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.DAOException;
-import nl.fontys.sebivenlo.dao.Entity2;
 import nl.fontys.sebivenlo.dao.TransactionToken;
-import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.*;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -51,7 +47,7 @@ abstract class PGDAOExceptionTestBase extends DBTestHelpers {
         eDao = daof.createDao( Employee.class );
     }
 
-    @After
+    @AfterEach
     void cleanup() {
         try {
             this.connection.close();

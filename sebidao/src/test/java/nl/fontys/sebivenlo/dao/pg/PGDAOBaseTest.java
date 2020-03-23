@@ -12,46 +12,18 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.TransactionToken;
-import static org.assertj.core.api.Assertions.*;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 /**
- * Make sure all tests run within a transaction.
- *
+ * Run all base tests, avoid test run duplication.
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-//@Ignore
-public class PGDAOTransactionalTest extends PGDAOTestBase {
-
-    PGTransactionToken tok;
-
-    @BeforeEach
-    void setUp() throws Throwable {
-        super.setUp();
-        eDao.close(); // close existing from super
-        eDao = (PGDAO<Integer, Employee>) daof.createDao( Employee.class );
-        try {
-            tok = eDao.startTransaction();
-        } catch ( DAOException notexpected ) {
-            Logger.getLogger( PGDAOTransactionalTest.class.getName() ).
-                    log( Level.SEVERE, null, notexpected );
-        }
-    }
-
-    @AfterEach
-    public void tearDown() throws Exception {
-
-        tok.close();
-    }
+public class PGDAOBaseTest extends PGDAOTestBase {
 
     @Test
     public void testExecuteInt0() {
@@ -62,18 +34,15 @@ public class PGDAOTransactionalTest extends PGDAOTestBase {
 
     @Test
     public void testSize() {
-        int size = eDao.size();
-        assertThat( size ).as( "there should be a piet" ).isEqualTo( 1 );
+        int id = eDao.size();
+        assertThat( id ).as( "there should be a piet" ).isEqualTo( 1 );
         //fail( "test method testExceuteInt0 reached its end, you can remove this line when you aggree." );
     }
 
     @Test//( expected = DAOException.class )
     public void testGetByColumnKeyValues() {
-        ThrowingCallable code = () -> {
-            eDao.getByColumnValues( "batcar", "black" );
-        };
-        assertThatThrownBy( code ).isExactlyInstanceOf( DAOException.class );
-        // column not in database should cause sql exception
+        Assertions.assertThatThrownBy( () ->{
+        eDao.getByColumnValues( "batcar", "black" );}).isExactlyInstanceOf( DAOException.class); // column not in database should cause sql exception
         //fail( "test method testGetByColumnKeyValues reached its end, you can remove this line when you aggree." );
     }
 
@@ -117,7 +86,7 @@ public class PGDAOTransactionalTest extends PGDAOTestBase {
         System.out.println( "jan = " + jan );
         System.out.println( "kat = " + kat );
         DAO dao = daof.createDao( Employee.class );
-        try ( final TransactionToken tok = dao.startTransaction() ) {
+        try (final TransactionToken tok = dao.startTransaction()) {
             Collection<Employee> saveAll = dao.saveAll( jan, kat );
             assertThat( saveAll.size() ).as( "using one and the same connection" ).isEqualTo( 2 );
             // Assertions.assertThat( saveAll ).containsExactlyInAnyOrder( kat, jan );
@@ -169,7 +138,7 @@ public class PGDAOTransactionalTest extends PGDAOTestBase {
         assertThat( parts.length ).as( "part count" ).isEqualTo( 7 );
         Object[] nonGeneratedParts = edao.dropGeneneratedParts( parts );
         assertThat( nonGeneratedParts.length ).as( "part count" ).isEqualTo( 6 );
-        Object o5 = nonGeneratedParts[ 5 ];
+        Object o5 = nonGeneratedParts[5];
         System.out.println( "5 field =" + o5.getClass().getSimpleName() + ":" + o5.toString() );
         assertThat( o5 instanceof LocalDate ).as( "last field is dob" ).isTrue();
         //        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
@@ -184,7 +153,8 @@ public class PGDAOTransactionalTest extends PGDAOTestBase {
         for ( Employee employee : list ) {
             System.out.println( "employee = " + employee );
         }
-        assertThat( list ).hasSize( 1 );
+        assertThat( list ).hasSize( 1);
         //fail( "method method reached end. You know what to do." );
     }
+
 }
