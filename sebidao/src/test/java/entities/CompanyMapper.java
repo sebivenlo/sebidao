@@ -23,7 +23,6 @@ public class CompanyMapper extends AbstractMapper<String, Company> {
         return "ticker";//super.idName(); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
     @Override
     public String tableName() {
         return "companies";

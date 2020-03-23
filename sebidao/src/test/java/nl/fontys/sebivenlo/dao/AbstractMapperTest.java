@@ -32,7 +32,7 @@ public class AbstractMapperTest {
 
     @Test
     public void testCreateCompany() {
-        Object[] a = new Object[]{ "Pieters", "Belgium", "Waterschei",
+        Object[] a = new Object[] { "Pieters", "Belgium", "Waterschei",
             "Molenstraat 20", "PITRS", "B46587", 0, null };
         Company comp = mapper.assembler.apply( a );
         assertThat( comp ).as( "Got a product" ).isNotNull();
@@ -81,7 +81,7 @@ public class AbstractMapperTest {
 
         // 8 parts, all strings should lead to exception
         MyMapper2 m2 = new MyMapper2();
-        Object[] parts = new Object[]{ "A", "B", "C", "D", "E", "F", "G", "H" };
+        Object[] parts = new Object[] { "A", "B", "C", "D", "E", "F", "G", "H" };
         try {
             Company2 comp = m2.assembler.apply( parts );
         } catch ( Throwable t ) {

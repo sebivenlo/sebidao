@@ -8,9 +8,10 @@ import java.io.Serializable;
  *
  * To help the mapper in this package, an optional method
  * {@code Object[] asParts()} can be provided to provide both efficient and
- * simple dis-assembly of the such entity into its constituent parts, which will help the database marshalling in the mapper.
- * 
- * 
+ * simple dis-assembly of the such entity into its constituent parts, which will
+ * help the database marshalling in the mapper.
+ *
+ *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public interface SimpleEntity extends Serializable {

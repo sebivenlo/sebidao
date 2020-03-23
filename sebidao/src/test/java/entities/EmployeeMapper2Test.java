@@ -19,22 +19,22 @@ public class EmployeeMapper2Test {
     public void testImplode() {
 
         EmployeeMapper2 em = new EmployeeMapper2();
-        Employee ip = em.implode( 1, "Puk", "Piet", email( "piet@fontys.nl"), 10, true );
+        Employee ip = em.implode( 1, "Puk", "Piet", email( "piet@fontys.nl" ), 10, true );
 
-        Employee ep = new Employee( 1, "Puk", "Piet", email("piet@fontys.nl"), 10, false, now() );
+        Employee ep = new Employee( 1, "Puk", "Piet", email( "piet@fontys.nl" ), 10, false, now() );
         assertEqualsExtracting( "wrong employeeid", ep, ip,
-                                Employee::getEmployeeid );
+                Employee::getEmployeeid );
         assertEqualsExtracting( "wrong firstname", ep, ip,
-                                Employee::getFirstname );
+                Employee::getFirstname );
         assertEqualsExtracting( "wrong lastname", ep, ip,
-                                Employee::getLastname );
+                Employee::getLastname );
         assertEqualsExtracting( "wrong department", ep, ip,
-                                Employee::getDepartmentid );
+                Employee::getDepartmentid );
     }
 
     @Test
     public void testExplode() {
-        Employee jan = new Employee( 3, "Klaassen", "Jan", email("jan@google.com"), 42 );
+        Employee jan = new Employee( 3, "Klaassen", "Jan", email( "jan@google.com" ), 42 );
 
         EmployeeMapper2 em = new EmployeeMapper2();
         Object[] parts = em.explode( jan );
@@ -58,7 +58,7 @@ public class EmployeeMapper2Test {
     }
 
     private static <T, U> void assertEqualsExtracting( String msg, T expected,
-                                                       T actual, Function<? super T, ? extends U> extractor ) {
+            T actual, Function<? super T, ? extends U> extractor ) {
         assertThat( extractor.apply( actual ) ).as( msg ).isEqualTo( extractor.
                 apply( expected )
         );
@@ -78,9 +78,9 @@ public class EmployeeMapper2Test {
 
     @Test
     public void testKeyExtractor() {
-        Employee bob = new Employee( 3, "Beton", "Bob", email("bob@truckers.org"), 42 );
+        Employee bob = new Employee( 3, "Beton", "Bob", email( "bob@truckers.org" ), 42 );
         EmployeeMapper2 em = new EmployeeMapper2();
-        assertThat( em.keyExtractor().apply( bob )).isEqualTo(3);
+        assertThat( em.keyExtractor().apply( bob ) ).isEqualTo( 3 );
 
         //fail( "testKeyExtractor not yet implemented. Review the code and comment or delete this line" );
     }

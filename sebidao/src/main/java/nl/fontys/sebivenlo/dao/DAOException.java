@@ -4,10 +4,9 @@ package nl.fontys.sebivenlo.dao;
  * Wraps any exception occurring in the DAO. Has all constructors of its super.
  * This implementation currently implements only constructor.
  *
- * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class DAOException extends RuntimeException {
-
 
     /**
      * Message and underlying cause.
@@ -21,10 +20,11 @@ public class DAOException extends RuntimeException {
 
     /**
      * When there is no underlying cause.
+     *
      * @param message to transfer
      */
     public DAOException( String message ) {
         super( message );
     }
-    
+
 }

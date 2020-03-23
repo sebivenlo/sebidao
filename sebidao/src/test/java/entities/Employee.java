@@ -33,12 +33,12 @@ public class Employee implements Entity2<Integer> {
         this.dob = dob;
     }
 
-    public Employee( Integer employeeid, String lastname, String firstname, 
+    public Employee( Integer employeeid, String lastname, String firstname,
             String email, Integer departmentid, Boolean available, LocalDate dob ) {
         this.employeeid = employeeid;
         this.lastname = lastname;
         this.firstname = firstname;
-        this.email = email(email);
+        this.email = email( email );
         this.departmentid = departmentid;
         this.available = available;
         this.dob = dob;
@@ -53,7 +53,7 @@ public class Employee implements Entity2<Integer> {
     public Employee( Integer employeeid, String lastname, String firstname,
             String email,
             Integer departmentid ) {
-        this( employeeid, lastname, firstname, email(email), departmentid, true, LocalDate.now() );
+        this( employeeid, lastname, firstname, email( email ), departmentid, true, LocalDate.now() );
     }
 
     Employee( Object[] parts ) {

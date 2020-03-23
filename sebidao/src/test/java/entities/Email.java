@@ -9,9 +9,10 @@ import org.postgresql.util.PGobject;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class Email implements Serializable{
-    
+public class Email implements Serializable {
+
     String value;
+
     /**
      * Should do regex validation but does not.
      *
@@ -20,13 +21,13 @@ public class Email implements Serializable{
     public Email( Object value ) {
         this.value = value.toString();
     }
-    
+
     @Override
     public String toString() {
         return value;
     }
-    
+
     public static Email email( Object v ) {
         return new Email( v.toString() );
-    }    
+    }
 }

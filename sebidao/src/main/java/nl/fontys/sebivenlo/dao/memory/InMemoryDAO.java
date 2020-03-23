@@ -98,20 +98,20 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
             return; // nothing to do
         }
         try (
-                 ObjectOutputStream out = new ObjectOutputStream(
+                ObjectOutputStream out = new ObjectOutputStream(
                         new FileOutputStream( getStorageName() ) ); ) {
             out.writeObject( this.storage );
         } catch ( FileNotFoundException ex ) {
-            Logger.getLogger( InMemoryDAO.class.getName() ).
-                    log( Level.SEVERE, null, ex );
+            Logger.getLogger( InMemoryDAO.class.getName() )
+                    .log( Level.SEVERE, null, ex );
         } catch ( IOException ex ) {
-            Logger.getLogger( InMemoryDAO.class.getName() ).
-                    log( Level.SEVERE, null, ex );
+            Logger.getLogger( InMemoryDAO.class.getName() )
+                    .log( Level.SEVERE, null, ex );
         }
     }
 
     private void load( String aStorageName ) {
-        try (  ObjectInputStream in = new ObjectInputStream(
+        try ( ObjectInputStream in = new ObjectInputStream(
                 new FileInputStream( aStorageName ) ) ) {
             this.storage.clear();
             Map<K, E> readMap = (Map<K, E>) in.readObject();
@@ -143,7 +143,7 @@ public class InMemoryDAO<K extends Serializable, E extends Entity2<K>> implement
     }
 
     public void fail( String testSaveIbi_reached_its_and_You_will_know ) {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException( "Not supported yet." ); 
     }
 
 }

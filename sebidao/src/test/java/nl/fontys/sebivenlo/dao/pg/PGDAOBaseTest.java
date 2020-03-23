@@ -21,52 +21,54 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Run all base tests, avoid test run duplication.
+ *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class PGDAOBaseTest extends PGDAOTestBase {
-
+    
     @Test
     public void testExecuteInt0() {
         int id = eDao.executeIntQuery( "select employeeid from employees where firstname='Batman'" );
         assertThat( id ).isEqualTo( 0 );
         //fail( "test method testExceuteInt0 reached its end, you can remove this line when you aggree." );
     }
-
+    
     @Test
     public void testSize() {
         int id = eDao.size();
         assertThat( id ).as( "there should be a piet" ).isEqualTo( 1 );
         //fail( "test method testExceuteInt0 reached its end, you can remove this line when you aggree." );
     }
-
+    
     @Test//( expected = DAOException.class )
     public void testGetByColumnKeyValues() {
-        Assertions.assertThatThrownBy( () ->{
-        eDao.getByColumnValues( "batcar", "black" );}).isExactlyInstanceOf( DAOException.class); // column not in database should cause sql exception
+        Assertions.assertThatThrownBy( () -> {
+            eDao.getByColumnValues( "batcar", "black" );
+        } ).isExactlyInstanceOf( DAOException.class ); // column not in database should cause sql exception
         //fail( "test method testGetByColumnKeyValues reached its end, you can remove this line when you aggree." );
     }
-
+    
     @Test
     public void testExecuteIntQueryInt1() {
         int id = eDao.executeIntQuery( "select departmentid from employees where employeeid=?", 1 );
         assertThat( id ).as( "piet is in dept 1" ).isEqualTo( 1 );
         // fail( "testExecuteIntQueryInt1 not yet implemented. Review the code and comment or delete this line" );
     }
-
+    
     @Test
     public void testGetIdForKey() {
         int id = eDao.getIdForKey( 1 );
         assertThat( id ).as( "piet has id 1" ).isEqualTo( 1 );
         //fail( "testGetIdForKey not yet implemented. Review the code and comment or delete this line" );
     }
-
+    
     @Test
     public void testGetConnection() {
         Connection connection = eDao.getConnection();
         assertThat( connection ).as( "having my connection" ).isNotNull();
         // fail( "testGetConnection not yet implemented. Review the code and comment or delete this line" );
     }
-
+    
     @Test
     public void testUsingTransactionConnection() throws SQLException {
         PGTransactionToken tok = new PGTransactionToken( ds.getConnection() );
@@ -77,7 +79,7 @@ public class PGDAOBaseTest extends PGDAOTestBase {
         assertThat( eDao.getTransactionToken() ).isSameAs( tok );
         //fail( "testUsingTransactionConnection not yet implemented. Review the code and comment or delete this line" );
     }
-
+    
     @Test
     public void testSaveAll() throws SQLException, Exception {
         LocalDate d = LocalDate.of( 1999, 5, 6 );
@@ -86,7 +88,7 @@ public class PGDAOBaseTest extends PGDAOTestBase {
         System.out.println( "jan = " + jan );
         System.out.println( "kat = " + kat );
         DAO dao = daof.createDao( Employee.class );
-        try (final TransactionToken tok = dao.startTransaction()) {
+        try ( final TransactionToken tok = dao.startTransaction() ) {
             Collection<Employee> saveAll = dao.saveAll( jan, kat );
             assertThat( saveAll.size() ).as( "using one and the same connection" ).isEqualTo( 2 );
             // Assertions.assertThat( saveAll ).containsExactlyInAnyOrder( kat, jan );
@@ -99,7 +101,7 @@ public class PGDAOBaseTest extends PGDAOTestBase {
         }
         //Assert.fail( "test method testSaveAll reached its end, you can remove this line when you aggree." );
     }
-
+    
     @Test
     public void testNullableFields() {
         String tick = "BAS";
@@ -113,7 +115,7 @@ public class PGDAOBaseTest extends PGDAOTestBase {
         assertThat( sC.getSomeInteger() ).as( "someinteger" ).isEqualTo( null );
         //Assert.fail( "test method testNullableFields reached its end, you can remove this line when you aggree." );
     }
-
+    
     @Test
     public void testDropGeneratedDept() {
         DepartmentMapper departmentMapper = new DepartmentMapper();
@@ -126,7 +128,7 @@ public class PGDAOBaseTest extends PGDAOTestBase {
         assertThat( nonGeneratedParts.length ).as( "normal field count" ).isEqualTo( 3 );
         //        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
     }
-
+    
     @Test
     public void testDropGeneratedEmp() {
         EmployeeMapper2 mapper = new EmployeeMapper2();
@@ -138,12 +140,12 @@ public class PGDAOBaseTest extends PGDAOTestBase {
         assertThat( parts.length ).as( "part count" ).isEqualTo( 7 );
         Object[] nonGeneratedParts = edao.dropGeneneratedParts( parts );
         assertThat( nonGeneratedParts.length ).as( "part count" ).isEqualTo( 6 );
-        Object o5 = nonGeneratedParts[5];
+        Object o5 = nonGeneratedParts[ 5 ];
         System.out.println( "5 field =" + o5.getClass().getSimpleName() + ":" + o5.toString() );
         assertThat( o5 instanceof LocalDate ).as( "last field is dob" ).isTrue();
         //        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
     }
-
+    
     @Test
     public void anyQuery() {
         EmployeeMapper2 mapper = new EmployeeMapper2();
@@ -153,8 +155,8 @@ public class PGDAOBaseTest extends PGDAOTestBase {
         for ( Employee employee : list ) {
             System.out.println( "employee = " + employee );
         }
-        assertThat( list ).hasSize( 1);
+        assertThat( list ).hasSize( 1 );
         //fail( "method method reached end. You know what to do." );
     }
-
+    
 }

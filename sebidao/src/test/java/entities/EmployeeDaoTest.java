@@ -112,7 +112,7 @@ public class EmployeeDaoTest {
         edao.update( savedJan ); // ignore result for now
         Employee updatedJan = edao.get( savedJan.getEmployeeid() ).get();
 
-        assertThat( savedJan.getEmail() ).extracting( e->e.toString() )
+        assertThat( savedJan.getEmail() ).extracting( e -> e.toString() )
                 .isEqualTo( "janklaassen@outlook.com" );
         // fail( "test05Update not yet implemented. Review the code and comment or delete this line" );
     }

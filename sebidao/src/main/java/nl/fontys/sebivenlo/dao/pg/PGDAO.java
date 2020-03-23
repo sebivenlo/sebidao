@@ -625,8 +625,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 }
             }
         } catch ( SQLException ex ) {
-            Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
-                    ex );
+            Logger.getLogger( PGDAO.class.getName() )
+                    .log( Level.SEVERE, null, ex );
             throw new DAOException( ex.getMessage(), ex );
         }
     }
@@ -660,8 +660,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             try {
                 return factory.getConnection();
             } catch ( SQLException ex ) {
-                Logger.getLogger( PGDAO.class.getName() ).
-                        log( Level.SEVERE, null, ex );
+                Logger.getLogger( PGDAO.class.getName() )
+                        .log( Level.SEVERE, null, ex );
                 throw new DAOException( ex.getMessage(), ex );
             }
         }
@@ -695,9 +695,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
      * @return the int value matching this key.
      */
     public int getIdForKey( K k ) {
-        String sql = format( "select %s from %s where %s=?", mapper.
-                idName(), mapper.tableName(), mapper
-                .naturalKeyName() );
+        String sql = format( "select %s from %s where %s=?",
+                mapper.idName(),
+                mapper.tableName(), 
+                mapper.naturalKeyName() );
         return executeIntQuery( sql, k );
 
     }

@@ -30,13 +30,13 @@ public class PGDAOStringKeyTest extends DBTestHelpers {
     }
 
     Company intel = new Company( "INTC", "Intel", "USA", "Santa Clara",
-                                 "2200 Mission College Blvd", "CA 95052" );
+            "2200 Mission College Blvd", "CA 95052" );
     Company amd = new Company( "AMD", "Advanced Micro Devices", "USA",
-                               "Santa Clara",
-                               "2485 Augustine Drive", "CA 95054" );
+            "Santa Clara",
+            "2485 Augustine Drive", "CA 95054" );
 
     Company fontys = new Company( "FNTS", "Fontys Hogescholen", "Netherlands",
-                                  "Venlo", "Tegelseweg 255", "5912 BG" );
+            "Venlo", "Tegelseweg 255", "5912 BG" );
 
     @Test
     public void testSave() {
@@ -58,7 +58,7 @@ public class PGDAOStringKeyTest extends DBTestHelpers {
         cDao.delete( savedC );
         int size3 = cDao.size();
 
-        assertThat(  size + 1 == size2 && size == size3 ).as("in and gone").isTrue();
+        assertThat( size + 1 == size2 && size == size3 ).as( "in and gone" ).isTrue();
 
         //fail( "testDelete not yet implemented. Review the code and comment or delete this line" );
     }

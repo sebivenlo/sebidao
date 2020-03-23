@@ -29,7 +29,7 @@ public class MemClientTest {
     @Test
     public void testIBi() {
         DAO<Integer, Employee> dao = fac.createDao( Employee.class );
-        Employee ibi = new Employee( 42, "Kouzak", "Ibrahim", email("i@there.com"), 4 );
+        Employee ibi = new Employee( 42, "Kouzak", "Ibrahim", email( "i@there.com" ), 4 );
 
         Employee saveDIbi = dao.save( ibi );
 

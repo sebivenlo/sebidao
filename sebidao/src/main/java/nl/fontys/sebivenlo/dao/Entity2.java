@@ -9,8 +9,9 @@ import java.io.Serializable;
  * to have a key. And yes, if you associate that with concept of a primary key,
  * you would be right.
  *
- * For those cases where SimpleEntity will not do, because you have to insist
- * on a natural key which is not an integral number such as {@code int} or {@code long}.
+ * For those cases where SimpleEntity will not do, because you have to insist on
+ * a natural key which is not an integral number such as {@code int} or
+ * {@code long}.
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  * @param <K> key to the entity.
@@ -23,5 +24,5 @@ public interface Entity2<K extends Serializable> extends SimpleEntity {
      * @return the key.
      */
     K getNaturalId();
-    
+
 }

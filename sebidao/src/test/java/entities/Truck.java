@@ -7,7 +7,7 @@ import nl.fontys.sebivenlo.dao.ID;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class Truck implements Entity2<Integer>  {
+public class Truck implements Entity2<Integer> {
 
     @ID
     private Integer truckid;
@@ -17,8 +17,7 @@ public class Truck implements Entity2<Integer>  {
         this.truckid = truckid;
         this.plate = Plate;
     }
-    
-    
+
     @Override
     public Integer getNaturalId() {
         return truckid;
@@ -27,7 +26,7 @@ public class Truck implements Entity2<Integer>  {
     @Override
     public int getId() {
         return truckid;
-   }
+    }
 
     public Integer getTruckid() {
         return truckid;
@@ -44,9 +43,9 @@ public class Truck implements Entity2<Integer>  {
     public void setPlate( String Plate ) {
         this.plate = Plate;
     }
-    
-    Object[] asParts(){
-        return new Object[]{
+
+    Object[] asParts() {
+        return new Object[] {
             this.truckid,
             this.plate
         };

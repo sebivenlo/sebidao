@@ -4,7 +4,8 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 
 /**
- * Coverage. 
+ * Coverage.
+ *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class TransactionTokenTest {
@@ -14,17 +15,16 @@ public class TransactionTokenTest {
 
     /**
      * Test that all default methods have no effect. For coverage.
+     *
      * @throws java.lang.Exception not expected
      */
     @Test
     public void testCallinMethodsCausesNoTrouble() throws Exception {
-        
+
         tok.commit();
         tok.rollback();
         tok.close();
         //fail( "testMethod not yet implemented. Review the code and comment or delete this line" );
     }
-    
-    
 
 }

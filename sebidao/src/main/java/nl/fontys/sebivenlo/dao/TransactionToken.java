@@ -6,7 +6,7 @@ package nl.fontys.sebivenlo.dao;
  * The typical use case is to store a database connection, but this is not
  * specified.
  *
- * @author Pieter van den Hombergh  {@code pieter.van.den.hombergh@gmail.com}
+ * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public interface TransactionToken extends AutoCloseable {
 
@@ -27,6 +27,7 @@ public interface TransactionToken extends AutoCloseable {
     }
 
     @Override
-    default void close() throws Exception{};
+    default void close() throws Exception {
+    }
 
 }

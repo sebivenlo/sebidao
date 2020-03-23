@@ -11,7 +11,7 @@ import nl.fontys.sebivenlo.dao.AbstractMapper;
  */
 public class DepartmentMapper extends AbstractMapper<String, Department> {
 
-    public DepartmentMapper( ) {
+    public DepartmentMapper() {
         super( String.class, Department.class );
     }
 

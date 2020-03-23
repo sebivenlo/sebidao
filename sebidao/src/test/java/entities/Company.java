@@ -9,7 +9,7 @@ import nl.fontys.sebivenlo.dao.TableName;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-@TableName("companies")
+@TableName( "companies" )
 public class Company implements Entity2<String> {
 
     private String name;
@@ -24,7 +24,7 @@ public class Company implements Entity2<String> {
 
     public Company( String name, String country, String city,
             String address, String ticker, String postcode ) {
-        this(name,country,city,address,ticker,postcode,0,null);
+        this( name, country, city, address, ticker, postcode, 0, null );
     }
 
     public Company( String name, String country, String city,
@@ -35,15 +35,15 @@ public class Company implements Entity2<String> {
         this.address = address;
         this.ticker = ticker;
         this.postcode = postcode;
-        this.someInt=i;
-        this.someInteger=j;
+        this.someInt = i;
+        this.someInteger = j;
     }
 
     @Override
     public String toString() {
         return "Company{" + "ticker=" + ticker + ", name=" + name + ", country="
                 + country + ", city=" + city + ", address=" + address
-                + ", postcode=" + postcode + ",somint ="+someInt+", somInteger="+someInteger+'}';
+                + ", postcode=" + postcode + ",somint =" + someInt + ", somInteger=" + someInteger + '}';
     }
 
     public String getTicker() {
@@ -96,13 +96,13 @@ public class Company implements Entity2<String> {
 
     static Company fromParts( Object[] parts ) {
 
-        return new Company( (String)parts[ 0 ], (String)parts[ 1 ], (String)parts[ 2 ], (String)parts[ 3 ], (String)parts[ 4 ],
-                (String)parts[ 5 ], (Integer)parts[6], (Integer)parts[7] );
+        return new Company( (String) parts[ 0 ], (String) parts[ 1 ], (String) parts[ 2 ], (String) parts[ 3 ], (String) parts[ 4 ],
+                (String) parts[ 5 ], (Integer) parts[ 6 ], (Integer) parts[ 7 ] );
     }
 
     Object[] asParts() {
 
-        return new Object[]{
+        return new Object[] {
             name,
             country,
             city,

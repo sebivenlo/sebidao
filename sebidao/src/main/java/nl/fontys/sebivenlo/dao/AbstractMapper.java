@@ -51,7 +51,7 @@ import static java.util.stream.Collectors.toList;
  * @param <K> key type.
  * @param <E> entity type.
  */
-public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
+public abstract class AbstractMapper<K, E> {
 
     /**
      * The key type for this mapper.
@@ -109,8 +109,8 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                     return assemblerCtor.newInstance( a );
                 } catch ( InstantiationException | IllegalAccessException
                         | IllegalArgumentException | InvocationTargetException ex ) {
-                    Logger.getLogger( AbstractMapper.class.getName() ).
-                            log( Level.SEVERE, null, ex );
+                    Logger.getLogger( AbstractMapper.class.getName() )
+                            .log( Level.SEVERE, null, ex );
                     throw new DAOException(
                             "could not invoke assembler constructor "
                             + assemblerCtor
@@ -118,8 +118,8 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                 }
             };
         } catch ( NoSuchMethodException | SecurityException ex ) {
-            Logger.getLogger( AbstractMapper.class.getName() ).
-                    log( Level.INFO, "cannot find assembler constructor "
+            Logger.getLogger( AbstractMapper.class.getName() )
+                    .log( Level.INFO, "cannot find assembler constructor "
                             + assemblerCtor(), ex );
             //throw new DAOException( "cannot find assembler constructor "+assemblerCtor(), ex );
         }
@@ -152,16 +152,19 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         int g = 0;
         for ( String fieldName : fieldNames ) {
             try {
-                String getterName = "get" + fieldName.substring( 0, 1 ).toUpperCase() + fieldName.substring( 1 );
+                String getterName = "get" + fieldName.substring( 0, 1 )
+                        .toUpperCase() + fieldName.substring( 1 );
                 Method m = entityType.getDeclaredMethod( getterName );
                 if ( m.isAccessible() ) {
-                    Logger.getLogger( AbstractMapper.class.getName() ).log( Level.INFO, "method is not accessible" + m );
+                    Logger.getLogger( AbstractMapper.class.getName() )
+                            .log( Level.INFO, "method is not accessible" + m );
                 } else {
                     getters[ g ] = entityType.getDeclaredMethod( getterName );
                 }
                 g++;
             } catch ( NoSuchMethodException | SecurityException ex ) {
-                Logger.getLogger( AbstractMapper.class.getName() ).log( Level.INFO, null, ex );
+                Logger.getLogger( AbstractMapper.class.getName() )
+                        .log( Level.INFO, null, ex );
             }
         }
         if ( g == entityMetaData.typeMap.size() ) {
@@ -173,8 +176,11 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                         if ( null != getter ) {
                             result[ i ] = getter.invoke( e );
                         }
-                    } catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex ) {
-                        Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+                    } catch ( IllegalAccessException
+                            | IllegalArgumentException
+                            | InvocationTargetException ex ) {
+                        Logger.getLogger( AbstractMapper.class.getName() )
+                                .log( Level.SEVERE, null, ex );
                     }
                     i++;
                 }
@@ -184,8 +190,11 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
     }
 
     /**
-     * For the case that the user/programmer provides and asParts method, use that to disassemble the entity.
-     * @return true if asPart method is available and cache reflectively created disassembler.
+     * For the case that the user/programmer provides and asParts method, use
+     * that to disassemble the entity.
+     *
+     * @return true if asPart method is available and cache reflectively created
+     * disassembler.
      */
     final boolean tryAsPart() {
         try {
@@ -200,8 +209,11 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
                     Object[] result = null;
                     try {
                         result = (Object[]) asParts.invoke( e );
-                    } catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException ex ) {
-                        Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+                    } catch ( IllegalAccessException
+                            | IllegalArgumentException
+                            | InvocationTargetException ex ) {
+                        Logger.getLogger( AbstractMapper.class.getName() )
+                                .log( Level.SEVERE, null, ex );
                     }
                     return result;
                 };
@@ -267,12 +279,17 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         StringBuilder sb = new StringBuilder( entityType.getSimpleName() );
         sb.append( "( " );
         String params
-                = entityMetaData.typeMap.values().stream().map( c -> c.
-                getSimpleName() )
+                = entityMetaData.typeMap.values().stream()
+                        .map( c -> c.getSimpleName() )
                         .collect( Collectors.joining( ", " ) );
         return sb.append( params ).append( ')' ).toString();
     }
 
+    /**
+     * Get the names of the generated fields.
+     *
+     * @return the list of names.
+     */
     public List<String> generatedFields() {
         if ( generatedFields == null ) {
             Field[] declaredFields = entityType.getDeclaredFields();
@@ -312,8 +329,8 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
      * @return the name of the table in the database
      */
     public String tableName() {
-        TableName annotation = this.entityType().getAnnotation( TableName.class);
-        if (annotation!= null){
+        TableName annotation = this.entityType().getAnnotation( TableName.class );
+        if ( annotation != null ) {
             return annotation.value();
         }
         return entityType().getSimpleName().toLowerCase() + 's';

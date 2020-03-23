@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 /**
  * For coverage.
+ *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class PGTransactionTokenTest {

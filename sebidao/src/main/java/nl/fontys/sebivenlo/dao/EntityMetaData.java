@@ -40,6 +40,7 @@ class EntityMetaData<E> {
     private boolean idGenerated;
     private List<Field> fields = new ArrayList<>();
     private List<Field> publicFields = Collections.unmodifiableList( fields );
+
     EntityMetaData( Class<E> about ) {
         this.about = about;
         register( about );
@@ -74,29 +75,33 @@ class EntityMetaData<E> {
 
     /**
      * Get the declared fields as a list.
+     *
      * @return the list, unmodifiable
      */
-    List<Field> getFields(){
+    List<Field> getFields() {
         return publicFields;
     }
+
     /**
      * Get a field by position.
+     *
      * @param i the field position (order) in the entity.
      * @return the field.
      */
-    public Field getField(int i){
+    public Field getField( int i ) {
         return fields.get( i );
     }
 
     /**
      * Get a field type by position.
+     *
      * @param i the field position (order) in the entity.
      * @return the field.
      */
-    public Class<?> getFieldType(int i){
+    public Class<?> getFieldType( int i ) {
         return fields.get( i ).getType();
     }
-    
+
     String getIdName() {
         return idName;
     }
@@ -139,6 +144,4 @@ class EntityMetaData<E> {
                 + idName + ", \nidGenerated=" + idGenerated + '}';
     }
 
-    
-    
 }

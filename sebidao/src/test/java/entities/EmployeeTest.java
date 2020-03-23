@@ -14,8 +14,8 @@ public class EmployeeTest {
 
     @Test
     public void testFromParts() {
-        Object[] parts = new Object[]{
-            1, "Puk", "Piet", email( "piet@student.fontys.nl"), 42, true, now()
+        Object[] parts = new Object[] {
+            1, "Puk", "Piet", email( "piet@student.fontys.nl" ), 42, true, now()
         };
 
         Employee employee = new Employee( parts );
@@ -38,8 +38,8 @@ public class EmployeeTest {
         emp.setEmployeeid( 1 );
         emp.setFirstname( "Piet" );
         emp.setLastname( "Puk" );
-        String es="p.puk@outlook.com";
-        emp.setEmail( email(es) );
+        String es = "p.puk@outlook.com";
+        emp.setEmail( email( es ) );
         emp.setDepartmentid( 42 );
 
         emp.setDob( of( 1953, 9, 15 ) );
@@ -49,7 +49,7 @@ public class EmployeeTest {
                 .isEqualTo( 1 );
         assertThat( part[ 1 ] ).as( "last" ).isEqualTo( "Puk" );
         assertThat( part[ 2 ] ).as( "first" ).isEqualTo( "Piet" );
-        assertThat( part[ 3 ] ).as( "email" ).extracting( x -> x.toString()).isEqualTo(es );
+        assertThat( part[ 3 ] ).as( "email" ).extracting( x -> x.toString() ).isEqualTo( es );
         assertThat( ( (Integer) part[ 4 ] ).intValue() ).as( "dept" )
                 .isEqualTo( 42 );
 
@@ -82,7 +82,7 @@ public class EmployeeTest {
         assertThat( emp.equals( "Hank" ) ).isFalse();
 
         Employee emp2 = new Employee( 57 );
-        assertThat( emp2.equals( emp )).isFalse();
+        assertThat( emp2.equals( emp ) ).isFalse();
 
         //fail( "testCoverEquals not yet implemented. Review the code and comment or delete this line" );
     }
