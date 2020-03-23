@@ -194,6 +194,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String marks = String.join( ",", questionMarks );
         String sql = String.format( "delete from %s where %s in (%s)", mapper
                 .tableName(), mapper.idName(), marks );
+        System.out.println( "sql = " + sql );
         try ( PreparedStatement pst = con.prepareStatement( sql ); ) {
             int col = 1;
             for ( K key : keys ) {
@@ -209,6 +210,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private void delete( final Connection con, K k ) {
         String sql = deleteQueryText();
+        System.out.println( "sql = " + sql );
         try (
                 PreparedStatement pst = con.prepareStatement( sql ); ) {
             pst.setObject( 1, k );
@@ -224,7 +226,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
         String sql = queryTextCache.computeIfAbsent( "delete",
                 x -> format( "delete from %s where %s=?", tableName(),
-                        mapper.idName() ) );
+                        mapper.naturalKeyName() ) );
         return sql;
     }
 
@@ -717,7 +719,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     private Object[] check( Object[] parts ) {
         if ( parts.length != mapper.persistentFieldNames().size() ) {
             throw new RuntimeException( "The number of parts in produced by the explode method"
-                    + "does not match the number of fields in the entity, please check you Entity.asPart() method"
+                    + " of " + this.mapper.entityType().getCanonicalName()
+                    + " does not match the number of fields in the entity, please check you Entity.asPart() method"
             );
         }
 

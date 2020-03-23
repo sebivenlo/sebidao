@@ -28,4 +28,10 @@ public class DepartmentMapper extends AbstractMapper<String, Department> {
         return Department::getName;
     }
 
+    @Override
+    public String idName() {
+        return "name"; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 }

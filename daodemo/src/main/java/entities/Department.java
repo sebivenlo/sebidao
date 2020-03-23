@@ -129,7 +129,7 @@ public class Department implements Entity2<String> {
     }
 
     Object[] explode() {
-        return new Object[]{ description, name, email };
+        return new Object[]{ description, name, email,departmentid };
     }
 
     @Override
@@ -137,5 +137,10 @@ public class Department implements Entity2<String> {
         return departmentid;
     }
 
+    public Integer getDepartmentid() {
+        return departmentid;
+    }
+
+    
     
 }

@@ -119,7 +119,6 @@ public final class PGDAOFactory extends AbstractDAOFactory {
      * Transform, convert or cast outgoing (to database) data.
      *
      * @param <U> type of class to use
-     * @param type token Class{@code <U>}
      * @param out outgoing data
      * @return object acceptable by the database.
      */
@@ -168,11 +167,11 @@ public final class PGDAOFactory extends AbstractDAOFactory {
         return this;
     }
 
-    public final <T extends Serializable, R, P extends PGobject> PGDAOFactory registerPGMashallers(Class<R> targetType, Function<T, R> inMarshaller,
-             Function<R, P> outMarshaller ) {
+    public final <T extends Serializable, R, P extends PGobject> PGDAOFactory registerPGMashallers( Class<R> targetType, Function<T, R> inMarshaller,
+            Function<R, P> outMarshaller ) {
         this.marshallInMap.put( targetType, inMarshaller );
         this.marshallOutMap.put( targetType, outMarshaller );
-             
+
         return this;
     }
 
@@ -189,7 +188,9 @@ public final class PGDAOFactory extends AbstractDAOFactory {
 //        return userToPg.getOrDefault( o.getClass(), "" );
 //    }
     /**
-     * Helper for postgreSQL to wrap a value in a PGobject.
+     * Helper for postgreSQL to wrap a value in a PGobject. The value object
+     * must have a meaningful toString that can be understood by the database as
+     * a value representation.
      *
      * @param pType pg type
      * @param value to wrap

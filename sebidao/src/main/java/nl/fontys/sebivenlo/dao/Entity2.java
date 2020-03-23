@@ -23,4 +23,5 @@ public interface Entity2<K extends Serializable> extends SimpleEntity {
      * @return the key.
      */
     K getNaturalId();
+    
 }

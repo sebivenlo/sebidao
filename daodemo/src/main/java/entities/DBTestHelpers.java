@@ -1,6 +1,5 @@
 package entities;
 
-import entities.Employee;
 import entities.PGDataSource;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.stream.Collectors.joining;
 import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
-import org.junit.jupiter.api.BeforeAll;
 
 /**
  *
@@ -36,7 +34,7 @@ public class DBTestHelpers {
         }
     }
 
-    protected static void doDDL( String ddl ) throws
+    public static void doDDL( String ddl ) throws
             SQLException {
         try ( Connection con = ds.getConnection();
                 PreparedStatement pst = con.prepareStatement( ddl ); ) {
@@ -46,11 +44,4 @@ public class DBTestHelpers {
         }
     }
 
-    @BeforeAll
-    public static void setupClass() {
-        daof = new PGDAOFactory( ds );
-        daof.registerMapper( Employee.class, new EmployeeMapper2() );
-//        daof.registerMapper( Employee.class, new EmployeeMapper());
-
-    }
 }

@@ -1,10 +1,12 @@
 package demo;
 
+import entities.DBTestHelpers;
 import entities.Department;
 import entities.DepartmentMapper;
 import entities.Employee;
 import entities.EmployeeMapper;
 import entities.PGDataSource;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +21,8 @@ import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
 public class TransactionMain {
 
 
-    public static void main( String[] args ) {
+    public static void main( String[] args ) throws SQLException {
+          DBTestHelpers.doDDL( "truncate table departments cascade" );
 
         // register a mapper for employee
         PGDAOFactory pdaof = new PGDAOFactory( PGDataSource.DATA_SOURCE );
@@ -36,7 +39,7 @@ public class TransactionMain {
         d1.setDescription( "bean counters" );
         d1.setEmail( "fin@vanderheijden.nl" );
 
-        Department saveDept = dDao.save( d1 );
+        Department savedDepartment = dDao.save( d1 );
 
         Collection<Department> allDept = dDao.getAll();
         System.out.println( "allDept = " );
@@ -54,15 +57,15 @@ public class TransactionMain {
             p.setLastname( "Hendrix" );
             p.setEmail( "s.hendrix@student.fontys.nl" );
             p.setDepartment( "fin" );
-            Employee sharonInDb = e2Dao.save( p );
+            Employee savedSharon = e2Dao.save( p );
 
             all = e2Dao.getAll();
             System.out.println( "now all = " );
             all.stream().forEach( System.out::println );
 
             // clean up 
-            e2Dao.delete( sharonInDb );
-            dDao.delete( saveDept );
+            e2Dao.delete( savedSharon );
+            dDao.delete( savedDepartment );
             tok.commit();
         } catch ( Exception ex ) {
             Logger.getLogger( MainDB.class.getName() ).log( Level.SEVERE, null,

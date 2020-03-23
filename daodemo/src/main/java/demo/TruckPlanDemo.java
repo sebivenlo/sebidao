@@ -1,5 +1,6 @@
 package demo;
 
+import entities.LocalDateTimeRange;
 import entities.PGDataSource;
 import entities.Truck;
 import entities.TruckMapper;
@@ -15,21 +16,21 @@ import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.TransactionToken;
 import nl.fontys.sebivenlo.dao.pg.PGDAO;
 import nl.fontys.sebivenlo.dao.pg.PGDAOFactory;
-import nl.fontys.sebivenlo.pgtypes.TSRange;
 
 /**
- *
+ * This class will throw and catch exceptions, intentionally.
+ * 
  * @author Pieter van den Hombergh {@code p.vandenhombergh@fontys.nl}
  */
 public class TruckPlanDemo {
 
     public static void main( String[] args ) throws Exception {
+
         new TruckPlanDemo().planSuccessfullyDemo();
         new TruckPlanDemo().planFailDemo();
-        
-        
-        System.out.println( "=============" );
-        PGDAO<Integer, TruckPlan> dao2 = pdaof.createDao( TruckPlan.class );
+
+        System.out.println( "====== Planning =======" );
+        PGDAO<Integer, TruckPlan> dao2 = pdaof().createDao( TruckPlan.class );
         Collection<TruckPlan> all = dao2.getAll();
         all.forEach( System.out::println );
         dao2.deleteAll( all ); //clean up after demo.
@@ -38,8 +39,8 @@ public class TruckPlanDemo {
     }
 
     private void planSuccessfullyDemo() {
-        final DAO<Integer, TruckPlan> tpDao = pdaof.createDao( TruckPlan.class );
-        final DAO<Integer, Truck> truckDao = pdaof.createDao( Truck.class );
+        final DAO<Integer, TruckPlan> tpDao = pdaof().createDao( TruckPlan.class );
+        final DAO<Integer, Truck> truckDao = pdaof().createDao( Truck.class );
         Collection<Truck> byColumnValues = truckDao
                 .getByColumnValues( "plate", "Vroom" );
         System.out.println( "byColumnValues = " + byColumnValues );
@@ -47,16 +48,16 @@ public class TruckPlanDemo {
 
         try (
                 TransactionToken ttok = tpDao.startTransaction(); ) {
-            TruckPlan tp1 = new TruckPlan( vroom.getTruckid(), new TSRange( LocalDateTime
-                                           .now(), Duration.ofHours( 3 ) ) );
-            TruckPlan tp2 = new TruckPlan( vroom.getTruckid(), new TSRange( LocalDateTime
-                                           .now().plusHours( 4 ), Duration
-                                                                            .ofHours( 3 ) ) );
+            TruckPlan tp1 = new TruckPlan( vroom.getTruckid(), new LocalDateTimeRange( LocalDateTime
+                    .now(), Duration.ofHours( 3 ) ) );
+            TruckPlan tp2 = new TruckPlan( vroom.getTruckid(), new LocalDateTimeRange( LocalDateTime
+                    .now().plusHours( 4 ), Duration
+                    .ofHours( 3 ) ) );
             tpDao.saveAll( tp1, tp2 );
 
             Collection<TruckPlan> all = tpDao.getAll();
             all.forEach( System.out::println );
-            ttok.commit(); 
+            ttok.commit();
         } catch ( Exception ex ) {
             Logger.getLogger( TruckPlanDemo.class.getName() )
                     .log( Level.SEVERE, null, ex );
@@ -65,8 +66,8 @@ public class TruckPlanDemo {
     }
 
     private void planFailDemo() {
-        DAO<Integer, TruckPlan> tpDao = pdaof.createDao( TruckPlan.class );
-        final DAO<Integer, Truck> truckDao = pdaof.createDao( Truck.class );
+        DAO<Integer, TruckPlan> tpDao = pdaof().createDao( TruckPlan.class );
+        final DAO<Integer, Truck> truckDao = pdaof().createDao( Truck.class );
         Collection<Truck> byColumnValues = truckDao
                 .getByColumnValues( "plate", "Volvo" );
         System.out.println( "byColumnValues = " + byColumnValues );
@@ -74,11 +75,11 @@ public class TruckPlanDemo {
 
         try (
                 TransactionToken ttok = tpDao.startTransaction(); ) {
-            TruckPlan tp1 = new TruckPlan( vroom.getTruckid(), new TSRange( LocalDateTime
-                                           .now(), Duration.ofHours( 3 ) ) );
-            TruckPlan tp2 = new TruckPlan( vroom.getTruckid(), new TSRange( LocalDateTime
-                                           .now().plusHours( 1 ), Duration
-                                                                            .ofHours( 3 ) ) );
+            TruckPlan tp1 = new TruckPlan( vroom.getTruckid(), new LocalDateTimeRange( LocalDateTime
+                    .now(), Duration.ofHours( 3 ) ) );
+            TruckPlan tp2 = new TruckPlan( vroom.getTruckid(), new LocalDateTimeRange( LocalDateTime
+                    .now().plusHours( 1 ), Duration
+                    .ofHours( 3 ) ) );
             tpDao.saveAll( tp1, tp2 );
             ttok.commit(); // should not succeed.
         } catch ( Exception expected ) {
@@ -89,11 +90,16 @@ public class TruckPlanDemo {
 
     }
 
-    private static final PGDAOFactory pdaof = new PGDAOFactory( PGDataSource.DATA_SOURCE );
+    static PGDAOFactory pdaof = null;
 
-    static {
-
-        pdaof.registerMapper( Truck.class, new TruckMapper() );
-        pdaof.registerMapper( TruckPlan.class, new TruckPlanMapper() );
+    private static final PGDAOFactory pdaof() {
+        if ( null == pdaof ) {
+            pdaof = new PGDAOFactory( PGDataSource.DATA_SOURCE );
+            pdaof.registerMapper( Truck.class, new TruckMapper() );
+            pdaof.registerMapper( TruckPlan.class, new TruckPlanMapper() );
+            pdaof.registerPGMashallers( LocalDateTimeRange.class, LocalDateTimeRange::fromTSRangeObject, x -> PGDAOFactory.pgobject( "tsrange", x ) );
+        }
+        return pdaof;
     }
+
 }
