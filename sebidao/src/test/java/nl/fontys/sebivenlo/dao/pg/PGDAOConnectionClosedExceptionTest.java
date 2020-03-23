@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
+@Disabled
 class PGDAOConnectionClosedExceptionTest extends PGDAOExceptionTestBase {
 
     @Override

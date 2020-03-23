@@ -1,5 +1,6 @@
 package entities;
 
+import static entities.Email.email;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -47,7 +48,7 @@ public class TransactionTest {
     public void testRollback() {
         // first dao is consumed by transaction
         Employee henk = new Employee( 0, "Heijmans", "Henk",
-                                      "henk@someclub.org", 1 );
+                                      email("henk@someclub.org"), 1 );
 
         int beforeSize = checkEmpDao.size();
         try (

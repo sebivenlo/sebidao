@@ -24,6 +24,8 @@ import nl.fontys.sebivenlo.dao.DAO;
 import nl.fontys.sebivenlo.dao.DAOException;
 import nl.fontys.sebivenlo.dao.TransactionToken;
 import nl.fontys.sebivenlo.dao.Entity2;
+import org.postgresql.util.PGobject;
+import org.postgresql.util.PSQLException;
 
 /**
  * PostgreSQL based DAO.
@@ -99,7 +101,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             Connection con = transactionToken.getConnection();
             return get( con, id );
         }
-        try (  Connection con = this.getConnection(); ) {
+        try ( Connection con = this.getConnection(); ) {
             return get( con, id );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -118,10 +120,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     private Optional<E> get( final Connection con, K id ) {
         String sql = getQueryText();
         try (
-                 PreparedStatement pst = con.prepareStatement( sql ); ) {
+                PreparedStatement pst = con.prepareStatement( sql ); ) {
             pst.setObject( 1, id );
             try (
-                     ResultSet rs = pst.executeQuery(); ) {
+                    ResultSet rs = pst.executeQuery(); ) {
                 if ( rs.next() ) {
                     return Optional.ofNullable( recordToEntity( rs ) );
                 } else {
@@ -192,7 +194,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String marks = String.join( ",", questionMarks );
         String sql = String.format( "delete from %s where %s in (%s)", mapper
                 .tableName(), mapper.idName(), marks );
-        try (  PreparedStatement pst = con.prepareStatement( sql ); ) {
+        try ( PreparedStatement pst = con.prepareStatement( sql ); ) {
             int col = 1;
             for ( K key : keys ) {
                 pst.setObject( col++, key );
@@ -208,7 +210,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     private void delete( final Connection con, K k ) {
         String sql = deleteQueryText();
         try (
-                 PreparedStatement pst = con.prepareStatement( sql ); ) {
+                PreparedStatement pst = con.prepareStatement( sql ); ) {
             pst.setObject( 1, k );
             boolean ignored = pst.execute();
         } catch ( SQLException ex ) {
@@ -231,7 +233,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         if ( null != transactionToken ) {
             return update( transactionToken.getConnection(), t );
         }
-        try (  Connection con = this.getConnection(); ) {
+        try ( Connection con = this.getConnection(); ) {
             return update( con, t );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -244,7 +246,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String sql
                 = updateQueryText();
         K key = mapper.keyExtractor().apply( t );
-        try (  PreparedStatement pst = c.prepareStatement( sql ); ) {
+        try ( PreparedStatement pst = c.prepareStatement( sql ); ) {
             Object[] parts = check( mapper.explode( t ) );
             check( parts );
             int j = 1;
@@ -254,7 +256,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                 pst.setObject( j++, part );
             }
             pst.setObject( j, key );
-            try (  ResultSet rs = pst.executeQuery(); ) {
+            try ( ResultSet rs = pst.executeQuery(); ) {
                 if ( rs.next() ) {
                     return recordToEntity( rs );
                 } else {
@@ -295,7 +297,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return save( transactionToken.getConnection(), t );
         }
 
-        try (  Connection c = this.getConnection(); ) {
+        try ( Connection c = this.getConnection(); ) {
             return save( c, t );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -310,7 +312,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return saveAll( transactionToken.getConnection(), entity );
         }
 
-        try (  Connection c = this.getConnection(); ) {
+        try ( Connection c = this.getConnection(); ) {
             return saveAll( c, entity );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -323,10 +325,10 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String sql
                 = saveQueryText();
         try (
-                 PreparedStatement pst = c.prepareStatement( sql ); ) {
+                PreparedStatement pst = c.prepareStatement( sql ); ) {
             populatePrepared( t, pst );
 
-            try (  ResultSet rs = pst.executeQuery(); ) {
+            try ( ResultSet rs = pst.executeQuery(); ) {
                 if ( rs.next() ) {
                     return recordToEntity( rs );
                 } else {
@@ -363,12 +365,12 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         String sql
                 = saveQueryText();
         List<E> result = new ArrayList<>();
-        try (  PreparedStatement pst = c.prepareStatement( sql ); ) {
+        try ( PreparedStatement pst = c.prepareStatement( sql ); ) {
             for ( E t : elements ) {
 
                 populatePrepared( t, pst );
 
-                try (  ResultSet rs = pst.executeQuery(); ) {
+                try ( ResultSet rs = pst.executeQuery(); ) {
                     if ( rs.next() ) {
                         result.add( recordToEntity( rs ) );
                     }
@@ -387,9 +389,14 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         Object[] parts = dropGeneneratedParts( check( mapper.explode( t ) ) );
         int j = 1;
         for ( Object part : parts ) {
-            if ( part instanceof SQLType ) {
-                pst.setObject( j++, part, ( (SQLType) part )
-                        .getVendorTypeNumber() );
+            if ( part == null ) {
+                pst.setObject( j++, part );
+                continue;
+            }
+            Object po = factory.marshallOut( part );
+            System.out.println( "po = " + po + " po class " + po.getClass() );
+            if ( po instanceof PGobject ) {
+                pst.setObject( j++, part, java.sql.Types.OTHER );
             } else {
                 pst.setObject( j++, part );
             }
@@ -433,7 +440,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         if ( null != transactionToken ) {
             return getAll( transactionToken.getConnection() );
         }
-        try (  Connection c = this.getConnection(); ) {
+        try ( Connection c = this.getConnection(); ) {
             return getAll( c );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -446,7 +453,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
         String sql = allQuery();
         try (
-                 PreparedStatement pst = c.prepareStatement( sql );  ResultSet rs = pst.executeQuery(); ) {
+                PreparedStatement pst = c.prepareStatement( sql ); ResultSet rs = pst.executeQuery(); ) {
             List<E> result = new ArrayList<>();
             Object[] parts = createPartsArray( rs );
             while ( rs.next() ) {
@@ -474,7 +481,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
             return getByColumnValues( transactionToken.getConnection(),
                     keyValues );
         }
-        try (  Connection con = this.getConnection(); ) {
+        try ( Connection con = this.getConnection(); ) {
             return getByColumnValues( con, keyValues );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -500,14 +507,13 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
                         allColumns(), tableName(),
                         columns, placeholders );
         try (
-                 PreparedStatement pst = c.prepareStatement( sql ); ) {
+                PreparedStatement pst = c.prepareStatement( sql ); ) {
             int j = 1;
             for ( int i = 0; i < values.size(); i++ ) {
                 pst.setObject( j++, values.get( i ) );
             }
-            try (  ResultSet rs = pst.executeQuery(); ) {
+            try ( ResultSet rs = pst.executeQuery(); ) {
                 List<E> result = new ArrayList<>();
-                Object[] parts = createPartsArray( rs );
                 while ( rs.next() ) {
                     // note columns start at 1
                     E e = recordToEntity( rs );
@@ -539,7 +545,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         if ( transactionToken != null ) {
             return executeIntQuery( transactionToken.getConnection(), sql );
         }
-        try (  Connection c = this.getConnection(); ) {
+        try ( Connection c = this.getConnection(); ) {
             return executeIntQuery( c, sql );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -550,8 +556,8 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private int executeIntQuery( final Connection c, String sql ) {
         try (
-                 PreparedStatement pst = c.prepareStatement( sql ); ) {
-            try (  ResultSet rs = pst.executeQuery(); ) {
+                PreparedStatement pst = c.prepareStatement( sql ); ) {
+            try ( ResultSet rs = pst.executeQuery(); ) {
                 if ( rs.next() ) {
                     return rs.getInt( 1 );
                 } else {
@@ -576,7 +582,7 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
         if ( transactionToken != null ) {
             return executeIntQuery( transactionToken.getConnection(), sql, k );
         }
-        try (  Connection c = this.getConnection(); ) {
+        try ( Connection c = this.getConnection(); ) {
             return executeIntQuery( c, sql, k );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,
@@ -587,9 +593,9 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
 
     private int executeIntQuery( final Connection c, String sql, K k ) {
         try (
-                 PreparedStatement pst = c.prepareStatement( sql ); ) {
+                PreparedStatement pst = c.prepareStatement( sql ); ) {
             pst.setObject( 1, k );
-            try (  ResultSet rs = pst.executeQuery(); ) {
+            try ( ResultSet rs = pst.executeQuery(); ) {
                 if ( rs.next() ) {
                     return rs.getInt( 1 );
                 } else {
@@ -701,18 +707,19 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     /**
      * Execute a query that produces a List of E.
      *
+     * @param con connection to use
      * @param queryText sql text
      * @param params positional parameters in the query
      * @return list of e, produced by the query.
      */
     private List<E> anyQuery( Connection con, String queryText, Object... params ) {
         try (
-                 PreparedStatement pst = con.prepareStatement( queryText ); ) {
+                PreparedStatement pst = con.prepareStatement( queryText ); ) {
             int j = 1;
             for ( Object param : params ) {
                 pst.setObject( j++, param );
             }
-            try (  ResultSet rs = pst.executeQuery(); ) {
+            try ( ResultSet rs = pst.executeQuery(); ) {
                 List<E> result = new ArrayList<>();
                 while ( rs.next() ) {
                     // note columns start at 1
@@ -729,17 +736,20 @@ public class PGDAO<K extends Serializable, E extends Entity2<K>>
     }
 
     /**
-     * Execute a query producing a list. Use case: a function is part of the query, and the query
-     * may in fact produce an update on the underlying database
+     * Execute a query producing a list. Use case: a function is part of the
+     * query, and the query may in fact produce an update on the underlying
+     * database
+     *
      * @param queryText sql of prepared statement
      * @param params positional parameters to the prepared statement
-     * @return 
+     * @return a list
      */
+    @Override
     public List<E> anyQuery( String queryText, Object... params ) {
         if ( transactionToken != null ) {
             return anyQuery( transactionToken.getConnection(), queryText, params );
         }
-        try (  Connection con = this.getConnection(); ) {
+        try ( Connection con = this.getConnection(); ) {
             return anyQuery( con, queryText, params );
         } catch ( SQLException ex ) { // cannot test cover this, unless connection breaks mid-air
             Logger.getLogger( PGDAO.class.getName() ).log( Level.SEVERE, null,

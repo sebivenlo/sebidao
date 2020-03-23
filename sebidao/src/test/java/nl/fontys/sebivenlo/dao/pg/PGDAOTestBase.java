@@ -5,6 +5,8 @@ import entities.CompanyMapper;
 import entities.DBTestHelpers;
 import entities.Department;
 import entities.DepartmentMapper;
+import entities.Email;
+import static entities.Email.email;
 import entities.Employee;
 import entities.EmployeeMapper2;
 import java.io.IOException;
@@ -30,7 +32,7 @@ import org.junit.Ignore;
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
-public class PGDAOTest extends DBTestHelpers {
+public class PGDAOTestBase extends DBTestHelpers {
 
     PGDAO<Integer, Employee> eDao;
 
@@ -43,7 +45,10 @@ public class PGDAOTest extends DBTestHelpers {
     @Before
     public void setUp() throws Throwable {
         assertThat( daof ).isNotNull();
+        daof.registerInMarshaller( Email.class, Email::new );
+        daof.registerOutMarshaller( Email.class, x-> PGDAOFactory.pgobject("citext", x ));
         eDao = daof.createDao( Employee.class );
+
     }
 
     @Test
@@ -106,13 +111,13 @@ public class PGDAOTest extends DBTestHelpers {
     @Test
     public void testSaveAll() throws SQLException, Exception {
         LocalDate d = LocalDate.of( 1999, 5, 6 );
-        Employee jan = new Employee( 0, "Klaassen", "Jan", "j.klaassen@fontys.nl", 1, true, d );
-        Employee kat = new Employee( 0, "Hansen", "Katrien", "j.hansen@fontys.nl", 1, false, d );
+        Employee jan = new Employee( 0, "Klaassen", "Jan", email( "j.klaassen@fontys.nl" ), 1, true, d );
+        Employee kat = new Employee( 0, "Hansen", "Katrien", email( "j.hansen@fontys.nl" ), 1, false, d );
         System.out.println( "jan = " + jan );
         System.out.println( "kat = " + kat );
         DAO dao = daof.createDao( Employee.class );
         try (
-                 TransactionToken tok = dao.startTransaction(); ) {
+                TransactionToken tok = dao.startTransaction(); ) {
             Collection<Employee> saveAll = dao.saveAll( jan, kat );
             assertThat( saveAll.size() )
                     .as( "using one and the same connection" )
@@ -124,6 +129,9 @@ public class PGDAOTest extends DBTestHelpers {
             Employee e2 = saveAll.iterator().next();
             dao.deleteAll( e1, e2 );
             tok.commit();
+        } catch(Throwable t){
+            t.printStackTrace();
+            throw t;
         }
 
         //Assert.fail( "test method testSaveAll reached its end, you can remove this line when you aggree." );
@@ -190,16 +198,16 @@ public class PGDAOTest extends DBTestHelpers {
 //        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
     }
 
-    @Test
-    public void anyQuery() {
-        EmployeeMapper2 mapper = new EmployeeMapper2();
-        PGDAO<Integer, Employee> eDaoa = daof.createDao( Employee.class );
-        String sql = "select * from employees where employeeid = ?";
-        List<Employee> list = eDaoa.anyQuery( sql, 1 );
-        for ( Employee employee : list ) {
-            System.out.println( "employee = " + employee );
-        }
-        Assert.assertEquals("size", 1, list.size());
-        //fail( "method method reached end. You know what to do." );
-    }
+//    @Test
+//    public void anyQuery() {
+//        EmployeeMapper2 mapper = new EmployeeMapper2();
+//        PGDAO<Integer, Employee> eDaoa = daof.createDao( Employee.class );
+//        String sql = "select * from employees where employeeid = ?";
+//        List<Employee> list = eDaoa.anyQuery( sql, 1 );
+//        for ( Employee employee : list ) {
+//            System.out.println( "employee = " + employee );
+//        }
+//        Assert.assertEquals( "size", 1, list.size() );
+//        //fail( "method method reached end. You know what to do." );
+//    }
 }

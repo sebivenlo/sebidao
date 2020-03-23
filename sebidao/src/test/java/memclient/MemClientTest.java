@@ -1,5 +1,6 @@
 package memclient;
 
+import static entities.Email.email;
 import entities.Employee;
 import entities.EmployeeMapper2;
 import nl.fontys.sebivenlo.dao.DAO;
@@ -7,6 +8,7 @@ import nl.fontys.sebivenlo.dao.memory.InMemoryDAO;
 import nl.fontys.sebivenlo.dao.memory.MemoryDAOFactory;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  * Note that entities saved in the dao are automagically persisted to disk on
@@ -23,11 +25,11 @@ public class MemClientTest {
 
     }
 
-//    @Ignore
+    @Ignore
     @Test
     public void testIBi() {
         DAO<Integer, Employee> dao = fac.createDao( Employee.class );
-        Employee ibi = new Employee( 42, "Kouzak", "Ibrahim", "i@there.com", 4 );
+        Employee ibi = new Employee( 42, "Kouzak", "Ibrahim", email("i@there.com"), 4 );
 
         Employee saveDIbi = dao.save( ibi );
 

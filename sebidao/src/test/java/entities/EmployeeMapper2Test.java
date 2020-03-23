@@ -1,5 +1,6 @@
 package entities;
 
+import static entities.Email.email;
 import static java.time.LocalDate.now;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -18,9 +19,9 @@ public class EmployeeMapper2Test {
     public void testImplode() {
 
         EmployeeMapper2 em = new EmployeeMapper2();
-        Employee ip = em.implode( 1, "Puk", "Piet", "piet@fontys.nl", 10, true );
+        Employee ip = em.implode( 1, "Puk", "Piet", email( "piet@fontys.nl"), 10, true );
 
-        Employee ep = new Employee( 1, "Puk", "Piet", "piet@fontys.nl", 10, false, now() );
+        Employee ep = new Employee( 1, "Puk", "Piet", email("piet@fontys.nl"), 10, false, now() );
         assertEqualsExtracting( "wrong employeeid", ep, ip,
                                 Employee::getEmployeeid );
         assertEqualsExtracting( "wrong firstname", ep, ip,
@@ -33,7 +34,7 @@ public class EmployeeMapper2Test {
 
     @Test
     public void testExplode() {
-        Employee jan = new Employee( 3, "Klaassen", "Jan", "jan@google.com", 42 );
+        Employee jan = new Employee( 3, "Klaassen", "Jan", email("jan@google.com"), 42 );
 
         EmployeeMapper2 em = new EmployeeMapper2();
         Object[] parts = em.explode( jan );
@@ -77,7 +78,7 @@ public class EmployeeMapper2Test {
 
     @Test
     public void testKeyExtractor() {
-        Employee bob = new Employee( 3, "Beton", "Bob", "bob@truckers.org", 42 );
+        Employee bob = new Employee( 3, "Beton", "Bob", email("bob@truckers.org"), 42 );
         EmployeeMapper2 em = new EmployeeMapper2();
         assertThat( em.keyExtractor().apply( bob )).isEqualTo(3);
 

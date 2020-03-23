@@ -142,6 +142,9 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         tryFieldAndMethodReflection();
     }
 
+    /**
+     * Create disassembler completely from getters.
+     */
     final void tryFieldAndMethodReflection() {
         Set<String> fieldNames = entityMetaData.typeMap.keySet();
         final Method[] getters = new Method[ fieldNames.size() ];
@@ -180,6 +183,10 @@ public abstract class AbstractMapper<K, E> {//implements Mapper<K, E> {
         }
     }
 
+    /**
+     * For the case that the user/programmer provides and asParts method, use that to disassemble the entity.
+     * @return true if asPart method is available and cache reflectively created disassembler.
+     */
     final boolean tryAsPart() {
         try {
             // first try asParts

@@ -1,5 +1,6 @@
 package entities;
 
+import static entities.Email.email;
 import java.time.LocalDate;
 import java.util.Objects;
 import nl.fontys.sebivenlo.dao.Entity2;
@@ -17,12 +18,12 @@ public class Employee implements Entity2<Integer> {
     private Integer employeeid;
     private String lastname;
     private String firstname;
-    private String email;
-    private int departmentid;
+    private Email email;
+    private Integer departmentid;
     private Boolean available;
     private LocalDate dob;
 
-    public Employee( Integer employeeid, String lastname, String firstname, String email, int departmentid, Boolean available, LocalDate dob ) {
+    public Employee( Integer employeeid, String lastname, String firstname, Email email, Integer departmentid, Boolean available, LocalDate dob ) {
         this.employeeid = employeeid;
         this.lastname = lastname;
         this.firstname = firstname;
@@ -32,15 +33,32 @@ public class Employee implements Entity2<Integer> {
         this.dob = dob;
     }
 
-    public Employee( int employeeid, String lastname, String firstname,
-            String email,
-            int departmentid ) {
+    public Employee( Integer employeeid, String lastname, String firstname, 
+            String email, Integer departmentid, Boolean available, LocalDate dob ) {
+        this.employeeid = employeeid;
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.email = email(email);
+        this.departmentid = departmentid;
+        this.available = available;
+        this.dob = dob;
+    }
+
+    public Employee( Integer employeeid, String lastname, String firstname,
+            Email email,
+            Integer departmentid ) {
         this( employeeid, lastname, firstname, email, departmentid, true, LocalDate.now() );
     }
 
+    public Employee( Integer employeeid, String lastname, String firstname,
+            String email,
+            Integer departmentid ) {
+        this( employeeid, lastname, firstname, email(email), departmentid, true, LocalDate.now() );
+    }
+
     Employee( Object[] parts ) {
-        this( (int) parts[ 0 ], (String) parts[ 1 ],
-                (String) parts[ 2 ], (String) parts[ 3 ], (int) parts[ 4 ], (Boolean) parts[ 5 ], (LocalDate) parts[ 6 ] );
+        this( (Integer) parts[ 0 ], (String) parts[ 1 ],
+                (String) parts[ 2 ], (Email) parts[ 3 ], (Integer) parts[ 4 ], (Boolean) parts[ 5 ], (LocalDate) parts[ 6 ] );
     }
 
     Object[] asParts() {
@@ -130,11 +148,11 @@ public class Employee implements Entity2<Integer> {
         this.departmentid = departmentid;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail( String email ) {
+    public void setEmail( Email email ) {
         this.email = email;
     }
 
@@ -143,7 +161,7 @@ public class Employee implements Entity2<Integer> {
         return this.employeeid;
     }
 
-    private Boolean getAvailable() {
+    public Boolean getAvailable() {
         return available;
     }
 

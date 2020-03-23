@@ -15,7 +15,7 @@ import org.junit.Ignore;
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 //@Ignore
-public class PGDAOTransactionalTest extends PGDAOTest {
+public class PGDAOTransactionalTest extends PGDAOTestBase {
 
     PGTransactionToken tok;
 
