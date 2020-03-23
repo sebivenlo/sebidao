@@ -129,9 +129,6 @@ public class PGDAOTestBase extends DBTestHelpers {
             Employee e2 = saveAll.iterator().next();
             dao.deleteAll( e1, e2 );
             tok.commit();
-        } catch(Throwable t){
-            t.printStackTrace();
-            throw t;
         }
 
         //Assert.fail( "test method testSaveAll reached its end, you can remove this line when you aggree." );
@@ -198,16 +195,16 @@ public class PGDAOTestBase extends DBTestHelpers {
 //        Assert.fail( "test testDropGeneratedDept reached its end, you can remove me when you aggree." );
     }
 
-//    @Test
-//    public void anyQuery() {
-//        EmployeeMapper2 mapper = new EmployeeMapper2();
-//        PGDAO<Integer, Employee> eDaoa = daof.createDao( Employee.class );
-//        String sql = "select * from employees where employeeid = ?";
-//        List<Employee> list = eDaoa.anyQuery( sql, 1 );
-//        for ( Employee employee : list ) {
-//            System.out.println( "employee = " + employee );
-//        }
-//        Assert.assertEquals( "size", 1, list.size() );
-//        //fail( "method method reached end. You know what to do." );
-//    }
+    @Test
+    public void anyQuery() {
+        EmployeeMapper2 mapper = new EmployeeMapper2();
+        PGDAO<Integer, Employee> eDaoa = daof.createDao( Employee.class );
+        String sql = "select * from employees where employeeid = ?";
+        List<Employee> list = eDaoa.anyQuery( sql, 1 );
+        for ( Employee employee : list ) {
+            System.out.println( "employee = " + employee );
+        }
+        Assert.assertEquals( "size", 1, list.size() );
+        //fail( "method method reached end. You know what to do." );
+    }
 }

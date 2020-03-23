@@ -153,15 +153,15 @@ public final class PGDAOFactory extends AbstractDAOFactory {
      * @param <T> incoming type
      * @param <U> user type
      * @param targetType type token for output
-     * @param mapper the mapper function, typically a lambda.
+     * @param inMarshaller the mapper function, typically a lambda.
      * @return this factory.
      */
-    public final <T extends Serializable, U> PGDAOFactory registerInMarshaller( Class<U> targetType, Function<T, U> mapper ) {
-        this.marshallInMap.put( targetType, mapper );
+    public final <T extends Serializable, U> PGDAOFactory registerInMarshaller( Class<U> targetType, Function<T, U> inMarshaller ) {
+        this.marshallInMap.put( targetType, inMarshaller );
         return this;
     }
 
-    public final PGDAOFactory registerOutMarshaller( Class<?> targetType, Function<?, ?> mapper ) {
+    public final <T extends Serializable,U extends PGobject> PGDAOFactory registerOutMarshaller( Class<T> targetType, Function<T, U> mapper ) {
         this.marshallOutMap.put( targetType, mapper );
         System.out.println( "register out targetType = " + targetType);
         return this;
