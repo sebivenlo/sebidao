@@ -42,7 +42,8 @@ public enum PGDataSource implements DataSource {
                     log( Level.SEVERE, null, ex );
         }
         dataSource = new PGSimpleDataSource();
-        dataSource.setServerName( props.getProperty( "server", SERVER ) );
+       
+        dataSource.setServerNames( new String[]{props.getProperty( "server", SERVER ) });
         dataSource.setDatabaseName( props.getProperty( "db", DB ) );
         dataSource.setUser( props.getProperty( "dbuser", DBUSER ) );
         dataSource.setPassword( props.getProperty( "dbpassword", DBPASSWORD ) );
