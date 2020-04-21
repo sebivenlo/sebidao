@@ -9,7 +9,7 @@
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
         <artifactId>sebipom</artifactId>
-        <version>2.3.5</version>
+        <version>2.3.8</version>
         <relativePath/>
     </parent>
     <description>The TAO of a DAO in a Demo</description>
@@ -35,4 +35,24 @@
             <type>jar</type>
         </dependency>
     </dependencies>
+     <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- add add-opens lines for all packages in your module that are tested.
+                        For testing it is fine to open your packages for the whole world, which includes
+                        e.g. junit, assertj, and mockito. 
+                        Also leave ${atgLine} because it is set/used by the coverage plugin.
+                    -->
+                    <argLine> 
+                        ${argLine}
+                        --add-opens sebidaodemo/demo=ALL-UNNAMED
+                        --add-opens sebidaodemo/entities=ALL-UNNAMED
+                        --add-opens sebidaodemo/pgtypes=ALL-UNNAMED
+                    </argLine>
+                </configuration>    
+            </plugin>
+        </plugins>
+    </build>
 </project>

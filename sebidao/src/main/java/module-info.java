@@ -1,9 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Simple DAO using postgresql features.
+ * 
+ * Sebi DAO is created as a service to students and as example of a rather
+ * simple but not naive DAO implementation.
+ * 
+ *
  */
-
 module nl.fontys.sebidao {
     exports nl.fontys.sebivenlo.dao;
     exports nl.fontys.sebivenlo.dao.memory;
