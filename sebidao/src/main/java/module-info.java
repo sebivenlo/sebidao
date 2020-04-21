@@ -4,6 +4,7 @@
  * Sebi DAO is created as a service to students and as example of a rather
  * simple but not naive DAO implementation.
  * 
+ * <img src='doc-files/summary.dot.png' alt='module graph'>
  *
  */
 module nl.fontys.sebidao {
