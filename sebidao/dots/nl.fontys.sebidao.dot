@@ -1,0 +1,37 @@
+digraph "nl.fontys.sebidao" {
+    // Path: /home/hom/sebi/sebidao/sebidao/target/sebidao-0.9.0-SNAPSHOT.jar
+   "nl.fontys.sebivenlo.dao"                          -> "java.io (java.base)";
+   "nl.fontys.sebivenlo.dao"                          -> "java.lang (java.base)";
+   "nl.fontys.sebivenlo.dao"                          -> "java.lang.annotation (java.base)";
+   "nl.fontys.sebivenlo.dao"                          -> "java.lang.invoke (java.base)";
+   "nl.fontys.sebivenlo.dao"                          -> "java.lang.reflect (java.base)";
+   "nl.fontys.sebivenlo.dao"                          -> "java.util (java.base)";
+   "nl.fontys.sebivenlo.dao"                          -> "java.util.function (java.base)";
+   "nl.fontys.sebivenlo.dao"                          -> "java.util.logging (java.logging)";
+   "nl.fontys.sebivenlo.dao"                          -> "java.util.stream (java.base)";
+   "nl.fontys.sebivenlo.dao"                          -> "nl.fontys.sebivenlo.dao (nl.fontys.sebidao)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "java.io (java.base)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "java.lang (java.base)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "java.lang.invoke (java.base)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "java.nio.file (java.base)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "java.util (java.base)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "java.util.function (java.base)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "java.util.logging (java.logging)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "nl.fontys.sebivenlo.dao (nl.fontys.sebidao)";
+   "nl.fontys.sebivenlo.dao.memory"                   -> "nl.fontys.sebivenlo.dao.memory (nl.fontys.sebidao)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.io (java.base)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.lang (java.base)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.lang.invoke (java.base)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.sql (java.sql)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.time (java.base)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.util (java.base)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.util.concurrent (java.base)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.util.function (java.base)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.util.logging (java.logging)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "java.util.stream (java.base)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "javax.sql (java.sql)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "nl.fontys.sebivenlo.dao (nl.fontys.sebidao)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "nl.fontys.sebivenlo.dao.pg (nl.fontys.sebidao)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "org.postgresql (org.postgresql.jdbc)";
+   "nl.fontys.sebivenlo.dao.pg"                       -> "org.postgresql.util (org.postgresql.jdbc)";
+}

@@ -1,0 +1,13 @@
+digraph "summary" {
+  "nl.fontys.sebidao"                                -> "java.base (java.base)";
+  "nl.fontys.sebidao"                                -> "java.logging (java.logging)";
+  "nl.fontys.sebidao"                                -> "java.sql (java.sql)";
+  "nl.fontys.sebidao"                                -> "org.postgresql.jdbc";
+  "org.postgresql.jdbc"                              -> "java.base (java.base)";
+  "org.postgresql.jdbc"                              -> "java.logging (java.logging)";
+  "org.postgresql.jdbc"                              -> "java.naming (java.naming)";
+  "org.postgresql.jdbc"                              -> "java.security.sasl (java.security.sasl)";
+  "org.postgresql.jdbc"                              -> "java.sql (java.sql)";
+  "org.postgresql.jdbc"                              -> "java.xml (java.xml)";
+  "org.postgresql.jdbc"                              -> "not found";
+}
