@@ -22,7 +22,7 @@ import java.util.stream.StreamSupport;
  * <dt>Get all</dt><dd>called {@code Collection<Entity> getAll()} here.</dd>
  * </dl>
  *
- * A future version of this DAO can participate in transactions by passing
+ * This DAO can participate in transactions by passing
  * around a transaction token. The implementing class of this interface is
  * advised to have a constructor accepting the token.
  *

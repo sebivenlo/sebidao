@@ -78,11 +78,7 @@ public class LocalDateTimeRange implements Range<LocalDateTime> {
             this.end = end;
         }
     }
-
-    public LocalDateTimeRange( LocalDateTime now, Duration ofHours ) {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     public LocalDateTime getStart() {
         return start;
     }

@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+        <parent>
+        <groupId>nl.fontys.sebivenlo</groupId>
+        <artifactId>sebidaoparent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../sebidaoparent</relativePath>
+    </parent>
+
     <groupId>nl.fontys.sebivenlo</groupId>
     <artifactId>sebidao</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <!--<version>0.9.0-SNAPSHOT</version>-->
     
     <name>sebidao :: DAO</name>
     <description>Simple DAO. Use a DAO to keep simple database stuff simple.</description>
-    <parent>
-        <groupId>nl.fontys.sebivenlo</groupId>
-        <artifactId>sebipom</artifactId>
-        <version>2.3.8</version>
-    </parent>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.10</version>
+            <version>42.2.12</version>
             <scope>provided</scope> 
         </dependency>
     </dependencies>

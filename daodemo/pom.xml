@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>daodemo</groupId>
-    <artifactId>daodemo</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>sebidao :: Demo</name>
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
-        <artifactId>sebipom</artifactId>
-        <version>2.3.8</version>
-        <relativePath/>
+        <artifactId>sebidaoparent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../sebidaoparent</relativePath>
     </parent>
+    <groupId>daodemo</groupId>
+    <artifactId>daodemo</artifactId>
+    <packaging>jar</packaging>
+    <name>sebidao :: Demo</name>
     <description>The TAO of a DAO in a Demo</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,21 +20,18 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.9.0-SNAPSHOT</version>
-        </dependency>
-	 <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.12</version>
+            <version>${project.version}</version>
+
         </dependency>
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>pgranges</artifactId>
-            <version>0.8</version>
+            <version>${project.version}</version>
+
             <type>jar</type>
         </dependency>
     </dependencies>
-     <build>
+    <build>
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
