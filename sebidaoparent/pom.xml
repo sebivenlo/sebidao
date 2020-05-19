@@ -18,6 +18,6 @@
     <modules>
         <module>../sebidao</module>
         <module>../daodemo</module>
-        <module>../pgtypes</module>
+        <module>../pgranges</module>
     </modules>
 </project>
