@@ -8,19 +8,20 @@ import java.util.Set;
 import java.util.function.Function;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
  * @author Pieter van den Hombergh {@code pieter.van.den.hombergh@gmail.com}
  */
 public class EmployeeMapper2Test {
-
+    
     @Test
     public void testImplode() {
-
+        
         EmployeeMapper2 em = new EmployeeMapper2();
-        Employee ip = em.implode( 1, "Puk", "Piet", email( "piet@fontys.nl" ), 10, true );
-
+        Employee ip = em.implode(1, "Puk", "Piet", email( "piet@fontys.nl" ), 10, true );
+        assertNotNull("ip null",ip);
         Employee ep = new Employee( 1, "Puk", "Piet", email( "piet@fontys.nl" ), 10, false, now() );
         assertEqualsExtracting( "wrong employeeid", ep, ip,
                 Employee::getEmployeeid );
@@ -31,13 +32,14 @@ public class EmployeeMapper2Test {
         assertEqualsExtracting( "wrong department", ep, ip,
                 Employee::getDepartmentid );
     }
-
+    
     @Test
     public void testExplode() {
         Employee jan = new Employee( 3, "Klaassen", "Jan", email( "jan@google.com" ), 42 );
-
+        
         EmployeeMapper2 em = new EmployeeMapper2();
         Object[] parts = em.explode( jan );
+        assertThat( parts ).hasSize( 7 );
         assertThat( jan.getEmployeeid() ).isEqualTo( parts[ 0 ] );
         assertThat( jan.getLastname() ).isEqualTo( parts[ 1 ] );
         assertThat( jan.getFirstname() ).isEqualTo( parts[ 2 ] );
@@ -45,25 +47,25 @@ public class EmployeeMapper2Test {
         assertThat( jan.getDepartmentid() ).isEqualTo( (int) parts[ 4 ] );
         //fail( "testExplode not yet implemented. Review the code and comment or delete this line" );
     }
-
+    
     @Test
     public void testGetTableName() {
         assertThat( new EmployeeMapper2().tableName() ).isEqualTo( "employees" );
     }
-
+    
     @Test
     public void testGetIdName() {
         Set<String> expected = new HashSet<>( Arrays.asList( "employeeid" ) );
         assertThat( new EmployeeMapper2().keyNames() ).isEqualTo( expected );
     }
-
+    
     private static <T, U> void assertEqualsExtracting( String msg, T expected,
             T actual, Function<? super T, ? extends U> extractor ) {
         assertThat( extractor.apply( actual ) ).as( msg ).isEqualTo( extractor.
                 apply( expected )
         );
     }
-
+    
     @Test
     public void testPersistentFieldNames() {
         EmployeeMapper2 em = new EmployeeMapper2();
@@ -75,7 +77,7 @@ public class EmployeeMapper2Test {
                 "departmentid" );
         //fail( "testPersistentFieldNames not yet implemented. Review the code and comment or delete this line" );
     }
-
+    
     @Test
     public void testKeyExtractor() {
         Employee bob = new Employee( 3, "Beton", "Bob", email( "bob@truckers.org" ), 42 );

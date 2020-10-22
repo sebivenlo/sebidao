@@ -136,7 +136,7 @@ public class Employee implements Entity2<Integer> {
                 + '}';
     }
 
-    public int getEmployeeid() {
+    public Integer getEmployeeid() {
         return employeeid;
     }
 

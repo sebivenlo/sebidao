@@ -4,7 +4,6 @@ import static entities.Email.email;
 import entities.Employee;
 import entities.EmployeeMapper2;
 import nl.fontys.sebivenlo.dao.DAO;
-import nl.fontys.sebivenlo.dao.memory.InMemoryDAO;
 import nl.fontys.sebivenlo.dao.memory.MemoryDAOFactory;
 import org.junit.Test;
 import static org.junit.Assert.*;

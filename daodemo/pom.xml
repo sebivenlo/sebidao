@@ -4,13 +4,13 @@
     <groupId>daodemo</groupId>
     <artifactId>daodemo</artifactId>
     <packaging>jar</packaging>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>0.9.1-SNAPSHOT</version>
     <name>DAO :: Demo</name>
     <description>The TAO of a DAO in a Demo</description>
     <parent>
         <groupId>nl.fontys.sebivenlo</groupId>
         <artifactId>sebipom</artifactId>
-        <version>2.3.8</version>
+        <version>2.5.0</version>
         <relativePath/>
     </parent>
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.9.0-SNAPSHOT</version>
+            <version>0.9.1-SNAPSHOT</version>
 
         </dependency>
         <dependency>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.12</version>
+            <version>42.2.18</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

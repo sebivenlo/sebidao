@@ -1,5 +1,8 @@
 package nl.fontys.sebivenlo.dao;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -11,10 +14,13 @@ import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import static java.util.Map.entry;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
@@ -79,7 +85,7 @@ public abstract class AbstractMapper<K, E> {
         this.entityType = entityType;
         this.keyType = keyType;
         entityMetaData = new EntityMetaData<>( entityType );
-        deriveAssemblerFunction();
+        deriveAssemblerFunction2();
         deriveDisAssemblerFunction();
     }
 
@@ -103,7 +109,7 @@ public abstract class AbstractMapper<K, E> {
         }
         try {
             Constructor<E> assemblerCtor = entityType.getConstructor( types );
-//            System.out.println( "found assemblerCtor = " + assemblerCtor );
+            System.out.println( "found assemblerCtor = " + assemblerCtor );
             assembler = ( Object[] a ) -> {
                 try {
                     return assemblerCtor.newInstance( a );
@@ -125,6 +131,36 @@ public abstract class AbstractMapper<K, E> {
         }
     }
 
+    final void deriveAssemblerFunction2() {
+
+        final MethodHandles.Lookup lookup = MethodHandles.lookup();
+        Collection<Class<?>> fieldTypes = entityMetaData.typeMap.values();
+        Class[] types = new Class[ fieldTypes.size() ];
+        int p = 0;
+        for ( Class<?> clz : fieldTypes ) {
+            types[ p++ ] = clz;
+        }
+        MethodType mt = MethodType.methodType( void.class, types );
+        try {
+            Constructor<E> constructor = entityType.getConstructor( types );
+
+            MethodHandle ctorH = lookup.findConstructor( entityType, mt );
+            System.out.println( "ctorH = " + ctorH );
+            assembler = ( Object[] args ) -> {
+
+                E result = null;
+                try {
+                    result = (E) ctorH.invokeWithArguments( args );
+                } catch ( Throwable ex ) {
+                    Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+                }
+                return result;
+            };
+        } catch ( NoSuchMethodException | IllegalAccessException ex ) {
+            Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+        }
+    }
+
     Function<Object[], E> assembler;
 
     Function<E, Object[]> disAssembler;
@@ -135,11 +171,11 @@ public abstract class AbstractMapper<K, E> {
      */
     final void deriveDisAssemblerFunction() {
 
-        if ( tryAsPart() ) {
+        if ( tryAsParts2() ) {
             return;
         }
 
-        tryFieldAndMethodReflection();
+        tryFieldAndMethodReflection2();
     }
 
     /**
@@ -148,7 +184,7 @@ public abstract class AbstractMapper<K, E> {
     final void tryFieldAndMethodReflection() {
         Set<String> fieldNames = entityMetaData.typeMap.keySet();
         final Method[] getters = new Method[ fieldNames.size() ];
-        final int fieldCount = entityMetaData.typeMap.size();
+        final int fieldCount = fieldNames.size();
         int g = 0;
         for ( String fieldName : fieldNames ) {
             try {
@@ -189,6 +225,30 @@ public abstract class AbstractMapper<K, E> {
         }
     }
 
+    final void tryFieldAndMethodReflection2() {
+        final int fieldCount = entityMetaData.typeMap.keySet().size();
+        final List<MethodHandle> getters = getGetters( entityType.getDeclaredFields() );
+        System.out.println( "getters=" + getters );
+//        Object[] result = new Object[ fieldCount ];
+        disAssembler = ( E e ) -> {
+
+            int i = 0;
+            Object[] result = new Object[ fieldCount ];
+            for ( MethodHandle getter : getters ) {
+                if ( getter != null ) {
+                    try {
+                        result[ i ] = getter.invoke( e );
+                    } catch ( Throwable ex ) {
+                        Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+                    }
+
+                }
+                i++;
+            }
+            return result;
+        };
+    }
+
     /**
      * For the case that the user/programmer provides and asParts method, use
      * that to disassemble the entity.
@@ -196,7 +256,7 @@ public abstract class AbstractMapper<K, E> {
      * @return true if asPart method is available and cache reflectively created
      * disassembler.
      */
-    final boolean tryAsPart() {
+    final boolean tryAsParts() {
         try {
             // first try asParts
             final Method asParts = entityType.getMethod( "asParts" );
@@ -221,6 +281,29 @@ public abstract class AbstractMapper<K, E> {
             }
         } catch ( NoSuchMethodException | SecurityException ex ) {
             Logger.getLogger( AbstractMapper.class.getName() ).log( Level.FINE, null, ex );
+        }
+        return false;
+    }
+    static final Object[] EMPTY_OBJ_ARRAY = new Object[ 0 ];
+
+    final boolean tryAsParts2() {
+        MethodType mt = MethodType.methodType( Object[].class );
+
+        try {
+            final MethodHandle asPartsMH = MethodHandles.lookup().findVirtual( entityType, "asParts", mt );
+
+            disAssembler = ( E e ) -> {
+                Object[] result = EMPTY_OBJ_ARRAY;
+                try {
+                    result = (Object[]) asPartsMH.invoke( e );
+                } catch ( Throwable ex ) {
+                    Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
+                }
+                return result;
+            };
+            return true;
+        } catch ( NoSuchMethodException | IllegalAccessException ex ) {
+            Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
         }
         return false;
     }
@@ -416,4 +499,79 @@ public abstract class AbstractMapper<K, E> {
         sb.append( "}" );
         return sb.toString();
     }
+
+    private List<MethodHandle> getGetters( Field[] fields ) {
+        return Arrays.stream( fields )
+                .filter( f -> normalField( f ) )
+                .map( f -> getGetter( f ) )
+                .collect( toList() );
+    }
+
+    /**
+     * Get the public getter for a field. Turn throwing method into logging
+     * method. This method tries to find for the declared filed type and if
+     * fails and the field type is a wrapper type (e.g. Integer) a second
+     * attempt is for a getter with the primitive return type.
+     *
+     * @param field filed to get getGetter for
+     * @return the getter method handle for the field
+     */
+    MethodHandle getGetter( Field field ) {
+        final MethodHandles.Lookup lookup = MethodHandles.lookup();
+        MethodHandle result = null;
+
+        MethodType mt = MethodType.methodType( field.getType() );
+        String getterName = getterNameFor( field );
+
+        try {
+            try { // 1st attempt
+                result = lookup.findVirtual( entityType, getterName, mt );
+            } catch ( NoSuchMethodException ex1 ) { // 2nd attempt
+                Class<?> primType = wrapperToPrimitive.get( field.getType() );
+                if ( null != primType ) {
+                    mt = MethodType.methodType( primType );
+                    result = lookup.findVirtual( field.getDeclaringClass(), getterName, mt );
+                }
+            }
+        } catch ( IllegalAccessException | NoSuchMethodException ex ) {
+            Logger.getLogger( field.getDeclaringClass().getName() ).log( Level.SEVERE, "for field " + field, ex );
+        }
+        return result;
+    }
+
+    /* to allow a second attempt when getter return type and field type differ by wrapping or unwrapping. */
+    private static final Map<Class<?>, Class<?>> wrapperToPrimitive
+            = Map.ofEntries(
+                    entry( Integer.class, int.class ),
+                    entry( int.class, Integer.class ),
+                    entry( Long.class, long.class ),
+                    entry( long.class, Long.class ),
+                    entry( Boolean.class, boolean.class ),
+                    entry( boolean.class, Boolean.class ),
+                    entry( Character.class, char.class ),
+                    entry( char.class, Character.class ),
+                    entry( Short.class, Short.class ),
+                    entry( short.class, short.class ),
+                    entry( Double.class, double.class ),
+                    entry( double.class, Double.class ),
+                    entry( Float.class, float.class ),
+                    entry( float.class, Float.class ),
+                    entry( Byte.class, byte.class ),
+                    entry( byte.class, Byte.class )
+            );
+
+    private static String getterNameFor( Field f ) {
+        String name = f.getName();
+        char[] nameChars = new char[ 3 + name.length() ];
+        "get".getChars( 0, 3, nameChars, 0 );
+        name.getChars( 0, name.length(), nameChars, 3 );
+        nameChars[ 3 ] = Character.toUpperCase( nameChars[ 3 ] );
+        return new String( nameChars );
+    }
+
+    private static boolean normalField( Field f ) {
+        int modifiers = f.getModifiers();
+        return !( Modifier.isStatic( modifiers ) || Modifier.isTransient( modifiers ) || f.isSynthetic() );
+    }
+
 }
