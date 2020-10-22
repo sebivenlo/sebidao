@@ -142,12 +142,8 @@ public abstract class AbstractMapper<K, E> {
         }
         MethodType mt = MethodType.methodType( void.class, types );
         try {
-            Constructor<E> constructor = entityType.getConstructor( types );
-
             MethodHandle ctorH = lookup.findConstructor( entityType, mt );
-            System.out.println( "ctorH = " + ctorH );
             assembler = ( Object[] args ) -> {
-
                 E result = null;
                 try {
                     result = (E) ctorH.invokeWithArguments( args );
@@ -171,122 +167,49 @@ public abstract class AbstractMapper<K, E> {
      */
     final void deriveDisAssemblerFunction() {
 
-        if ( tryAsParts2() ) {
+        if ( tryAsParts() ) {
             return;
         }
 
-        tryFieldAndMethodReflection2();
+        tryFieldAndMethodReflection();
     }
 
     /**
      * Create disassembler completely from getters.
      */
+    /**
+     * Create disassembler completely from getters.
+     */
     final void tryFieldAndMethodReflection() {
-        Set<String> fieldNames = entityMetaData.typeMap.keySet();
-        final Method[] getters = new Method[ fieldNames.size() ];
-        final int fieldCount = fieldNames.size();
-        int g = 0;
-        for ( String fieldName : fieldNames ) {
-            try {
-                String getterName = "get" + fieldName.substring( 0, 1 )
-                        .toUpperCase() + fieldName.substring( 1 );
-                Method m = entityType.getDeclaredMethod( getterName );
-                if ( m.isAccessible() ) {
-                    Logger.getLogger( AbstractMapper.class.getName() )
-                            .log( Level.INFO, "method is not accessible" + m );
-                } else {
-                    getters[ g ] = entityType.getDeclaredMethod( getterName );
-                }
-                g++;
-            } catch ( NoSuchMethodException | SecurityException ex ) {
-                Logger.getLogger( AbstractMapper.class.getName() )
-                        .log( Level.INFO, null, ex );
-            }
-        }
-        if ( g == entityMetaData.typeMap.size() ) {
-            disAssembler = ( E e ) -> {
-                Object[] result = new Object[ fieldCount ];
-                int i = 0;
-                for ( Method getter : getters ) {
-                    try {
-                        if ( null != getter ) {
-                            result[ i ] = getter.invoke( e );
-                        }
-                    } catch ( IllegalAccessException
-                            | IllegalArgumentException
-                            | InvocationTargetException ex ) {
-                        Logger.getLogger( AbstractMapper.class.getName() )
-                                .log( Level.SEVERE, null, ex );
-                    }
-                    i++;
-                }
-                return result;
-            };
-        }
-    }
-
-    final void tryFieldAndMethodReflection2() {
         final int fieldCount = entityMetaData.typeMap.keySet().size();
         final List<MethodHandle> getters = getGetters( entityType.getDeclaredFields() );
         System.out.println( "getters=" + getters );
-//        Object[] result = new Object[ fieldCount ];
         disAssembler = ( E e ) -> {
-
             int i = 0;
             Object[] result = new Object[ fieldCount ];
-            for ( MethodHandle getter : getters ) {
-                if ( getter != null ) {
-                    try {
-                        result[ i ] = getter.invoke( e );
-                    } catch ( Throwable ex ) {
-                        Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
-                    }
-
+            try {
+                for ( MethodHandle getter : getters ) {
+                    result[ i ] = getter.invoke( e );
+                    i++;
                 }
-                i++;
+            } catch ( Throwable ex ) {
+                Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
             }
             return result;
         };
     }
 
+    private static final Object[] EMPTY_OBJ_ARRAY = new Object[ 0 ];
+
     /**
      * For the case that the user/programmer provides and asParts method, use
-     * that to disassemble the entity.
+     * that to disassemble the entity. Using this method is assumed to be more
+     * efficient in startup and execution.
      *
      * @return true if asPart method is available and cache reflectively created
      * disassembler.
      */
     final boolean tryAsParts() {
-        try {
-            // first try asParts
-            final Method asParts = entityType.getMethod( "asParts" );
-            if ( asParts == null ) {
-                return false;
-            }
-            Class<?> returnType = asParts.getReturnType();
-            if ( returnType.isArray() ) {
-                disAssembler = ( E e ) -> {
-                    Object[] result = null;
-                    try {
-                        result = (Object[]) asParts.invoke( e );
-                    } catch ( IllegalAccessException
-                            | IllegalArgumentException
-                            | InvocationTargetException ex ) {
-                        Logger.getLogger( AbstractMapper.class.getName() )
-                                .log( Level.SEVERE, null, ex );
-                    }
-                    return result;
-                };
-                return true;
-            }
-        } catch ( NoSuchMethodException | SecurityException ex ) {
-            Logger.getLogger( AbstractMapper.class.getName() ).log( Level.FINE, null, ex );
-        }
-        return false;
-    }
-    static final Object[] EMPTY_OBJ_ARRAY = new Object[ 0 ];
-
-    final boolean tryAsParts2() {
         MethodType mt = MethodType.methodType( Object[].class );
 
         try {
