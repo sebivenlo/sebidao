@@ -26,7 +26,7 @@ public class Company implements Entity2<String> {
     }
 
     public Company( String name, String country, String city,
-            String address, String ticker, String postcode, int i, Integer j ) {
+            String address, String ticker, String postcode, Integer i, Integer j ) {
         this.name = name;
         this.country = country;
         this.city = city;

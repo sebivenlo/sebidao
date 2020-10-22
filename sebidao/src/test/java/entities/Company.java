@@ -19,7 +19,7 @@ public class Company implements Entity2<String> {
     @ID( generated = false )
     private String ticker;
     private String postcode;
-    private int someInt;
+    private Integer someInt;
     private Integer someInteger;
 
     public Company( String name, String country, String city,
@@ -28,7 +28,7 @@ public class Company implements Entity2<String> {
     }
 
     public Company( String name, String country, String city,
-            String address, String ticker, String postcode, int i, Integer j ) {
+            String address, String ticker, String postcode, Integer i, Integer j ) {
         this.name = name;
         this.country = country;
         this.city = city;

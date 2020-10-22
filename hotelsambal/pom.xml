@@ -15,12 +15,12 @@
         <dependency>
             <groupId>nl.fontys.sebivenlo</groupId>
             <artifactId>sebidao</artifactId>
-            <version>0.7.1</version>
+            <version>0.9.1-SNAPSHOT</version>
         </dependency>
 	 <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.12</version>
+            <version>42.2.18</version>
         </dependency>
     </dependencies>
 </project>

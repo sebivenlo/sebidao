@@ -85,7 +85,7 @@ public abstract class AbstractMapper<K, E> {
         this.entityType = entityType;
         this.keyType = keyType;
         entityMetaData = new EntityMetaData<>( entityType );
-        deriveAssemblerFunction2();
+        deriveAssemblerFunction();
         deriveDisAssemblerFunction();
     }
 
@@ -101,37 +101,6 @@ public abstract class AbstractMapper<K, E> {
      *
      */
     final void deriveAssemblerFunction() {
-        Collection<Class<?>> fieldTypes = entityMetaData.typeMap.values();
-        Class[] types = new Class[ fieldTypes.size() ];
-        int p = 0;
-        for ( Class<?> clz : fieldTypes ) {
-            types[ p++ ] = clz;
-        }
-        try {
-            Constructor<E> assemblerCtor = entityType.getConstructor( types );
-            System.out.println( "found assemblerCtor = " + assemblerCtor );
-            assembler = ( Object[] a ) -> {
-                try {
-                    return assemblerCtor.newInstance( a );
-                } catch ( InstantiationException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException ex ) {
-                    Logger.getLogger( AbstractMapper.class.getName() )
-                            .log( Level.SEVERE, null, ex );
-                    throw new DAOException(
-                            "could not invoke assembler constructor "
-                            + assemblerCtor
-                            + "\n" + parameters( a ), ex );
-                }
-            };
-        } catch ( NoSuchMethodException | SecurityException ex ) {
-            Logger.getLogger( AbstractMapper.class.getName() )
-                    .log( Level.INFO, "cannot find assembler constructor "
-                            + assemblerCtor(), ex );
-            //throw new DAOException( "cannot find assembler constructor "+assemblerCtor(), ex );
-        }
-    }
-
-    final void deriveAssemblerFunction2() {
 
         final MethodHandles.Lookup lookup = MethodHandles.lookup();
         Collection<Class<?>> fieldTypes = entityMetaData.typeMap.values();
@@ -142,7 +111,9 @@ public abstract class AbstractMapper<K, E> {
         }
         MethodType mt = MethodType.methodType( void.class, types );
         try {
-            MethodHandle ctorH = lookup.findConstructor( entityType, mt );
+            Constructor<E> constructor = entityType.getConstructor( types );
+//            MethodHandle ctorH = lookup.findConstructor( entityType, mt );
+            MethodHandle ctorH = lookup.unreflectConstructor( constructor );
             assembler = ( Object[] args ) -> {
                 E result = null;
                 try {
@@ -189,7 +160,7 @@ public abstract class AbstractMapper<K, E> {
             Object[] result = new Object[ fieldCount ];
             try {
                 for ( MethodHandle getter : getters ) {
-                    result[ i ] = getter.invoke( e );
+                    result[ i ] = getter.invokeWithArguments( e );
                     i++;
                 }
             } catch ( Throwable ex ) {
@@ -218,7 +189,7 @@ public abstract class AbstractMapper<K, E> {
             disAssembler = ( E e ) -> {
                 Object[] result = EMPTY_OBJ_ARRAY;
                 try {
-                    result = (Object[]) asPartsMH.invoke( e );
+                    result = (Object[]) asPartsMH.invokeExact(e );
                 } catch ( Throwable ex ) {
                     Logger.getLogger( AbstractMapper.class.getName() ).log( Level.SEVERE, null, ex );
                 }

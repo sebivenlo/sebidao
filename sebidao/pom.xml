@@ -45,7 +45,7 @@
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>/entities/*</exclude>
+            <exclude>**/entities</exclude>
           </excludes>
         </configuration>
       </plugin>

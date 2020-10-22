@@ -1,5 +1,6 @@
 package entities;
 
+import entities.*;
 import java.util.function.Function;
 import nl.fontys.sebivenlo.dao.AbstractMapper;
 

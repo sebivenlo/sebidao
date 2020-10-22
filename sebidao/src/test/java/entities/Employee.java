@@ -1,5 +1,6 @@
 package entities;
 
+import entities.*;
 import static entities.Email.email;
 import java.time.LocalDate;
 import java.util.Objects;
